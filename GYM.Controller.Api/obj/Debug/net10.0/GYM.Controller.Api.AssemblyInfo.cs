@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GYM.Controller.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8727ffb65831d76fdbf529df7d231d3e6b5db49f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4d759d121c5ca58f67c377c94a67c574085cd4fb")]
 [assembly: System.Reflection.AssemblyProductAttribute("GYM.Controller.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GYM.Controller.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
