@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\stefa\\Codigo\\P2_T1\\GYM.Controller.Api\\GYM.Controller.Api.csproj": {}
+    "C:\\Users\\alann\\Desktop\\Proyecto2\\P2_T1\\GYM.Controller.Api\\GYM.Controller.Api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\stefa\\Codigo\\P2_T1\\GYM.Controller.Api\\GYM.Controller.Api.csproj": {
+    "C:\\Users\\alann\\Desktop\\Proyecto2\\P2_T1\\GYM.Controller.Api\\GYM.Controller.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\stefa\\Codigo\\P2_T1\\GYM.Controller.Api\\GYM.Controller.Api.csproj",
+        "projectUniqueName": "C:\\Users\\alann\\Desktop\\Proyecto2\\P2_T1\\GYM.Controller.Api\\GYM.Controller.Api.csproj",
         "projectName": "GYM.Controller.Api",
-        "projectPath": "C:\\Users\\stefa\\Codigo\\P2_T1\\GYM.Controller.Api\\GYM.Controller.Api.csproj",
-        "packagesPath": "C:\\Users\\stefa\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\stefa\\Codigo\\P2_T1\\GYM.Controller.Api\\obj\\",
+        "projectPath": "C:\\Users\\alann\\Desktop\\Proyecto2\\P2_T1\\GYM.Controller.Api\\GYM.Controller.Api.csproj",
+        "packagesPath": "C:\\Users\\alann\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\alann\\Desktop\\Proyecto2\\P2_T1\\GYM.Controller.Api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\stefa\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\alann\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -27,8 +27,8 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\stefa\\Codigo\\P2_T1\\GYM.Data\\GYM.Data.csproj": {
-                "projectPath": "C:\\Users\\stefa\\Codigo\\P2_T1\\GYM.Data\\GYM.Data.csproj"
+              "C:\\Users\\alann\\Desktop\\Proyecto2\\P2_T1\\GYM.Data\\GYM.Data.csproj": {
+                "projectPath": "C:\\Users\\alann\\Desktop\\Proyecto2\\P2_T1\\GYM.Data\\GYM.Data.csproj"
               }
             }
           }
@@ -94,7 +94,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.302/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
@@ -512,17 +512,17 @@
         }
       }
     },
-    "C:\\Users\\stefa\\Codigo\\P2_T1\\GYM.Data\\GYM.Data.csproj": {
+    "C:\\Users\\alann\\Desktop\\Proyecto2\\P2_T1\\GYM.Data\\GYM.Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\stefa\\Codigo\\P2_T1\\GYM.Data\\GYM.Data.csproj",
+        "projectUniqueName": "C:\\Users\\alann\\Desktop\\Proyecto2\\P2_T1\\GYM.Data\\GYM.Data.csproj",
         "projectName": "GYM.Data",
-        "projectPath": "C:\\Users\\stefa\\Codigo\\P2_T1\\GYM.Data\\GYM.Data.csproj",
-        "packagesPath": "C:\\Users\\stefa\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\stefa\\Codigo\\P2_T1\\GYM.Data\\obj\\",
+        "projectPath": "C:\\Users\\alann\\Desktop\\Proyecto2\\P2_T1\\GYM.Data\\GYM.Data.csproj",
+        "packagesPath": "C:\\Users\\alann\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\alann\\Desktop\\Proyecto2\\P2_T1\\GYM.Data\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\stefa\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\alann\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -581,7 +581,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.302/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
