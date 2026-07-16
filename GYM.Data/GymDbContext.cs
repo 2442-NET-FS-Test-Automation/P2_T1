@@ -28,7 +28,6 @@ public class GymDbContext : DbContext
         modelBuilder.Entity<Room>(e =>
         {
             e.HasKey(r => r.Id); //Marks as Primary Key
-
             e.Property(r => r.Id).ValueGeneratedOnAdd(); //NO need to use a PK when creating new Room, automatic, autoincremental
 
             e.Property(r => r.Name).IsRequired().HasMaxLength(100); //Required, MaxLength = 100
@@ -44,12 +43,28 @@ public class GymDbContext : DbContext
 
         modelBuilder.Entity<Training>(e =>
         {
-            e.HasKey(e => e.Id);
-            e.Property(e => e.Id).ValueGeneratedOnAdd();
+            e.HasKey(r => r.Id);
+            e.Property(r => r.Id).ValueGeneratedOnAdd();
             //instructorid, es obligatorio - relación de 1 instructor por training
+            
+            //trainer 
+            e.HasOne(u => u.Trainer).WithMany(c => c.Trainigs).HasForeignKey(o => o.TrainerId);
+
+            //Category relationship. 
+            e.HasOne(u => u.Category).WithMany(c => c.Trainings).HasForeignKey(o => o.CategoryID);
+
+            //Room relationship
+            e.HasOne(u => u.Room).WithMany(c => c.Trainings).HasForeignKey(o => o.RoomId);
+
             //Descripcion maxLength 250 caracteres
+            e.Property(r => r.Description).HasMaxLength(250);
+
             //ClassStart < Classend
-            //RoomID FK, relación de n training a 1 room
+            e.ToTable(t => t.HasCheckConstraint("CK_Trainig_StartBeforeEnd", "ClassStart < ClassEnd"));
+
+            e.Property(r => r.ClassStart).IsRequired();
+            e.Property(r => r.ClassEnd).IsRequired();
+
         });
 
         modelBuilder.Entity<Category>(e =>
