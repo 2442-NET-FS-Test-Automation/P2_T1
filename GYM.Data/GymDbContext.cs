@@ -24,18 +24,28 @@ public class GymDbContext : DbContext
     //Deeper configuration. Fluent API
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        //Falta constraints
+
         modelBuilder.Entity<Room>(e =>
         {
-            //id : unico, obligatorio, autoincremental
-            //name : max 100 length, obligatorio
-            //maxCapacity : 0 < capacidad < 35
-            //isAvailable default = true
+            e.HasKey(r => r.Id); //Marks as Primary Key
+
+            e.Property(r => r.Id).ValueGeneratedOnAdd(); //NO need to use a PK when creating new Room, automatic, autoincremental
+
+            e.Property(r => r.Name).IsRequired().HasMaxLength(100); //Required, MaxLength = 100
+
+            e.Property(r => r.MaxCapacity).IsRequired(); // Is requiered
+            e.ToTable(t => t.HasCheckConstraint(
+                "CK_Room_MaxCapacity",
+                "0 < MaxCapacity AND MaxCapacity <= 35"
+            )); //0 < MaxCapacity <= 35
+
+            e.Property(e => e.IsAvailable).HasDefaultValue(true);
         });
 
         modelBuilder.Entity<Training>(e =>
         {
-            //id unico, antoincremental, obligatorio
+            e.HasKey(e => e.Id);
+            e.Property(e => e.Id).ValueGeneratedOnAdd();
             //instructorid, es obligatorio - relación de 1 instructor por training
             //Descripcion maxLength 250 caracteres
             //ClassStart < Classend

@@ -4,6 +4,7 @@ public class Statistic
 {
     public int Id {get; set;}
     public int UserId{get; set;} //FK UserId
+    public User User  { get; set; } = default!;
     public decimal Weight {get;set;} //Weight of the person  
     public decimal Height {get;set;}
     public decimal Strength {get;set;}
