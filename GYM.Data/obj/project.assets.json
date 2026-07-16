@@ -3632,11 +3632,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\RevatureCodigo\\P2_T1\\GYM.Data\\GYM.Data.csproj",
+      "projectUniqueName": "C:\\Users\\stefa\\Codigo\\P2_T1\\GYM.Data\\GYM.Data.csproj",
       "projectName": "GYM.Data",
-      "projectPath": "D:\\RevatureCodigo\\P2_T1\\GYM.Data\\GYM.Data.csproj",
+      "projectPath": "C:\\Users\\stefa\\Codigo\\P2_T1\\GYM.Data\\GYM.Data.csproj",
       "packagesPath": "C:\\Users\\stefa\\.nuget\\packages\\",
-      "outputPath": "D:\\RevatureCodigo\\P2_T1\\GYM.Data\\obj\\",
+      "outputPath": "C:\\Users\\stefa\\Codigo\\P2_T1\\GYM.Data\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\stefa\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -3698,7 +3698,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.302/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",

@@ -2130,11 +2130,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\RevatureCodigo\\P2_T1\\GYM.Controller.Api\\GYM.Controller.Api.csproj",
+      "projectUniqueName": "C:\\Users\\stefa\\Codigo\\P2_T1\\GYM.Controller.Api\\GYM.Controller.Api.csproj",
       "projectName": "GYM.Controller.Api",
-      "projectPath": "D:\\RevatureCodigo\\P2_T1\\GYM.Controller.Api\\GYM.Controller.Api.csproj",
+      "projectPath": "C:\\Users\\stefa\\Codigo\\P2_T1\\GYM.Controller.Api\\GYM.Controller.Api.csproj",
       "packagesPath": "C:\\Users\\stefa\\.nuget\\packages\\",
-      "outputPath": "D:\\RevatureCodigo\\P2_T1\\GYM.Controller.Api\\obj\\",
+      "outputPath": "C:\\Users\\stefa\\Codigo\\P2_T1\\GYM.Controller.Api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\stefa\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -2150,8 +2150,8 @@
           "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {
-            "D:\\RevatureCodigo\\P2_T1\\GYM.Data\\GYM.Data.csproj": {
-              "projectPath": "D:\\RevatureCodigo\\P2_T1\\GYM.Data\\GYM.Data.csproj"
+            "C:\\Users\\stefa\\Codigo\\P2_T1\\GYM.Data\\GYM.Data.csproj": {
+              "projectPath": "C:\\Users\\stefa\\Codigo\\P2_T1\\GYM.Data\\GYM.Data.csproj"
             }
           }
         }
@@ -2217,7 +2217,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.302/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

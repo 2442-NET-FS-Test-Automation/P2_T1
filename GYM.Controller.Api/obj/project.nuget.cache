@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "QozahEX5hLI=",
+  "dgSpecHash": "ZId3T7cQC3g=",
   "success": true,
-  "projectFilePath": "D:\\RevatureCodigo\\P2_T1\\GYM.Controller.Api\\GYM.Controller.Api.csproj",
+  "projectFilePath": "C:\\Users\\stefa\\Codigo\\P2_T1\\GYM.Controller.Api\\GYM.Controller.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\stefa\\.nuget\\packages\\automapper\\16.2.0\\automapper.16.2.0.nupkg.sha512",
     "C:\\Users\\stefa\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
