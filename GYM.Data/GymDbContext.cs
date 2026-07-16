@@ -67,49 +67,104 @@ public class GymDbContext : DbContext
 
         });
 
+        //======= CATEGORY ======================================
         modelBuilder.Entity<Category>(e =>
         {
             //id unico, antoincremental, obligatorio
-            //Name must be unique, max length 30
-            //Description max length 255
+            //Los constaints de arriba estan en Entities/Category.cs como Data Annotations
+            e.Property(n => n.Name).HasColumnType("varchar(30)");
+            e.Property(d => d.Description).HasColumnType("varchar(255)");
         });
 
-        modelBuilder.Entity<Booking>(e =>
+        modelBuilder.Entity<Booking>(entity =>
         {
             //id unico, antoincremental, obligatorio
             //0<=totalAmount < 35/maxCapacitydDeROom
             //PaymentID FK- relacion. 1 booking a 1 payment
             //BookAt - hora actual
+
+            entity.Property(e => e.BookAt).HasColumnType("datetime");
+
+            // Relación con Training
+            entity.HasOne(b => b.Training)
+                  .WithMany(t => t.Bookings)
+                  .HasForeignKey(b => b.TrainingId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            // Relación con User
+            entity.HasOne(b => b.User)
+                  .WithMany(u => u.Bookings)
+                  .HasForeignKey(b => b.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            // Relación 1:1 con Payment
+            entity.HasOne(b => b.Payment)
+                  .WithOne(p => p.Booking)
+                  .HasForeignKey<Booking>(b => b.PaymentId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
         });
 
-        modelBuilder.Entity<Payment>(e =>
+        modelBuilder.Entity<Payment>(entity =>
         {
             //id unico, antoincremental, obligatorio
             //0 < totalAmount < MaxDecimal, precision ? decimales 2
             //PAymentType ? 
             //Status enum
             //PaymentDate - hora actual
+
+            // Especificar precisión para dinero (decimal(18,2))
+            entity.Property(e => e.TotalAmount).HasColumnType("decimal(18,2)");
+            entity.Property(e => e.PaymentDate).HasColumnType("datetime");
+
+            // Enum como String
+            entity.Property(e => e.Status)
+                  .HasConversion<string>()
+                  .HasColumnType("varchar(20)");
         });
 
-        modelBuilder.Entity<User>(e =>
+        modelBuilder.Entity<User>(entity =>
         {
             //id unico, antoincremental, obligatorio
             //email, type email, obligatorio, unico
             //phone, unico, obligatorio, maxLength 15
             //password -> Hashed, MaxLength ???
             //Role obligatorio
+
+            // Index unico
+            entity.HasIndex(e => e.Email).IsUnique();
+            entity.HasIndex(e => e.Phone).IsUnique();
+
+            entity.Property(e => e.Email).HasColumnType("nvarchar(150)");
+            entity.Property(e => e.Phone).HasColumnType("varchar(20)");
+            entity.Property(e => e.Password).HasColumnType("nvarchar(255)");
+
+            // Guardar Enum como String en lugar de Integer
+            entity.Property(e => e.Role)
+                  .HasConversion<string>()
+                  .HasColumnType("varchar(20)");
         });
 
-        modelBuilder.Entity<UserDetail>(e =>
+        modelBuilder.Entity<UserDetail>(entity =>
         {
             //id unico, antoincremental, obligatorio
             //userId FK - 1 a 1
             //name maxLenth 50, obligatorio
             //surname maxLength 50
             //join at - hora de creación
+
+            entity.Property(e => e.Name).HasColumnType("nvarchar(50)");
+            entity.Property(e => e.Surname).HasColumnType("nvarchar(50)");
+            entity.Property(e => e.JoinAt).HasColumnType("datetime2");
+
+            // Configuración Relación 1:1 con User
+            entity.HasOne(ud => ud.User)
+                  .WithOne(u => u.UserDetails)
+                  .HasForeignKey<UserDetail>(ud => ud.UserId)
+                  .OnDelete(DeleteBehavior.Cascade); // Si se borra el User, se borra su detalle
         });
 
-        modelBuilder.Entity<Statistic>(e =>
+        modelBuilder.Entity<Statistic>(entity =>
         {
             //id unico, antoincremental, obligatorio
             //UserId - 1 userId a n statistic
@@ -119,6 +174,21 @@ public class GymDbContext : DbContext
             //0'0'' < milerun < max ?. obligatorio
             //Measureat - al crear, obligatorio
 
+
+            // Configurar precisión de decimales para métricas corporales
+            entity.Property(e => e.Weight).HasColumnType("decimal(5,2)");   // Ej: 120.50 kg
+            entity.Property(e => e.Height).HasColumnType("decimal(3,2)");   // Ej: 1.85 m
+            entity.Property(e => e.Strength).HasColumnType("decimal(5,2)");
+
+            // Mapeos nativos para fecha y hora simplificadas
+            entity.Property(e => e.MileRun).HasColumnType("time");
+            entity.Property(e => e.MeasureAt).HasColumnType("date");
+
+            // Relación con User
+            entity.HasOne(s => s.User)
+                  .WithMany(u => u.Statistics)
+                  .HasForeignKey(s => s.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
         });
 
     }

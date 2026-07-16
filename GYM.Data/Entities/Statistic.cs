@@ -1,8 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace GYM.Data.Entities;
 
 public class Statistic
 {
+    [Key]
     public int Id {get; set;}
+    [Required]
     public int UserId{get; set;} //FK UserId
     public User User  { get; set; } = default!;
     public decimal Weight {get;set;} //Weight of the person  
