@@ -13,6 +13,7 @@ public class GymDbContext : DbContext
     //Classes singular, dbset plural
     //Classes -> Tables
     public DbSet<Booking> Bookings => Set<Booking>();
+    public DbSet<Category> Categories => Set<Category>();
     public DbSet<Payment> Payments => Set<Payment>();
     public DbSet<Room> Rooms => Set<Room>();
     public DbSet<Statistic> Statistics => Set<Statistic>();
@@ -39,6 +40,13 @@ public class GymDbContext : DbContext
             //Descripcion maxLength 250 caracteres
             //ClassStart < Classend
             //RoomID FK, relación de n training a 1 room
+        });
+
+        modelBuilder.Entity<Category>(e =>
+        {
+            //id unico, antoincremental, obligatorio
+            //Name must be unique, max length 30
+            //Description max length 255
         });
 
         modelBuilder.Entity<Booking>(e =>
