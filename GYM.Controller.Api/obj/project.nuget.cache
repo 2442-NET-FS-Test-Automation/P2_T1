@@ -1,20 +1,20 @@
 {
   "version": 2,
-  "dgSpecHash": "aX000aDChCs=",
+  "dgSpecHash": "HwtQ+w8txaM=",
   "success": true,
-  "projectFilePath": "D:\\RevatureCodigo\\P2_T1\\GYM.Controller.Api\\GYM.Controller.Api.csproj",
+  "projectFilePath": "C:\\Users\\angie\\OneDrive\\Documentos\\codigo miguel\\Miguel-Aranda\\week-6-7\\P2_T1\\GYM.Controller.Api\\GYM.Controller.Api.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\stefa\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.9\\microsoft.aspnetcore.openapi.10.0.9.nupkg.sha512",
-    "C:\\Users\\stefa\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512"
+    "C:\\Users\\angie\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.9\\microsoft.aspnetcore.openapi.10.0.9.nupkg.sha512",
+    "C:\\Users\\angie\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512"
   ],
   "logs": [
     {
       "code": "NU1903",
       "level": "Warning",
-      "message": "El paquete \"Microsoft.OpenApi\" 2.0.0 tiene una vulnerabilidad de gravedad alta conocida, https://github.com/advisories/GHSA-v5pm-xwqc-g5wc",
-      "projectPath": "D:\\RevatureCodigo\\P2_T1\\GYM.Controller.Api\\GYM.Controller.Api.csproj",
+      "message": "Package 'Microsoft.OpenApi' 2.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-v5pm-xwqc-g5wc",
+      "projectPath": "C:\\Users\\angie\\OneDrive\\Documentos\\codigo miguel\\Miguel-Aranda\\week-6-7\\P2_T1\\GYM.Controller.Api\\GYM.Controller.Api.csproj",
       "warningLevel": 1,
-      "filePath": "D:\\RevatureCodigo\\P2_T1\\GYM.Controller.Api\\GYM.Controller.Api.csproj",
+      "filePath": "C:\\Users\\angie\\OneDrive\\Documentos\\codigo miguel\\Miguel-Aranda\\week-6-7\\P2_T1\\GYM.Controller.Api\\GYM.Controller.Api.csproj",
       "libraryId": "Microsoft.OpenApi",
       "targetGraphs": [
         "net10.0"
