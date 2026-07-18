@@ -3627,24 +3627,31 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\alann\\.nuget\\packages\\": {}
+    "C:\\Users\\angie\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\alann\\Desktop\\Proyecto2\\P2_T1\\GYM.Data\\GYM.Data.csproj",
+      "projectUniqueName": "C:\\Users\\angie\\OneDrive\\Documentos\\codigo miguel\\Miguel-Aranda\\week-6-7\\P2_T1\\GYM.Data\\GYM.Data.csproj",
       "projectName": "GYM.Data",
-      "projectPath": "C:\\Users\\alann\\Desktop\\Proyecto2\\P2_T1\\GYM.Data\\GYM.Data.csproj",
-      "packagesPath": "C:\\Users\\alann\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\alann\\Desktop\\Proyecto2\\P2_T1\\GYM.Data\\obj\\",
+      "projectPath": "C:\\Users\\angie\\OneDrive\\Documentos\\codigo miguel\\Miguel-Aranda\\week-6-7\\P2_T1\\GYM.Data\\GYM.Data.csproj",
+      "packagesPath": "C:\\Users\\angie\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\angie\\OneDrive\\Documentos\\codigo miguel\\Miguel-Aranda\\week-6-7\\P2_T1\\GYM.Data\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\alann\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\angie\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

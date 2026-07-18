@@ -22,5 +22,5 @@ public class User
     public List<Training> Trainigs {get;set;} = new();
     public UserDetail UserDetails  { get; set; } = default!;
     public List<Statistic> Statistics { get; set; }  = new();
-
+    public List<User_Achievements> UserAchievements {get; set;} = new();
 }

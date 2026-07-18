@@ -118,7 +118,7 @@ public class GymDbContext : DbContext
             entity.Property(e => e.PaymentDate).HasColumnType("datetime");
 
             // Enum como String
-            entity.Property(e => e.Status)
+            entity.Property(e => e.StatusPayment)
                   .HasConversion<string>()
                   .HasColumnType("varchar(20)");
         });
