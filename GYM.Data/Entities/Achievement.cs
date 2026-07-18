@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 namespace GYM.Data.Entities;
-public class Achievements
+public class Achievement
 {
     [Key]
     public int Id {get; set;}
@@ -13,5 +13,6 @@ public class Achievements
     public int Points {get; set;}
     [MaxLength(50)]
     public string Condition_type {get; set;} = default!;
-    public int Condition_value {get; set;}
+    public List<User_Achievement> UserAchievements {get; set;} = new();
+
 }
