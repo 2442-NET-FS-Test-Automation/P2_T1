@@ -32,3 +32,5 @@ See my own — and only my own. As a consumer, I can view my transaction history
 Historial de entrenamientos.
 
 DB Diagram -> https://lucid.app/lucidchart/73bb86a6-e723-4efb-811b-0669394f345e/edit?viewport_loc=-278%2C-267%2C1459%2C752%2C0_0&invitationId=inv_f2229796-bf4e-443a-8a98-1466cdfa8b5f 
+
+Figma Mockup -> https://www.figma.com/design/F1GREzLiRTwrRopCkzEAXh/GymQuest?node-id=0-1&t=OZw1mEOewxiSBiKj-1
