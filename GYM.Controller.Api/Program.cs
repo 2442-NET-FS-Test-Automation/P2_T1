@@ -1,8 +1,18 @@
+using GYM.Data;
 using Serilog;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+
+//Here we get our connection "String" from our Json "appsettings.json"
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+//Connection with SQL server
+builder.Services.AddDbContext<GymDbContext>(options =>
+    options.UseSqlServer(connectionString));
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console() // Write to console, and write to a file - starting a new file each day.

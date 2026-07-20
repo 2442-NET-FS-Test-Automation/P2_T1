@@ -198,9 +198,9 @@ public DbSet<User> Users => Set<User>();
         );
 
         modelBuilder.Entity<Achievement>().HasData(
-            new Achievement {Id = 1, Name = "Newbie", Description="Complete your first workout", Points=5, Condition_type="workouts_completed"},
-            new Achievement {Id = 2, Name = "Rocky Balboa", Description="Run 5 miles", Points=10, Condition_type="miles_runned"},
-            new Achievement {Id = 3, Name = "Killer machine!", Description="Complete 5 workouts", Points=30, Condition_type="workouts_completed"}
+            new Achievement {Id = 1, Name = "Newbie", Description="Complete your first workout", Points=5, Condition_type="workouts_completed", Icon="fa-trophy"},
+            new Achievement {Id = 2, Name = "Rocky Balboa", Description="Run 5 miles", Points=10, Condition_type="miles_runned", Icon="fa-star"},
+            new Achievement {Id = 3, Name = "Killer machine!", Description="Complete 5 workouts", Points=30, Condition_type="workouts_completed", Icon="fa-Medal"}
         );
 
         //==========================================
