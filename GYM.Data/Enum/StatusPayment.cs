@@ -1,5 +1,5 @@
 namespace GYM.Data.Entities;
-ublic enum StatusPayment
+public enum StatusPayment
 {
     Pending, //Yet to pay
     Complete, //Payment Successfull

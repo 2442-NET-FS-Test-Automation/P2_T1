@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using GYM.Data.Entities;
 using Microsoft.EntityFrameworkCore.Internal;
+using System.Dynamic;
+using System.Reflection.Metadata;
 
 namespace GYM.Data;
 
@@ -20,6 +22,8 @@ public class GymDbContext : DbContext
     public DbSet<Training> Trainings => Set<Training>();
     public DbSet<User> Users => Set<User>();
     public DbSet<UserDetail> UserDetails => Set<UserDetail>();
+    public DbSet<Achievement> Achievement => Set<Achievement>();
+    public DbSet<User_Achievement> UserAchivement => Set<User_Achievement>();
 
     //Deeper configuration. Fluent API
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -118,7 +122,7 @@ public class GymDbContext : DbContext
             entity.Property(e => e.PaymentDate).HasColumnType("datetime");
 
             // Enum como String
-            entity.Property(e => e.Status)
+            entity.Property(e => e.StatusPayment)
                   .HasConversion<string>()
                   .HasColumnType("varchar(20)");
         });
@@ -190,6 +194,49 @@ public class GymDbContext : DbContext
                   .HasForeignKey(s => s.UserId)
                   .OnDelete(DeleteBehavior.Cascade);
         });
+
+        modelBuilder.Entity<Achievement>(entity =>
+        {
+            // relation with userAchievements -> many users can have many and different achievements
+            entity.HasMany(e => e.UserAchievements)
+                    .WithOne(ua => ua.Achievement)
+                    .HasForeignKey(ua => ua.AchievementId)
+                    .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<User_Achievement>(entity =>
+        {
+            entity.HasOne(ua => ua.User)
+                .WithMany(u => u.UserAchievements)
+                .HasForeignKey(ua => ua.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(ua => ua.Achievement)
+                .WithMany(a => a.UserAchievements)
+                .HasForeignKey(ua => ua.AchievementId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+
+        // now it's time to add default data
+
+        modelBuilder.Entity<User>().HasData(
+            new User {Id = 1, Email="aranda.castillo.miguel@gmail.com", Phone="6645709069", Password="hola123", Role=Role.User},
+            new User {Id = 2, Email="juanjimenez@example.com", Phone="8885748622", Password="juan123", Role=Role.Trainer}
+        );
+
+        modelBuilder.Entity<UserDetail>().HasData(
+            new UserDetail {Id = 1, UserId=1, Name="Miguel Angel", Surname="Aranda Castillo", JoinAt=new DateTime(2025, 1, 15, 0, 0, 0, DateTimeKind.Utc)},
+            new UserDetail {Id = 2, UserId=2, Name="Juan", Surname="Jimenez Ortega", JoinAt=new DateTime(2024, 1, 15, 0, 0, 0, DateTimeKind.Utc)}
+
+        );
+
+        modelBuilder.Entity<Achievement>().HasData(
+            new Achievement {Id = 1, Name = "Newbie", Description="Complete your first workout", Points=5, Condition_type="workouts_completed"},
+            new Achievement {Id = 2, Name = "Rocky Balboa", Description="Run 5 miles", Points=10, Condition_type="miles_runned"},
+            new Achievement {Id = 3, Name = "Killer machine!", Description="Complete 5 workouts", Points=30, Condition_type="workouts_completed"}
+        );
+
 
     }
 }
