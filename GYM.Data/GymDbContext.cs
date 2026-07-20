@@ -14,127 +14,119 @@ public class GymDbContext : DbContext
 
     //Classes singular, dbset plural
     //Classes -> Tables
-    public DbSet<Booking> Bookings => Set<Booking>();
-    public DbSet<Category> Categories => Set<Category>();
-    public DbSet<Payment> Payments => Set<Payment>();
-    public DbSet<Room> Rooms => Set<Room>();
-    public DbSet<Statistic> Statistics => Set<Statistic>();
-    public DbSet<Training> Trainings => Set<Training>();
-    public DbSet<User> Users => Set<User>();
+public DbSet<User> Users => Set<User>();
     public DbSet<UserDetail> UserDetails => Set<UserDetail>();
-    public DbSet<Achievement> Achievement => Set<Achievement>();
-    public DbSet<User_Achievement> UserAchivement => Set<User_Achievement>();
+    public DbSet<Training> Trainings => Set<Training>();
+    public DbSet<Exercise> Exercises => Set<Exercise>();
+    public DbSet<TrainingExercises> TrainingExercises => Set<TrainingExercises>();
+    public DbSet<Booking> Bookings => Set<Booking>();
+    public DbSet<Achievement> Achievements => Set<Achievement>();
+    public DbSet<User_Achievement> UserAchievements => Set<User_Achievement>();
+    public DbSet<Statistic> Statistics => Set<Statistic>();
 
     //Deeper configuration. Fluent API
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 
-        modelBuilder.Entity<Room>(e =>
-        {
-            e.HasKey(r => r.Id); //Marks as Primary Key
-            e.Property(r => r.Id).ValueGeneratedOnAdd(); //NO need to use a PK when creating new Room, automatic, autoincremental
+        // ==========================================
+        // 1. RELACIÓN 1:1 (User <-> UserDetails)
+        // ==========================================
+        modelBuilder.Entity<User>()
+            .HasOne(u => u.UserDetail)
+            .WithOne(ud => ud.User)
+            .HasForeignKey<UserDetail>(ud => ud.UserId)
+            .OnDelete(DeleteBehavior.Cascade); // Si se elimina el User, se eliminan sus detalles
+        
+        // ==========================================
+        // 2. RELACIONES 1:N (User & Training <-> Bookings)
+        // ==========================================
+        modelBuilder.Entity<Booking>()
+            .HasOne(b => b.User)
+            .WithMany(u => u.Bookings)
+            .HasForeignKey(b => b.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-            e.Property(r => r.Name).IsRequired().HasMaxLength(100); //Required, MaxLength = 100
+        modelBuilder.Entity<Booking>()
+            .HasOne(b => b.Training)
+            .WithMany(t => t.Bookings)
+            .HasForeignKey(b => b.TrainingId)
+            .OnDelete(DeleteBehavior.Restrict); // Evita borrado en cascada para mantener el historial intacto        
 
-            e.Property(r => r.MaxCapacity).IsRequired(); // Is requiered
-            e.ToTable(t => t.HasCheckConstraint(
-                "CK_Room_MaxCapacity",
-                "0 < MaxCapacity AND MaxCapacity <= 35"
-            )); //0 < MaxCapacity <= 35
+        // ==========================================
+        // 3. RELACIÓN M:N (Training <-> Exercise) mediante TrainingExercises
+        // ==========================================
+        modelBuilder.Entity<TrainingExercises>()
+            .HasOne(te => te.Training)
+            .WithMany(t => t.TrainingExercises)
+            .HasForeignKey(te => te.TrainingId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-            e.Property(e => e.IsAvailable).HasDefaultValue(true);
-        });
+        modelBuilder.Entity<TrainingExercises>()
+            .HasOne(te => te.Exercise)
+            .WithMany(e => e.TrainingExercises)
+            .HasForeignKey(te => te.ExerciseId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-        modelBuilder.Entity<Training>(e =>
-        {
-            e.HasKey(r => r.Id);
-            e.Property(r => r.Id).ValueGeneratedOnAdd();
-            //instructorid, es obligatorio - relación de 1 instructor por training
-            
-            //trainer 
-            e.HasOne(u => u.Trainer).WithMany(c => c.Trainigs).HasForeignKey(o => o.TrainerId);
+        // ==========================================
+        // 4. RELACIÓN M:N (User <-> Achievements) mediante UserAchievements
+        // ==========================================
+        modelBuilder.Entity<User_Achievement>()
+            .HasOne(ua => ua.User)
+            .WithMany(u => u.UserAchievements)
+            .HasForeignKey(ua => ua.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-            //Category relationship. 
-            e.HasOne(u => u.Category).WithMany(c => c.Trainings).HasForeignKey(o => o.CategoryID);
+        modelBuilder.Entity<User_Achievement>()
+            .HasOne(ua => ua.Achievement)
+            .WithMany(a => a.UserAchievements)
+            .HasForeignKey(ua => ua.AchievementId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-            //Room relationship
-            e.HasOne(u => u.Room).WithMany(c => c.Trainings).HasForeignKey(o => o.RoomId);
+        // ==========================================
+        // 5. RELACIÓN 1:N (User <-> Statistics)
+        // ==========================================
+        modelBuilder.Entity<Statistic>()
+            .HasOne(s => s.User)
+            .WithMany(u => u.Statistics)
+            .HasForeignKey(s => s.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-            //Descripcion maxLength 250 caracteres
-            e.Property(r => r.Description).HasMaxLength(250);
+        // ==========================================
+        // 6. MAPEO DE ENUMS A STRINGS
+        // ==========================================
+        // Guardar Enums como Texto en SQL Server facilita la lectura al inspeccionar la BD
+        modelBuilder.Entity<User>()
+            .Property(u => u.Role)
+            .HasConversion<string>();
 
-            //ClassStart < Classend
-            e.ToTable(t => t.HasCheckConstraint("CK_Trainig_StartBeforeEnd", "ClassStart < ClassEnd"));
+        modelBuilder.Entity<UserDetail>()
+            .Property(ud => ud.Gender)
+            .HasConversion<string>();
 
-            e.Property(r => r.ClassStart).IsRequired();
-            e.Property(r => r.ClassEnd).IsRequired();
+        modelBuilder.Entity<Training>()
+            .Property(t => t.Place)
+            .HasConversion<string>();
 
-        });
+        modelBuilder.Entity<Booking>()
+            .Property(b => b.Status)
+            .HasConversion<string>();
 
-        //======= CATEGORY ======================================
-        modelBuilder.Entity<Category>(e =>
-        {
-            //id unico, antoincremental, obligatorio
-            //Los constaints de arriba estan en Entities/Category.cs como Data Annotations
-            e.Property(n => n.Name).HasColumnType("varchar(30)");
-            e.Property(d => d.Description).HasColumnType("varchar(255)");
-        });
+        // ==========================================
+        // 7. ÍNDICES 
+        // ==========================================
+        // Indice de Unicidad para Emails (Evita registros duplicados a nivel BD)
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
 
-        modelBuilder.Entity<Booking>(entity =>
-        {
-            //id unico, antoincremental, obligatorio
-            //0<=totalAmount < 35/maxCapacitydDeROom
-            //PaymentID FK- relacion. 1 booking a 1 payment
-            //BookAt - hora actual
+        // Índice no clave para optimizar búsquedas frecuentes por ubicación de rutinas
+        modelBuilder.Entity<Training>()
+            .HasIndex(t => t.Place)
+            .HasDatabaseName("IX_Trainings_Place");
 
-            entity.Property(e => e.BookAt).HasColumnType("datetime");
-
-            // Relación con Training
-            entity.HasOne(b => b.Training)
-                  .WithMany(t => t.Bookings)
-                  .HasForeignKey(b => b.TrainingId)
-                  .OnDelete(DeleteBehavior.Cascade);
-
-            // Relación con User
-            entity.HasOne(b => b.User)
-                  .WithMany(u => u.Bookings)
-                  .HasForeignKey(b => b.UserId)
-                  .OnDelete(DeleteBehavior.Cascade);
-
-            // Relación 1:1 con Payment
-            entity.HasOne(b => b.Payment)
-                  .WithOne(p => p.Booking)
-                  .HasForeignKey<Booking>(b => b.PaymentId)
-                  .OnDelete(DeleteBehavior.Cascade);
-
-        });
-
-        modelBuilder.Entity<Payment>(entity =>
-        {
-            //id unico, antoincremental, obligatorio
-            //0 < totalAmount < MaxDecimal, precision ? decimales 2
-            //PAymentType ? 
-            //Status enum
-            //PaymentDate - hora actual
-
-            // Especificar precisión para dinero (decimal(18,2))
-            entity.Property(e => e.TotalAmount).HasColumnType("decimal(18,2)");
-            entity.Property(e => e.PaymentDate).HasColumnType("datetime");
-
-            // Enum como String
-            entity.Property(e => e.StatusPayment)
-                  .HasConversion<string>()
-                  .HasColumnType("varchar(20)");
-        });
 
         modelBuilder.Entity<User>(entity =>
         {
-            //id unico, antoincremental, obligatorio
-            //email, type email, obligatorio, unico
-            //phone, unico, obligatorio, maxLength 15
-            //password -> Hashed, MaxLength ???
-            //Role obligatorio
-
             // Index unico
             entity.HasIndex(e => e.Email).IsUnique();
             entity.HasIndex(e => e.Phone).IsUnique();
@@ -142,43 +134,17 @@ public class GymDbContext : DbContext
             entity.Property(e => e.Email).HasColumnType("nvarchar(150)");
             entity.Property(e => e.Phone).HasColumnType("varchar(20)");
             entity.Property(e => e.Password).HasColumnType("nvarchar(255)");
-
-            // Guardar Enum como String en lugar de Integer
-            entity.Property(e => e.Role)
-                  .HasConversion<string>()
-                  .HasColumnType("varchar(20)");
         });
 
         modelBuilder.Entity<UserDetail>(entity =>
         {
-            //id unico, antoincremental, obligatorio
-            //userId FK - 1 a 1
-            //name maxLenth 50, obligatorio
-            //surname maxLength 50
-            //join at - hora de creación
-
             entity.Property(e => e.Name).HasColumnType("nvarchar(50)");
             entity.Property(e => e.Surname).HasColumnType("nvarchar(50)");
             entity.Property(e => e.JoinAt).HasColumnType("datetime2");
-
-            // Configuración Relación 1:1 con User
-            entity.HasOne(ud => ud.User)
-                  .WithOne(u => u.UserDetails)
-                  .HasForeignKey<UserDetail>(ud => ud.UserId)
-                  .OnDelete(DeleteBehavior.Cascade); // Si se borra el User, se borra su detalle
         });
 
         modelBuilder.Entity<Statistic>(entity =>
         {
-            //id unico, antoincremental, obligatorio
-            //UserId - 1 userId a n statistic
-            // 0 < Weight  < MaxDecimal, precision ? decimales 2. obligatorio
-            // 0 < maxHeight  < MaxDecimal, precision ? decimales 2. obligatorio
-            // 0 < strength  < MaxDecimal, precision ? decimales 2. obligatorio
-            //0'0'' < milerun < max ?. obligatorio
-            //Measureat - al crear, obligatorio
-
-
             // Configurar precisión de decimales para métricas corporales
             entity.Property(e => e.Weight).HasColumnType("decimal(5,2)");   // Ej: 120.50 kg
             entity.Property(e => e.Height).HasColumnType("decimal(3,2)");   // Ej: 1.85 m

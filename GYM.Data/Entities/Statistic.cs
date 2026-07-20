@@ -14,4 +14,5 @@ public class Statistic
     public decimal Strength {get;set;}
     public TimeOnly MileRun{get;set;}
     public DateOnly MeasureAt{get;set;} //When were the measurements taken
+    public int age {get; set;}
 }

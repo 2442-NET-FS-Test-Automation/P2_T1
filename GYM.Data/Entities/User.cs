@@ -1,23 +1,36 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GYM.Data.Entities;
 
+[Table("Users")]
 public class User
 {
     [Key]
-    public int Id {get;  set;}
+    public int Id { get; set; }
+
     [Required]
+    [StringLength(150)]
+    [Column(TypeName = "nvarchar(150)")]
     [EmailAddress]
-    public string Email {get; set;} = ""; //Email
+    public string Email { get; set; } = string.Empty;
+
     [Required]
-    public string Phone{get; set;} = ""; //Phone number
+    [StringLength(20)]
+    [Column(TypeName = "varchar(20)")]
+    public string Phone { get; set; } = string.Empty;
+
     [Required]
-    public string Password {get; set;} = "";
+    [StringLength(255)]
+    [Column(TypeName = "nvarchar(255)")]
+    public string Password { get; set; } = string.Empty;
+
     [Required]
-    public Role Role {get; set;} //Role of the user: User or Trainer
-    public List<Booking> Bookings  { get; set; } = new();
-    public List<Training> Trainigs {get;set;} = new();
-    public UserDetail UserDetails  { get; set; } = default!;
-    public List<Statistic> Statistics { get; set; }  = new();
-    public List<User_Achievement> UserAchievements {get; set;} = new();
+    public Role Role { get; set; } = Role.User;
+
+    // Relaciones de navegación
+    public UserDetail? UserDetail { get; set; }
+    public List<Booking> Bookings { get; set; } = new ();
+    public List<User_Achievement> UserAchievements { get; set; } = new ();
+    public List<Statistic> Statistics { get; set; } = new ();
 }

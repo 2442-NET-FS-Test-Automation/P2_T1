@@ -1,22 +1,38 @@
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GYM.Data.Entities;
 
+[Table("Trainings")]
 public class Training
 {
-    public int Id {get; set;} //PK
-     public int TrainerId {get;set;} //FK - who is giving the training
-    public User Trainer {get;set;} = default!; //Navigation property
-    public int CategoryID {get; set; }  //Category FK
-    public Category Category {get; set;} = default!; //Navigation property
-    public int RoomId {get; set;} //FK
-    public Room Room {get;set;} = default!; //Reference navigation
+    [Key]
+    public int Id { get; set; }
 
-    public StatusTraining StatusTraining {get;set;} //Status of training
-    public string Description {get; set; } = ""; //Description of the training
-    public DateTime ClassStart {get; set; } //When it starts
-    public DateTime ClassEnd {get; set;} //WHen it ends
-    public int TotalAttendees {get; set;} //How many are going
-    public List<Booking> Bookings{get;set;} = new(); //navigation property for all the bookings for the trainings
+    [Required]
+    [StringLength(50)]
+    public string Difficulty { get; set; } = string.Empty;
 
+    public int Calories { get; set; }
+
+    [Required]
+    public Place Place { get; set; }
+
+    [StringLength(255)]
+    [Column(TypeName = "varchar(255)")]
+    public string Description { get; set; } = string.Empty;
+
+    public TimeOnly EstimatedTime { get; set; }
+
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    [Required]
+    [StringLength(120)]
+    [Column(TypeName = "varchar(120)")]
+    public string TrainingName { get; set; } = string.Empty;
+
+    // Relaciones de navegación
+    public List<TrainingExercises> TrainingExercises { get; set; } = new ();
+    public List<Booking> Bookings { get; set; } = new ();
 }
