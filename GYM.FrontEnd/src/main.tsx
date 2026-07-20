@@ -1,10 +1,10 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import Home from './Home' // <-- Aquí importas tu componente (ajusta la ruta si está en otra carpeta)
+import 'bootstrap/dist/css/bootstrap.min.css' // Si vas a usar Bootstrap
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <Home /> {/* <-- Aquí cambias lo que venía por tu componente Main */}
+  </React.StrictMode>,
 )
