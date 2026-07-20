@@ -1,14 +1,21 @@
 using Microsoft.EntityFrameworkCore;
 using GYM.Data.Entities;
+using GYM.Data;
 using Serilog;
 using GYM.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// remember to change the connection string depending on your configuration
-// miguel pass: libraryPass1!
-var conn_string = "Server=localhost,1433;Database=LibraryMinimalDb;User Id=sa;Password=libraryPass1!;TrustServerCertificate=true";
+
+
+//Here we get our connection "String" from our Json "appsettings.json"
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+//Connection with SQL server
+builder.Services.AddDbContext<GymDbContext>(options =>
+    options.UseSqlServer(connectionString));
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console() // Write to console, and write to a file - starting a new file each day.

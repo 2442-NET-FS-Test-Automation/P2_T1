@@ -1,0 +1,11 @@
+How to make migrations?
+
+Create one:
+dotnet ef migrations add SeedInitialCatalog --project GYM.Data --startup-project GYM.Controller.Api
+
+Update the migrations 
+USE THIS TO GET THE MIGRATIONS FROM GITHUB
+dotnet ef database update --project GYM.Data --startup-project GYM.Controller.Api
+
+Posible error: falta libreria
+dotnet add GYM.Controller.Api package Microsoft.EntityFrameworkCore.Design
