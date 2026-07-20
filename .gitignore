@@ -12,6 +12,9 @@ dist/
 build/
 
 # dotenv files
+**/bin/
+**/obj/
+
 .env
 
 # User-specific files
