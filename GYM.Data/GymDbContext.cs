@@ -192,8 +192,4 @@ public class GymDbContext : DbContext
         });
 
     }
-
-
-
-
 }

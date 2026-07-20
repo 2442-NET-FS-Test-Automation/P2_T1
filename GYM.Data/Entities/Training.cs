@@ -11,6 +11,8 @@ public class Training
     public Category Category {get; set;} = default!; //Navigation property
     public int RoomId {get; set;} //FK
     public Room Room {get;set;} = default!; //Reference navigation
+
+    public StatusTraining StatusTraining {get;set;} //Status of training
     public string Description {get; set; } = ""; //Description of the training
     public DateTime ClassStart {get; set; } //When it starts
     public DateTime ClassEnd {get; set;} //WHen it ends
