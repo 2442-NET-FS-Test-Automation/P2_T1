@@ -1,19 +1,31 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using GYM.Data.Entities;
+
 namespace GYM.Data.Entities;
 
+[Table("Bookings")]
 public class Booking
 {
     [Key]
-    public int Id {get; set;} //PK
+    public int Id { get; set; }
+
     [Required]
-    public int TrainingId{get;set;} //FK What training is booked
-    public Training Training{get;set;} = default!;
+    public int TrainingId { get; set; }
+
+    [ForeignKey(nameof(TrainingId))]
+    public Training Training { get; set; } = null!;
+
     [Required]
-    public int UserId{get; set;} //FK user
-    public User User{get;set;} = default!;
+    public int UserId { get; set; }
+
+    [ForeignKey(nameof(UserId))]
+    public User User { get; set; } = null!;
+
     [Required]
-    public int PaymentId {get; set;} //FK payment
-    public Payment Payment{get;set;} = default!;
-    [Required]
-    public DateTime BookAt{get; set;} = DateTime.Now; //When was the class booked
+    public BookingStatus Status { get; set; } = BookingStatus.Book;
+
+    public DateTime ExerciseTime { get; set; }
+
+    public DateTime? DoneAt { get; set; }
 }

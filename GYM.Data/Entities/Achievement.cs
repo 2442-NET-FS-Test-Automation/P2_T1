@@ -13,6 +13,7 @@ public class Achievement
     public int Points {get; set;}
     [MaxLength(50)]
     public string Condition_type {get; set;} = default!;
+    public int ConditionValue { get; set; }
     public List<User_Achievement> UserAchievements {get; set;} = new();
 
 }
