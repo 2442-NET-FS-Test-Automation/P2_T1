@@ -188,7 +188,7 @@ public DbSet<User> Users => Set<User>();
 
         modelBuilder.Entity<User>().HasData(
             new User {Id = 1, Email="aranda.castillo.miguel@gmail.com", Phone="6645709069", Password="hola123", Role=Role.User},
-            new User {Id = 2, Email="juanjimenez@example.com", Phone="8885748622", Password="juan123", Role=Role.Trainer}
+            new User {Id = 2, Email="trainer@example.com", Phone="8885748622", Password="juan123", Role=Role.Trainer}
         );
 
         modelBuilder.Entity<UserDetail>().HasData(
@@ -201,6 +201,104 @@ public DbSet<User> Users => Set<User>();
             new Achievement {Id = 1, Name = "Newbie", Description="Complete your first workout", Points=5, Condition_type="workouts_completed"},
             new Achievement {Id = 2, Name = "Rocky Balboa", Description="Run 5 miles", Points=10, Condition_type="miles_runned"},
             new Achievement {Id = 3, Name = "Killer machine!", Description="Complete 5 workouts", Points=30, Condition_type="workouts_completed"}
+        );
+
+        //==========================================
+        // Exercise Seed Data
+        //==========================================
+        modelBuilder.Entity<Exercise>().HasData(
+            new Exercise 
+            { 
+                Id = 1, 
+                Name = "Flexiones de Pecho", 
+                Description = "Flexiones estándar manteniendo la espalda recta.", 
+                VisualReferenceUrl = "https://example.com/pushups.gif", 
+                Sets = 4, 
+                Reps = 15 
+            },
+            new Exercise 
+            { 
+                Id = 2, 
+                Name = "Sentadillas", 
+                Description = "Sentadillas libres bajando a 90 grados.", 
+                VisualReferenceUrl = "https://example.com/squats.gif", 
+                Sets = 4, 
+                Reps = 20 
+            },
+            new Exercise 
+            { 
+                Id = 3, 
+                Name = "Curl de Biceps con Mancuerna", 
+                Description = "Levantamiento controlado de pesas para bíceps.", 
+                VisualReferenceUrl = "https://example.com/biceps.gif", 
+                Sets = 3, 
+                Reps = 12 
+            },
+            new Exercise 
+            { 
+                Id = 4, 
+                Name = "Plancha Abdominal", 
+                Description = "Mantener la postura isométrica para fuerza de core.", 
+                VisualReferenceUrl = "https://example.com/plank.gif", 
+                Sets = 3, 
+                Reps = 1 // Representa 1 minuto por set
+            }
+        );
+
+        //==========================================
+        // Training (Rutinas) Seed Data
+        //==========================================
+        modelBuilder.Entity<Training>().HasData(
+            new Training
+            {
+                Id = 1,
+                TrainingName = "Rutina Full Body Principiantes",
+                Difficulty = "Fácil",
+                Calories = 250,
+                Place = Place.Home,
+                Description = "Rutina básica ideal para iniciar en casa sin equipo pesado.",
+                EstimatedTime = new TimeOnly(0, 30, 0), // 30 minutos
+                CreatedAt = new DateTime(2026, 7, 1, 0, 0, 0, DateTimeKind.Utc)
+            },
+            new Training
+            {
+                Id = 2,
+                TrainingName = "Fuerza e Hipertrofia de Brazos",
+                Difficulty = "Intermedio",
+                Calories = 400,
+                Place = Place.GYM,
+                Description = "Entrenamiento enfocado en aumentar volumen y fuerza muscular.",
+                EstimatedTime = new TimeOnly(0, 45, 0), // 45 minutos
+                CreatedAt = new DateTime(2026, 7, 1, 0, 0, 0, DateTimeKind.Utc)
+            },
+            new Training
+            {
+                Id = 3,
+                TrainingName = "Desafío Cardio & Core Exterior",
+                Difficulty = "Avanzado",
+                Calories = 600,
+                Place = Place.Outdoors,
+                Description = "Entrenamiento de alta intensidad al aire libre para quemar grasa.",
+                EstimatedTime = new TimeOnly(1, 0, 0), // 1 hora
+                CreatedAt = new DateTime(2026, 7, 1, 0, 0, 0, DateTimeKind.Utc)
+            }
+        );
+
+        //==========================================
+        // TrainingExercises (Pivote M:N) Seed Data
+        //==========================================
+        modelBuilder.Entity<TrainingExercises>().HasData(
+            // Rutina 1 (Full Body) -> Contiene Flexiones (1) y Sentadillas (2)
+            new TrainingExercises { Id = 1, TrainingId = 1, ExerciseId = 1 },
+            new TrainingExercises { Id = 2, TrainingId = 1, ExerciseId = 2 },
+
+            // Rutina 2 (Brazos) -> Contiene Flexiones (1) y Curl de Biceps (3)
+            new TrainingExercises { Id = 3, TrainingId = 2, ExerciseId = 1 },
+            new TrainingExercises { Id = 4, TrainingId = 2, ExerciseId = 3 },
+
+            // Rutina 3 (Cardio & Core) -> Contiene Sentadillas (2) y Plancha (4)
+            new TrainingExercises { Id = 5, TrainingId = 3, ExerciseId = 2 },
+            new TrainingExercises { Id = 6, TrainingId = 3, ExerciseId = 4 }
         );
 
 
