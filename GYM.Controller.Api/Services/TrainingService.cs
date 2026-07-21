@@ -1,5 +1,6 @@
 
 
+using Azure.Core.Pipeline;
 using GYM.Controller.Api.DTOs;
 using GYM.Data.Entities;
 using GYM.Data.Repositories;
@@ -7,11 +8,11 @@ using GYM.Data.Repositories;
 namespace GYM.Controller.Api.Services;
 
 //Repo Layer
-public class ExerciseService : IExerciseService
+public class TrainingService : ITrainingService
 { 
-    private readonly IExerciseRepository _repository;
+    private readonly ITrainingRepository _repository;
 
-    public ExerciseService(IExerciseRepository repository)
+    public TrainingService(ITrainingRepository repository)
     {
         _repository = repository;
     }
@@ -37,9 +38,9 @@ public class ExerciseService : IExerciseService
         
     }
 
-    public async Task<ExerciseDTO?> GetExerciseByName(string name)
+    public async Task<ExerciseDTO?> GetExerciseById(int Id)
     {
-        var exercise = await _repository.GetExerciseByName(name);
+        var exercise = await _repository.GetExerciseById(Id);
 
         if(exercise is null)
             return null;
@@ -85,5 +86,37 @@ public class ExerciseService : IExerciseService
 
         return dbExerciseDTO;
         
+    }
+
+    public Task<bool> DeleteExerciseByIdAsync(int ExerciseId)
+    {
+        return _repository.RemoveExercise(ExerciseId);
+    }
+
+    public async Task<TrainingDTO> GetTrainingDTOAsync(int id)
+    {
+        var training = await _repository.GetTrainingById(id);
+
+        if(training is null)
+            return null;
+        
+        List<ExerciseDTO> exercises = new();
+        TrainingDTO trainingDTO = new TrainingDTO
+        {
+            Id = training.Id,
+            TrainingName = training.TrainingName,
+            Difficulty = training.Difficulty,
+            Calories = training.Calories,
+            Description = training.Description,
+            EstimatedTime = training.EstimatedTime,
+            CreatedAt = training.CreatedAt,
+            ExercisesId = training.TrainingExercises.Select(i => (int?)i.Id).ToList()
+        };
+        return trainingDTO;
+    }
+
+    public Task<TrainingDTO> AddTrainingAsync(TrainingDTO training)
+    {
+        throw new NotImplementedException();
     }
 }

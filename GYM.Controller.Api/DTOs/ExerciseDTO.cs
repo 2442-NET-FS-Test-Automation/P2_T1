@@ -1,6 +1,3 @@
-
-using Microsoft.Identity.Client;
-
 namespace GYM.Controller.Api.DTOs;
 
 public class ExerciseDTO

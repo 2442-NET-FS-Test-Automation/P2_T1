@@ -11,9 +11,9 @@ using Microsoft.Extensions.Caching.Memory;
 [Route("api/[Controller]")] //route base
 public class TrainingController : ControllerBase
 {
-    private readonly IExerciseService _service;
+    private readonly ITrainingService _service;
     private readonly IMemoryCache _cache;
-    public TrainingController(IExerciseService service, IMemoryCache cache)
+    public TrainingController(ITrainingService service, IMemoryCache cache)
     {
         _service = service;
         _cache = cache;
@@ -35,15 +35,10 @@ public class TrainingController : ControllerBase
 
     }
 
-    [HttpGet("{name}")]
-    public async Task<ActionResult<ExerciseDTO>> GetExerciseByName(string name)
+    [HttpGet("ExerciseByName/{id}")]
+    public async Task<ActionResult<ExerciseDTO>> GetExerciseByName(int id)
     {
-        
-        if(string.IsNullOrWhiteSpace(name)) //Si name es vacio return null
-            return NotFound();
-
-        string nombre = name.Trim();
-        var dto = await _service.GetExerciseByName(nombre);
+        var dto = await _service.GetExerciseById(id);
 
         return dto is null ? NotFound() : Ok(dto);
     }
@@ -52,13 +47,46 @@ public class TrainingController : ControllerBase
     //Falta poner quien puede acceder a este endpoint !!!!!!!!!!!!!!!!!
     public async Task<ActionResult<ExerciseDTO>> AddExercise(ExerciseDTO newExercise)
     {
-        ExerciseDTO newExerciseDto = await _service.AddExerciseAsync(newExercise);
+        ExerciseDTO newExerciseDto = await _service.AddExerciseAsync(newExercise);  
         //_cache.Remove("Exercises:all"); //Se borra el cache
 
         return CreatedAtAction(
             nameof(GetExerciseByName),
             new {name = newExercise.Name},
             newExerciseDto);
+
+    }
+
+    //To delete by exercise by their id
+    [HttpDelete("Exercise")]
+    public async Task<ActionResult> DeleteExerciseById(int id)
+    {
+        bool isDeleted = await _service.DeleteExerciseByIdAsync(id);
+
+        if(isDeleted)
+        {
+            _cache.Remove("Exercises:all");
+            return NoContent();
+        }
+        else
+        {
+            return NotFound();
+        }
+    }
+    
+    [HttpGet("TrainingById/{id}")]
+    public async Task<ActionResult<TrainingDTO>> GetTrainingById(int id)
+    {
+        var dto = await _service.GetTrainingDTOAsync(id);
+
+        return dto is null ? NotFound() : Ok(dto);
+    }
+
+    [HttpPost("AddTrainingInfo")]
+    public async Task<ActionResult<TrainingDTO>> AddTraining(TrainingDTO training)
+    {
+        TrainingDTO trainingDTO = await _service.AddTrainingAsync(training);
+        return Ok(trainingDTO);
 
     }
 

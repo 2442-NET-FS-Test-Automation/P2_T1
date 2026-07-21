@@ -38,8 +38,8 @@ builder.Services.AddMemoryCache(); // adding cache-ing to our server
 builder.Services.AddResponseCaching(); // adding response cache-ing - asking the front end to save request results 
 
 //Services
-builder.Services.AddScoped<IExerciseRepository, ExerciseRepository>(); //Service
-builder.Services.AddScoped<IExerciseService, ExerciseService>(); //Repository
+builder.Services.AddScoped<ITrainingRepository, TrainingRepository>(); //Service
+builder.Services.AddScoped<ITrainingService, TrainingService>(); //Repository
 var app = builder.Build();
 
 app.UseSwagger();
