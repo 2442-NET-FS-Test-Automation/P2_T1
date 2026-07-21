@@ -1,9 +1,10 @@
-using Microsoft.EntityFrameworkCore;
-using GYM.Data.Entities;
 using GYM.Data;
 using Serilog;
-using GYM.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyModel;
+using GYM.Data.Repositories;
+using GYM.Controller.Api.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 //Connection with SQL server
-builder.Services.AddDbContext<GymDbContext>(options =>
+builder.Services.AddDbContextFactory<GymDbContext>(options => //Se cambio a Factory
     options.UseSqlServer(connectionString));
 
 Log.Logger = new LoggerConfiguration()
@@ -24,18 +25,6 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog(); // Tell the builder to use Serilog for logging
 
-// Adding CORS 
-const string SpaCorsPolicy = "spa"; // string name for our policy
-
-// Configuring our CORS policy
-builder.Services.AddCors(o => o.AddPolicy(SpaCorsPolicy, p => p
-    .WithOrigins("http://127.0.0.1:5137","http://127.0.0.1:5500")
-    .AllowAnyHeader()
-    .AllowAnyMethod()    
-));
-
-builder.Services.AddDbContextFactory<GymDbContext>(o => o.UseSqlServer(conn_string));
-
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -44,7 +33,13 @@ builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//Caching
+builder.Services.AddMemoryCache(); // adding cache-ing to our server
+builder.Services.AddResponseCaching(); // adding response cache-ing - asking the front end to save request results 
 
+//Services
+builder.Services.AddScoped<IExerciseRepository, ExerciseRepository>(); //Service
+builder.Services.AddScoped<IExerciseService, ExerciseService>(); //Repository
 var app = builder.Build();
 
 app.UseSwagger();
@@ -58,6 +53,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseResponseCaching(); //Response caching middleware
 //app.UseSerilogRequestLogging(); No se cuando hay que descomentar
 
 app.UseHttpsRedirection();
