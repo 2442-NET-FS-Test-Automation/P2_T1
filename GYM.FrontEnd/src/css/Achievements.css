@@ -1,0 +1,53 @@
+.achievements-page {
+  background-color: #121321;
+  min-height: 100vh;
+  color: #FFFFFF;
+}
+
+/* Banner de progreso superior */
+.done-achievements-banner {
+  border-radius: 16px;
+  background-color: #1a1b2e;
+  border: 1px solid #282a42;
+  padding: 24px;
+}
+
+/* Customización de la barra de progreso de Bootstrap */
+.custom-progress {
+  background-color: #0b0c10;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.custom-progress-bar {
+  background: linear-gradient(90deg, #3EFFD4 0%, #00E5FF 100%);
+  transition: width 0.4s ease-in-out;
+}
+
+/* Cards de Logros */
+.achievement-card {
+  background-color: #1A1B2E;
+  border: 1px solid #282A42;
+  border-radius: 12px;
+  padding: 16px 20px;
+  transition: all 0.2s ease-in-out;
+}
+
+.achievement-card.unlocked {
+  border-color: #00E5FF;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.15);
+}
+
+.achievement-card.locked {
+  opacity: 0.4;
+  filter: grayscale(80%);
+}
+
+.text-cyan {
+  color: #00E5FF;
+}
+
+.text-purple-light {
+  color: #BFA2FF;
+}
