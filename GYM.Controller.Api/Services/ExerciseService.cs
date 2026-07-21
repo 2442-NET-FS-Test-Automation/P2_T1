@@ -1,5 +1,3 @@
-
-
 using GYM.Controller.Api.DTOs;
 using GYM.Data.Repositories;
 
