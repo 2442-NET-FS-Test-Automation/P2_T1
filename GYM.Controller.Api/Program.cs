@@ -1,6 +1,10 @@
 using GYM.Data;
 using Serilog;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyModel;
+using GYM.Data.Repositories;
+using GYM.Controller.Api.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 //Connection with SQL server
-builder.Services.AddDbContext<GymDbContext>(options =>
+builder.Services.AddDbContextFactory<GymDbContext>(options => //Se cambio a Factory
     options.UseSqlServer(connectionString));
 
 Log.Logger = new LoggerConfiguration()
@@ -29,7 +33,13 @@ builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//Caching
+builder.Services.AddMemoryCache(); // adding cache-ing to our server
+builder.Services.AddResponseCaching(); // adding response cache-ing - asking the front end to save request results 
 
+//Services
+builder.Services.AddScoped<IExerciseRepository, ExerciseRepository>(); //Service
+builder.Services.AddScoped<IExerciseService, ExerciseService>(); //Repository
 var app = builder.Build();
 
 app.UseSwagger();
@@ -43,6 +53,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseResponseCaching(); //Response caching middleware
 //app.UseSerilogRequestLogging(); No se cuando hay que descomentar
 
 app.UseHttpsRedirection();
