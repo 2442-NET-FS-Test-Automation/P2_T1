@@ -10,6 +10,6 @@ public class TrainingDTO
     public string Description {get;set;} = default!;
     public TimeOnly EstimatedTime{get;set;}
     public DateTime? CreatedAt{get;set;}
-    public List<int?> ExercisesId {get;set;} = default!;
+    public List<ExerciseDTO> Exercises {get;init;} = default!;
 
 }

@@ -110,7 +110,17 @@ public class TrainingService : ITrainingService
             Description = training.Description,
             EstimatedTime = training.EstimatedTime,
             CreatedAt = training.CreatedAt,
-            ExercisesId = training.TrainingExercises.Select(i => (int?)i.Id).ToList()
+            Exercises = training.TrainingExercises //Pass as a list of exercisesDTO
+                .Select(te => new ExerciseDTO
+                {
+                    Id = te.Exercise.Id,
+                    Name = te.Exercise.Name,
+                    Description = te.Exercise.Description,
+                    VisualReferenceUrl = te.Exercise.VisualReferenceUrl,
+                    Sets = te.Exercise.Sets,
+                    Reps = te.Exercise.Reps
+                })
+                .ToList()
         };
         return trainingDTO;
     }
