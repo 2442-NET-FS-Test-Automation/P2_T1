@@ -2,6 +2,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
 using  GYM.Controller.Api.DTOs;
 using GYM.Controller.Api.Services;
+using GYM.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -35,8 +36,8 @@ public class TrainingController : ControllerBase
 
     }
 
-    [HttpGet("ExerciseByName/{id}")]
-    public async Task<ActionResult<ExerciseDTO>> GetExerciseByName(int id)
+    [HttpGet("ExerciseById/{id}")]
+    public async Task<ActionResult<ExerciseDTO>> GetExerciseById(int id)
     {
         var dto = await _service.GetExerciseById(id);
 
@@ -48,11 +49,11 @@ public class TrainingController : ControllerBase
     public async Task<ActionResult<ExerciseDTO>> AddExercise(ExerciseDTO newExercise)
     {
         ExerciseDTO newExerciseDto = await _service.AddExerciseAsync(newExercise);  
-        //_cache.Remove("Exercises:all"); //Se borra el cache
+        _cache.Remove("Exercises:all"); //Se borra el cache
 
         return CreatedAtAction(
-            nameof(GetExerciseByName),
-            new {name = newExercise.Name},
+            nameof(GetExerciseById),
+            new {Id = newExercise.Id},
             newExerciseDto);
 
     }
@@ -82,12 +83,52 @@ public class TrainingController : ControllerBase
         return dto is null ? NotFound() : Ok(dto);
     }
 
-    [HttpPost("AddTrainingInfo")]
-    public async Task<ActionResult<TrainingDTO>> AddTraining(TrainingDTO training)
+    [HttpGet("GetAllTrainings")]
+    public async Task<ActionResult<List<TrainingDTO>>> GetAllTrainings()
     {
-        TrainingDTO trainingDTO = await _service.AddTrainingAsync(training);
-        return Ok(trainingDTO);
+        var listTrainingDTOs = await _cache.GetOrCreateAsync("Trainings:all", async entry =>
+        {
+            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1);
+            var items = await _service.GetAllTrainings();
+            return items;
+        });
 
+        return listTrainingDTOs is null ? NotFound() : Ok(listTrainingDTOs); // 404 not found : 200 (list)
+    }
+
+    [HttpPost("AddTraining")]
+    public async Task<ActionResult<TrainingDTO>> AddTraining(TrainingAddDTO trainingAddDTO)
+    {
+        TrainingDTO newTrainingDTO = await _service.AddTrainingAsync(trainingAddDTO);
+        _cache.Remove("Trainings:all"); //Se borra el cache
+
+        return CreatedAtAction(
+            nameof(GetTrainingById),
+            new {Id = newTrainingDTO.Id},
+            newTrainingDTO);
+    }
+
+    [HttpPost("AddExercisesToTraining")]
+    public async Task<Training?> AddExercisesTraining(int TrainingId, List<int> ExercisesId)
+    {
+        Training? tr = await _service.AddExercisesToTraining(TrainingId, ExercisesId);
+        _cache.Remove("Trainings:all"); //Se borra el cache
+
+        if(tr is null)//Si los id no son validos o trainingId no es valido
+            return null;
+
+        return tr;
+    }
+
+    [HttpDelete("DeleteExerciseFromTraining")]
+    public async Task<IActionResult> DeleteExerciseFromTraining(int TrainingId,  List<int> ExercisesId)
+    {
+        bool result = await _service.DeleteExercisesFromTraining(TrainingId, ExercisesId);
+        _cache.Remove("Trainings:all"); //Se borra el cache
+        if(!result)
+            return NotFound();
+
+        return NoContent();
     }
 
 }

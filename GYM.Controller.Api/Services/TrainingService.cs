@@ -4,6 +4,7 @@ using Azure.Core.Pipeline;
 using GYM.Controller.Api.DTOs;
 using GYM.Data.Entities;
 using GYM.Data.Repositories;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace GYM.Controller.Api.Services;
 
@@ -72,7 +73,7 @@ public class TrainingService : ITrainingService
             
         };
 
-        Exercise dbExercise = await _repository.CreateExercise(newExercise); //Se pasa a repo layer a crear
+        Exercise dbExercise = await _repository.AddExercise(newExercise); //Se pasa a repo layer a crear
 
         ExerciseDTO dbExerciseDTO = new ExerciseDTO
         {
@@ -88,12 +89,42 @@ public class TrainingService : ITrainingService
         
     }
 
+    public async Task<TrainingDTO> AddTrainingAsync(TrainingAddDTO trainingDTO)
+    {
+        Training training = new Training
+        {
+            Difficulty = trainingDTO.Difficulty,
+            Calories = trainingDTO.Calories,
+            Place = trainingDTO.Place,
+            Description = trainingDTO.Description,
+            EstimatedTime = trainingDTO.EstimatedTime,
+            TrainingName = trainingDTO.TrainingName,
+            CreatedAt = DateTime.Now
+        };
+
+        Training dbNewTrainig = await _repository.AddTraining(training);
+        
+
+        TrainingDTO newTraining = new TrainingDTO
+        {
+            Id = dbNewTrainig.Id,
+            Difficulty = dbNewTrainig.Difficulty,
+            Calories = dbNewTrainig.Calories,
+            Place = dbNewTrainig.Place,
+            Description = dbNewTrainig.Description,
+            EstimatedTime = dbNewTrainig.EstimatedTime,
+            TrainingName = dbNewTrainig.TrainingName
+        };
+
+        return newTraining;
+    }
+
     public Task<bool> DeleteExerciseByIdAsync(int ExerciseId)
     {
         return _repository.RemoveExercise(ExerciseId);
     }
 
-    public async Task<TrainingDTO> GetTrainingDTOAsync(int id)
+    public async Task<TrainingDTO?> GetTrainingDTOAsync(int id)
     {
         var training = await _repository.GetTrainingById(id);
 
@@ -107,6 +138,7 @@ public class TrainingService : ITrainingService
             TrainingName = training.TrainingName,
             Difficulty = training.Difficulty,
             Calories = training.Calories,
+            Place = training.Place,
             Description = training.Description,
             EstimatedTime = training.EstimatedTime,
             CreatedAt = training.CreatedAt,
@@ -125,8 +157,79 @@ public class TrainingService : ITrainingService
         return trainingDTO;
     }
 
-    public Task<TrainingDTO> AddTrainingAsync(TrainingDTO training)
+    public async Task<IReadOnlyList<TrainingDTO>> GetAllTrainings()
     {
-        throw new NotImplementedException();
+        var catalog = await _repository.GetAllTrainingsAsync();
+        if(catalog is null)
+            return null;
+        
+        List<TrainingDTO> trainingsDTOs = new();
+        foreach(Training training in catalog)
+        {
+            trainingsDTOs.Add(new TrainingDTO
+            {
+                Id = training.Id,
+                TrainingName = training.TrainingName,
+                Difficulty = training.Difficulty,
+                Calories = training.Calories,
+                Place = training.Place,
+                Description = training.Description,
+                EstimatedTime = training.EstimatedTime,
+                CreatedAt = training.CreatedAt,
+                Exercises = training.TrainingExercises.Select(te => new ExerciseDTO
+                {
+                    Id = te.Exercise.Id,
+                    Name = te.Exercise.Name,
+                    Description = te.Exercise.Description,
+                    VisualReferenceUrl = te.Exercise.VisualReferenceUrl,
+                    Sets = te.Exercise.Sets,
+                    Reps = te.Exercise.Reps
+                })
+                .ToList()
+
+            });
+        }
+
+        return trainingsDTOs;
+    }
+
+    public async Task<Training?> AddExercisesToTraining(int trainingId, List<int> Exercises)
+    {
+        Training? tr = await _repository.GetTrainingById(trainingId);
+
+        List<Exercise> listExercises = new();
+        foreach(int num in Exercises)
+        {
+            Exercise? ex = await _repository.GetExerciseById(num);
+            if(ex is null)
+                continue;
+            listExercises.Add(ex);
+        }
+
+        if(listExercises is null || tr is null)
+            return null;
+            
+        Training training = await _repository.AddExercisesToTraining(tr, listExercises);
+        return training;
+    }
+
+    public async Task<bool> DeleteExercisesFromTraining(int trainingId, List<int> Exercises)
+    {
+        Training? tr = await _repository.GetTrainingById(trainingId);
+
+        List<Exercise> listExercises = new();
+        foreach(int num in Exercises)
+        {
+            Exercise? ex = await _repository.GetExerciseById(num);
+            if(ex is null)
+                continue;
+            listExercises.Add(ex);
+        }
+
+        if(listExercises is null || tr is null)
+            return false;
+            
+        bool result = await _repository.DeleteExercisesFromTraining(tr, listExercises);
+        return result;
     }
 }
