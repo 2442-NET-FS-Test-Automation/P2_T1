@@ -1,10 +1,22 @@
 import apiClient from './apiClient';
 
+export type Gender = 'Male' | 'Female' | 'Other';
+
+export interface UserDetailData {
+    gender: Gender,
+    name: string,
+    surname: string,
+    joinAt: string,
+    age: number
+}
+
 export interface UserData{
     id: number,
-    name: string,
     email: string,
+    phone: number,
+    password: number,
     role?: string
+    detail?: UserDetailData
 }
 
 export interface AuthResponse {

@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { FiCalendar, FiAward, FiUser, FiX, FiLogOut, FiSettings } from 'react-icons/fi';
+// Link to navigate through screens. The replacement of <a> tag
+import { Link } from 'react-router-dom'; 
 
 interface NavbarProps {
   onLogout?: () => void;
@@ -10,6 +12,7 @@ export default function Navbar({ onLogout }: NavbarProps) {
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
+
   return (
     <>
       {/* HEADER PRINCIPAL */}
@@ -17,10 +20,10 @@ export default function Navbar({ onLogout }: NavbarProps) {
         <div className="container-fluid d-flex justify-content-between align-items-center">
           
           {/* Logo GymQuest */}
-          <a className="navbar-brand fw-bold fs-4 d-flex align-items-center" href="#home" style={{ color: '#FFFFFF' }}>
+          <Link to="/" className="navbar-brand fw-bold fs-4 d-flex align-items-center" style={{ color: '#FFFFFF' }}>
             Gym<span style={{ color: '#00E5FF' }}>Quest</span>
             <span className="ms-2" style={{ fontSize: '0.9rem', color: '#8A8D93' }}>⚔️</span>
-          </a>
+          </Link>
 
           {/* Iconos de la derecha */}
           <div className="d-flex align-items-center gap-4" style={{ color: '#FFFFFF', fontSize: '1.4rem' }}>
@@ -54,15 +57,15 @@ export default function Navbar({ onLogout }: NavbarProps) {
           <a href="#perfil" className="text-decoration-none text-white d-flex align-items-center gap-2 p-2 rounded hover-effect" onClick={toggleMenu}>
             <FiUser style={{ color: '#00E5FF' }} /> Ver Datos
           </a>
-          <a href="#config" className="text-decoration-none text-white d-flex align-items-center gap-2 p-2 rounded hover-effect" onClick={toggleMenu}>
-            <FiSettings /> Configuración
-          </a>
+          <Link to="/profile/settings" className="text-decoration-none text-white d-flex align-items-center gap-2 p-2 rounded hover-effect" onClick={toggleMenu}>
+            <FiSettings /> Configuration
+          </Link>
           <hr className="text-muted my-2" />
           <button 
             className="btn btn-link text-decoration-none text-danger d-flex align-items-center gap-2 p-2 w-100 text-start" 
             onClick={() => { toggleMenu(); if(onLogout) onLogout(); }}
           >
-            <FiLogOut /> Cerrar Sesión
+            <FiLogOut /> Log Out
           </button>
         </div>
       </div>
