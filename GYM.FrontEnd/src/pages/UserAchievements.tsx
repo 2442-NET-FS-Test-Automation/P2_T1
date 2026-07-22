@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { achievementsWithStatus, type Achievement } from "./services/achievementService";
-import { getUser, type UserData } from "./services/auth";
-import "./css/Achievements.css"; 
+import { achievementsWithStatus, type Achievement } from "../services/achievementService";
+import { getUser } from "../services/auth";
+import type { UserData } from "../interfaces/user";
+import "../css/Achievements.css"; 
 
 export default function Achievements() {
   const [user, setUser] = useState<UserData | null>(null);
