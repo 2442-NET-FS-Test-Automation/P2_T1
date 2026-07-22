@@ -8,6 +8,7 @@ import Home from './Home'
 import Achievements from './Achievements'
 import {Login} from './pages/Login'
 import ProfileSettings from './ProfileSettings'
+import { LandingPage } from './pages/LandingPage'
 
 // Componente auxiliar para manejar la navegación interna
 const LoginPage = () => {
@@ -29,7 +30,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/achievements" element={<Achievements />} />
         <Route path="/login" element={<LoginPage/>} />
         <Route path="/register" element={<RegisterPage />} />
