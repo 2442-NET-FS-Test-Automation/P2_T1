@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import Home from './Home'
 import Achievements from './Achievements'
 import {Login} from './pages/Login'
+import ProfileSettings from './ProfileSettings'
 
 // Componente auxiliar para manejar la navegación interna
 const LoginPage = () => {
@@ -32,6 +33,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <Route path="/achievements" element={<Achievements />} />
         <Route path="/login" element={<LoginPage/>} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/profile/settings" element={<ProfileSettings />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,
