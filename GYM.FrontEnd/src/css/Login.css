@@ -1,0 +1,161 @@
+/* Layout Principal */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #0d0f18; /* Fondo oscuro exacto al mockup */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #ffffff;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Marca y Logo */
+.brand-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.brand-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0;
+  color: #ffffff;
+}
+
+.brand-highlight {
+  color: #40ffcb; /* Verde neón característico */
+}
+
+.swords-icon {
+  font-size: 2.5rem;
+  margin: 15px 0;
+}
+
+.form-subtitle {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #e0e0e0;
+  margin: 0;
+}
+
+/* Formulario e Inputs */
+.login-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.input-group {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background-color: #ffffff;
+  color: #333333;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.input-group input::placeholder {
+  color: #888888;
+}
+
+/* Checkbox Remember Me */
+.checkbox-group {
+  margin: 10px 0 20px 0;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #a0a0a0;
+  cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"] {
+  accent-color: #40ffcb;
+  cursor: pointer;
+}
+
+/* Botón Log In */
+.login-button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 25px;
+  background: linear-gradient(135deg, #40ffcb 0%, #20e0a8 100%);
+  color: #0d0f18;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(64, 255, 203, 0.4);
+}
+
+.login-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Campo de Error */
+.error-field {
+  min-height: 25px;
+  margin-top: 15px;
+  text-align: center;
+}
+
+.error-text {
+  color: #ff5252;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* Divisor */
+.divider {
+  width: 100%;
+  border: 0;
+  height: 1px;
+  background-color: #2a2d3d;
+  margin: 25px 0;
+}
+
+/* Texto de Registro */
+.register-text {
+  font-size: 0.85rem;
+  color: #888888;
+  margin: 0;
+}
+
+.register-link {
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.register-link:hover {
+  color: #40ffcb;
+}
