@@ -9,7 +9,7 @@ export default function Achievements() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Cálculos de progreso
+  // Calculate achievement progress
   const unlockedCount = achievements.filter((a) => a.unlocked).length;
   const totalAchievements = achievements.length;
   const progressPercentage =
