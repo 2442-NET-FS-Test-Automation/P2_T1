@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { clearToken, getToken } from '../auth/storage';
 
 // 1. Create a personalized axios instance
 const apiClient = axios.create({
@@ -12,7 +13,7 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use(
   (config) => {
     // store token to localStorage
-    const token = localStorage.getItem('gym_token');
+    const token = getToken();
 
     // Si el token existe, lo metemos en las cabeceras de autorización
     if (token && config.headers) {
@@ -34,7 +35,7 @@ apiClient.interceptors.response.use(
     // if the asp.net backed responds with "Not authorized"
     if (error.response && error.response.status === 401) {
       console.warn('Token expired or invalid. Redirecting to login page...');
-      localStorage.removeItem('gym_token');
+      clearToken();
       // Aquí podrías forzar un redireccionamiento al login si usas react-router:
       // window.location.href = '/login';
     }

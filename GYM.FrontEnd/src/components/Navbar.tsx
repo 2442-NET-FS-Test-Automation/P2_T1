@@ -48,14 +48,14 @@ export default function Navbar({ onLogout }: NavbarProps) {
       >
         {/* Header del menú */}
         <div className="d-flex justify-content-between align-items-center mb-4">
-          <h5 className="text-white m-0 fw-bold">Mi Perfil</h5>
+          <h5 className="text-white m-0 fw-bold">Menu</h5>
           <FiX className="text-white fs-4" style={{ cursor: 'pointer' }} onClick={toggleMenu} />
         </div>
 
         {/* Enlaces del menú */}
         <div className="d-flex flex-column gap-3">
           <a href="#perfil" className="text-decoration-none text-white d-flex align-items-center gap-2 p-2 rounded hover-effect" onClick={toggleMenu}>
-            <FiUser style={{ color: '#00E5FF' }} /> Ver Datos
+            <FiUser style={{ color: '#00E5FF' }} /> Your profile
           </a>
           <Link to="/profile/settings" className="text-decoration-none text-white d-flex align-items-center gap-2 p-2 rounded hover-effect" onClick={toggleMenu}>
             <FiSettings /> Configuration

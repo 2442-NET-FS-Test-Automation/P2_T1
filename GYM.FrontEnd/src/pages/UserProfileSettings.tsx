@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { getUser, type UserData } from "./services/auth";
-import "./css/ProfileSettings.css";
-import Navbar from "./components/Navbar";
+import { getUser } from "../services/auth";
+import type { UserData } from "../interfaces/user";
+import "../css/ProfileSettings.css";
+import Navbar from "../components/Navbar";
 
 export default function ProfileSettings(){
     const [user, setUser] = useState<UserData | null>(null);
@@ -61,7 +62,7 @@ export default function ProfileSettings(){
                                 type="email" 
                                 id="email" 
                                 placeholder="Enter email address"
-                                // value={user?.email || ''} 
+                                value={user?.email || ''} 
                                 readOnly 
                             />
                         </div>
@@ -73,7 +74,7 @@ export default function ProfileSettings(){
                                 type="text" 
                                 id="firstName" 
                                 placeholder="Enter first name"
-                                // value={user?.name || ''} 
+                                value={user?.detail?.name || ''} 
                             />
                         </div>
 
@@ -84,7 +85,7 @@ export default function ProfileSettings(){
                                 type="text" 
                                 id="lastName" 
                                 placeholder="Enter last name"
-                                // value={user?.surname || ''} 
+                                value={user?.detail?.surname || ''} 
                             />
                         </div>
 
@@ -95,7 +96,7 @@ export default function ProfileSettings(){
                                 type="tel" 
                                 id="phone" 
                                 placeholder="Enter phone number"
-                                // value={user?.phone || ''} 
+                                value={user?.phone || ''}
                             />
                         </div>
 
@@ -106,7 +107,7 @@ export default function ProfileSettings(){
                                 type="text" 
                                 id="weight" 
                                 placeholder="Enter weight (e.g. 70kg)"
-                                // value={user?.weight || ''} 
+                                value={user?.stadistic?.weight || ''}
                             />
                         </div>
 
@@ -117,7 +118,7 @@ export default function ProfileSettings(){
                                 type="text" 
                                 id="height" 
                                 placeholder="Enter height (e.g. 175cm)"
-                                // value={user?.height || ''} 
+                                value={user?.stadistic?.height || ''}
                             />
                         </div>
                     </form>

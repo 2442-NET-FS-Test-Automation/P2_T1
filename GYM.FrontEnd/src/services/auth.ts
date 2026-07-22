@@ -1,46 +1,15 @@
 import apiClient from './apiClient';
+import { clearToken, getToken, setToken } from '../auth/storage';
+import type { AuthResponse, LoginPayload, RegisterPayload } from '../interfaces/auth';
+import type { UserData } from '../interfaces/user';
 
-export type Gender = 'Male' | 'Female' | 'Other';
-
-export interface UserDetailData {
-    gender: Gender,
-    name: string,
-    surname: string,
-    joinAt: string,
-    age: number
-}
-
-export interface UserData{
-    id: number,
-    email: string,
-    phone: number,
-    password: number,
-    role?: string
-    detail?: UserDetailData
-}
-
-export interface AuthResponse {
-    token: string,
-    user: UserData
-}
-
-export interface LoginPayload {
-    email: string,
-    password: string
-}
-
-export interface RegisterPayload {
-    name: string,
-    surname: string,
-    email: string,
-    password: string,
-    phone?: string
-}
+export type { AuthResponse, LoginPayload, RegisterPayload } from '../interfaces/auth';
+export type { UserData } from '../interfaces/user';
 
 // Obtain the data of the authenticated user through the JWT Token
 // it sends request to the backend to validate the stored token in localStorage
 export const getUser = async(): Promise<UserData | null> => {
-    const token = localStorage.getItem('gym_token');
+    const token = getToken();
 
     // cancel the operation if the token was not valid
     if(!token) return null;
@@ -51,7 +20,7 @@ export const getUser = async(): Promise<UserData | null> => {
     } catch(err) {
         console.error("The user can't be found", err);
         // clean localStorage in case the token failed or it's expired
-        localStorage.removeItem('gym_token');
+        clearToken();
         return null;
     }
 };
@@ -64,7 +33,7 @@ export const login = async(credentials: LoginPayload): Promise<AuthResponse> => 
 
         // if we receive the unique token, we store it
         if(response.data && response.data.token){
-            localStorage.setItem('gym_token', response.data.token);
+            setToken(response.data.token);
         }
         return response.data;
     } catch (err){
@@ -78,7 +47,7 @@ export const register = async(userData: RegisterPayload): Promise<AuthResponse> 
         const response = await apiClient.post<AuthResponse>('/auth/register', userData);
 
         if(response.data && response.data.token){
-            localStorage.setItem('gym_token', response.data.token);
+            setToken(response.data.token);
         }
         return response.data;
     }catch(err){
@@ -89,8 +58,6 @@ export const register = async(userData: RegisterPayload): Promise<AuthResponse> 
 
 // close the session
 export const logout = (): void => {
-  localStorage.removeItem('gym_token');
-  // Opcional: Redirigir al usuario al login o recargar la página
-  // window.location.href = '/login';
+    clearToken();
 };
 
