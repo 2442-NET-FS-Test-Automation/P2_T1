@@ -113,33 +113,36 @@ public class TrainingService : ITrainingService
             listExercises.Add(ex);
         }
 
-        if(listExercises is null)
+        if(listExercises.Count == 0)
             return null;
             
         await _repository.AddExercisesToTraining(dbNewTrainig, listExercises);
+        Training? tr = await _repository.GetTrainingById(dbNewTrainig.Id);
 
-        TrainingDTO newTraining = new TrainingDTO
+        if(tr is not null)
         {
-            Id = dbNewTrainig.Id,
-            Difficulty = dbNewTrainig.Difficulty,
-            Calories = dbNewTrainig.Calories,
-            Place = dbNewTrainig.Place,
-            Description = dbNewTrainig.Description,
-            EstimatedTime = dbNewTrainig.EstimatedTime,
-            TrainingName = dbNewTrainig.TrainingName,
-            Exercises = dbNewTrainig.TrainingExercises.Select(te => new ExerciseDTO
-                {
-                    Id = te.Exercise.Id,
-                    Name = te.Exercise.Name,
-                    Description = te.Exercise.Description,
-                    VisualReferenceUrl = te.Exercise.VisualReferenceUrl,
-                    Sets = te.Exercise.Sets,
-                    Reps = te.Exercise.Reps
-                })
-                .ToList()
-        };
-
-        return newTraining;
+            TrainingDTO newTraining = new TrainingDTO
+            {
+                Id = tr.Id,
+                Difficulty = tr.Difficulty,
+                Calories = tr.Calories,
+                Place = tr.Place,
+                Description = tr.Description,
+                EstimatedTime = tr.EstimatedTime,
+                TrainingName = tr.TrainingName,
+                Exercises = tr.TrainingExercises.Select(te => new ExerciseDTO
+                    {
+                        Id = te.Exercise.Id,
+                        Name = te.Exercise.Name,
+                        Description = te.Exercise.Description,
+                        VisualReferenceUrl = te.Exercise.VisualReferenceUrl,
+                        Sets = te.Exercise.Sets,
+                        Reps = te.Exercise.Reps
+                    })
+                    .ToList()
+            };
+            return newTraining;
+        }return null;
     }
 
     public Task<bool> DeleteExerciseByIdAsync(int ExerciseId)
