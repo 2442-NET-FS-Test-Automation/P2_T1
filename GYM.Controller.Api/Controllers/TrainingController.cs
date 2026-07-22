@@ -109,15 +109,18 @@ public class TrainingController : ControllerBase
     }
 
     [HttpPost("AddExercisesToTraining")]
-    public async Task<Training?> AddExercisesTraining(int TrainingId, List<int> ExercisesId)
+    public async Task<ActionResult<TrainingDTO>> AddExercisesTraining(int TrainingId, List<int> ExercisesId)
     {
-        Training? tr = await _service.AddExercisesToTraining(TrainingId, ExercisesId);
+        if (ExercisesId is null || ExercisesId.Count == 0)
+            return BadRequest("At least one exercise is required.");
+    
+        TrainingDTO? tr = await _service.AddExercisesToTraining(TrainingId, ExercisesId);
         _cache.Remove("Trainings:all"); //Se borra el cache
 
         if(tr is null)//Si los id no son validos o trainingId no es valido
-            return null;
+            return NotFound();
 
-        return tr;
+        return Ok(tr);
     }
 
     [HttpDelete("DeleteExerciseFromTraining")]

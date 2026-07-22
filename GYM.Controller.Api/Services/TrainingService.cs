@@ -103,7 +103,20 @@ public class TrainingService : ITrainingService
         };
 
         Training dbNewTrainig = await _repository.AddTraining(training);
-        
+
+        List<Exercise> listExercises = new();
+        foreach(int num in trainingDTO.ExercisesIDs)
+        {
+            Exercise? ex = await _repository.GetExerciseById(num);
+            if(ex is null)
+                continue;
+            listExercises.Add(ex);
+        }
+
+        if(listExercises is null)
+            return null;
+            
+        await _repository.AddExercisesToTraining(dbNewTrainig, listExercises);
 
         TrainingDTO newTraining = new TrainingDTO
         {
@@ -113,7 +126,17 @@ public class TrainingService : ITrainingService
             Place = dbNewTrainig.Place,
             Description = dbNewTrainig.Description,
             EstimatedTime = dbNewTrainig.EstimatedTime,
-            TrainingName = dbNewTrainig.TrainingName
+            TrainingName = dbNewTrainig.TrainingName,
+            Exercises = dbNewTrainig.TrainingExercises.Select(te => new ExerciseDTO
+                {
+                    Id = te.Exercise.Id,
+                    Name = te.Exercise.Name,
+                    Description = te.Exercise.Description,
+                    VisualReferenceUrl = te.Exercise.VisualReferenceUrl,
+                    Sets = te.Exercise.Sets,
+                    Reps = te.Exercise.Reps
+                })
+                .ToList()
         };
 
         return newTraining;
@@ -193,7 +216,7 @@ public class TrainingService : ITrainingService
         return trainingsDTOs;
     }
 
-    public async Task<Training?> AddExercisesToTraining(int trainingId, List<int> Exercises)
+    public async Task<TrainingDTO?> AddExercisesToTraining(int trainingId, List<int> Exercises)
     {
         Training? tr = await _repository.GetTrainingById(trainingId);
 
@@ -210,7 +233,29 @@ public class TrainingService : ITrainingService
             return null;
             
         Training training = await _repository.AddExercisesToTraining(tr, listExercises);
-        return training;
+
+        List<ExerciseDTO> exercises = new();
+        return new TrainingDTO
+            {
+                Id = training.Id,
+                TrainingName = training.TrainingName,
+                Difficulty = training.Difficulty,
+                Calories = training.Calories,
+                Place = training.Place,
+                Description = training.Description,
+                EstimatedTime = training.EstimatedTime,
+                CreatedAt = training.CreatedAt,
+                Exercises = training.TrainingExercises.Select(te => new ExerciseDTO
+                {
+                    Id = te.Exercise.Id,
+                    Name = te.Exercise.Name,
+                    Description = te.Exercise.Description,
+                    VisualReferenceUrl = te.Exercise.VisualReferenceUrl,
+                    Sets = te.Exercise.Sets,
+                    Reps = te.Exercise.Reps
+                })
+                .ToList()
+            }; 
     }
 
     public async Task<bool> DeleteExercisesFromTraining(int trainingId, List<int> Exercises)

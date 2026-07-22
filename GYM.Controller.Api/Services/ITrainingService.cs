@@ -12,6 +12,6 @@ public interface ITrainingService
     Task<TrainingDTO?> GetTrainingDTOAsync(int id);
     Task<IReadOnlyList<TrainingDTO>> GetAllTrainings();
     Task<TrainingDTO> AddTrainingAsync(TrainingAddDTO trainingDTO);
-    Task<Training?> AddExercisesToTraining(int trainingId, List<int> Exercises);
+    Task<TrainingDTO?> AddExercisesToTraining(int trainingId, List<int> Exercises);
     Task<bool> DeleteExercisesFromTraining(int trainingId, List<int> Exercises);
 }
