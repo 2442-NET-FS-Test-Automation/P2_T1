@@ -2,6 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using GYM.Data.Entities;
 using GYM.Data;
 using Serilog;
+using Microsoft.Extensions.DependencyModel;
+using Microsoft.AspNetCore.Identity;
+using GYM.Controller.Api.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +27,29 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 builder.Host.UseSerilog(); // Tell the builder to use Serilog for logging
+
+//Authentication and Authorization -------------------------------------------------------------------------------
+var jwtKey = builder.Configuration["Jwt:Key"]; //AppSettings.Development.json
+
+
+//Issuer and audiende hardcoded
+const string jwtIssuer = "GYM-fulfillment";
+const string jwtAudience = "GYM-fulfillment-users";
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(o=>o.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true, ValidIssuer = jwtIssuer,
+        ValidateAudience = true, ValidAudience = jwtAudience,
+        ValidateIssuerSigningKey = true, IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+        ValidateLifetime = true
+    });
+
+builder.Services.AddAuthorization(); //After authentication
+
+//Stateless, we can use Singleton
+builder.Services.AddSingleton<ITokenService, TokenService>(); //Services for log in
+//----------------------------------------------------------------------------------------------
 
 // Adding CORS 
 const string SpaCorsPolicy = "spa"; // string name for our policy
