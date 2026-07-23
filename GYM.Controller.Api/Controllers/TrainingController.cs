@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 
+//Controller for exercises and training, add, update, delete, get
 
 [ApiController] //ASP.NET knows to map this controller during app.MapControllers()
-[Route("api/[Controller]")] //route base
+[Route("[Controller]")] //route base
+//[Authorize] poner cuando todos los endpoints queden hechos !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 public class TrainingController : ControllerBase
 {
     private readonly ITrainingService _service;
@@ -108,6 +110,17 @@ public class TrainingController : ControllerBase
             newTrainingDTO);
     }
 
+    [HttpPut("updateTrainingInfo")]
+    public async Task<IActionResult> UpdateTrainingInfo(TrainingDTO trainingDTO)
+    {
+        if(trainingDTO is null)
+            return BadRequest();
+
+        TrainingDTO? updatedTrainig =await _service.UpdateTrainingInfo(trainingDTO);
+        _cache.Remove("Trainings:all");
+        return Ok(updatedTrainig);
+    }
+
     [HttpPost("AddExercisesToTraining")]
     public async Task<ActionResult<TrainingDTO>> AddExercisesTraining(int TrainingId, List<int> ExercisesId)
     {
@@ -127,11 +140,32 @@ public class TrainingController : ControllerBase
     public async Task<IActionResult> DeleteExerciseFromTraining(int TrainingId,  List<int> ExercisesId)
     {
         bool result = await _service.DeleteExercisesFromTraining(TrainingId, ExercisesId);
-        _cache.Remove("Trainings:all"); //Se borra el cache
         if(!result)
             return NotFound();
-
+        _cache.Remove("Trainings:all"); //Se borra el cache
         return NoContent();
     }
 
+    
+    [HttpPut("updateExercise")]
+    public async Task<IActionResult> UpdateExercise(ExerciseDTO exerciseDTO)
+    {
+        if(exerciseDTO is null)
+            return BadRequest();
+
+        ExerciseDTO? updatedExercise =await _service.UpdateExercise(exerciseDTO);
+        _cache.Remove("Exercises:all");
+        return Ok(updatedExercise);
+    }
+
+    [HttpDelete("DeleteTraining")]
+    public async Task<IActionResult> DeleteTraining(int trainingID)
+    {
+        
+        bool result = await _service.DeleteTraining(trainingID);
+        if(!result)
+            return BadRequest();
+        _cache.Remove("Trainings:all");
+        return NoContent();
+    }
 }

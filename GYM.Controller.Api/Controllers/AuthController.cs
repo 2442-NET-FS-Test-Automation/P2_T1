@@ -7,7 +7,7 @@ using GYM.Controller.Api.DTOs;
 using GYM.Data.Entities;
 
 [ApiController]
-[Route("auth")]
+[Route("authentication")]
 
 public class AuthController : ControllerBase
 {
@@ -33,7 +33,8 @@ public class AuthController : ControllerBase
         return CreatedAtAction(nameof(Me),  result); //201 
     }
 
-     [HttpGet("me")]
+
+    [HttpGet("me")]
     public ActionResult Me()
     {
         return Ok( new
@@ -55,6 +56,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("token")]
+    
     public ActionResult IssueToken(string userEmail, Role role)
     {
         var userToken = _tokenService.Issue(userEmail, role);
