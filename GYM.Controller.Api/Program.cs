@@ -3,7 +3,7 @@ using GYM.Data.Entities;
 using GYM.Data;
 using GYM.Data.Repositories;
 using Serilog;
-using Microsoft.Extensions.DependencyModel;
+//using Microsoft.Extensions.DependencyModel;
 using Microsoft.AspNetCore.Identity;
 using GYM.Controller.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -56,7 +56,7 @@ const string SpaCorsPolicy = "spa"; // string name for our policy
 
 // Configuring our CORS policy
 builder.Services.AddCors(o => o.AddPolicy(SpaCorsPolicy, p => p
-    .WithOrigins("http://127.0.0.1:5137","http://127.0.0.1:5500")
+    .AllowAnyOrigin()
     .AllowAnyHeader()
     .AllowAnyMethod()    
 ));
@@ -84,6 +84,11 @@ builder.Services.AddScoped<IUserService, UserService>(); //Service User for auth
 builder.Services.AddScoped<IUserRepository, UserRepository>(); //Repository User for auth
 
 var app = builder.Build();
+
+//============================
+//  Middleware
+app.UseRouting();
+app.UseCors(SpaCorsPolicy);
 
 app.UseSwagger();
 app.UseSwaggerUI();

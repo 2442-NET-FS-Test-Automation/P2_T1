@@ -1,20 +1,27 @@
 import axios from 'axios';
 import { getToken } from '../auth/storage';
 
-// one axios object/instance for the whole app. Since we're only hitting one api
-// we can centralize its url here. If you are hitting multiple api's just make
-// separate clients. Can all be in the same file or one per file - up to you
-
-// later when we do login and we have to attach that JWT bearer token -
-// it'll be centralized in one place! No having to chase down every fetch call
+// Instancia centralizada de Axios apuntando a la API de ASP.NET Core
 export const api = axios.create({
-    baseURL: "http://localhost:5173"
-})
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5076/api',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-// Request interceptor - Attack that bearer token (if we have it) to EVERY call
-// that our client makes.
-api.interceptors.request.use((config) => {
+// Interceptor de Solicitud para inyectar el Token Bearer si existe
+api.interceptors.request.use(
+  (config) => {
     const token = getToken();
-    if (token) config.headers.Authorization = `Bearer ${token}`; // writing the header
+    
+    // Asignación segura de cabeceras en Axios
+    if (token && config.headers) {
+      config.headers.set('Authorization', `Bearer ${token}`);
+    }
+
     return config;
-})
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);

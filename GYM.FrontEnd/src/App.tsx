@@ -4,7 +4,7 @@ import Achievements from './pages/UserAchievements';
 import ProfileSettings from './pages/UserProfileSettings';
 import { Login } from './pages/Login';
 import { LandingPage } from './pages/LandingPage';
-import { createBrowserRouter, RouterProvider, useNavigate } from 'react-router-dom';
+//import { createBrowserRouter, RouterProvider, useNavigate } from 'react-router-dom';
 import { UserStatistics } from './pages/UserStadistics';
 
 function App() {
