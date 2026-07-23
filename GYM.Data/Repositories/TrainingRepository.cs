@@ -118,4 +118,12 @@ public class TrainingRepository : ITrainingRepository
         await db.SaveChangesAsync();
         return UpdatedExercise;
     }
+
+    public async Task<Training> UpdateTrainingInfo(Training UpdatedTraining)
+    {
+        await using var db = await _factory.CreateDbContextAsync();
+        db.Trainings.Update(UpdatedTraining);
+        await db.SaveChangesAsync();
+        return UpdatedTraining;
+    }
 }

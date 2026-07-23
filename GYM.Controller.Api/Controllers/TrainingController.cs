@@ -110,6 +110,17 @@ public class TrainingController : ControllerBase
             newTrainingDTO);
     }
 
+    [HttpPut("updateTrainingInfo")]
+    public async Task<IActionResult> UpdateTrainingInfo(TrainingDTO trainingDTO)
+    {
+        if(trainingDTO is null)
+            return BadRequest();
+
+        TrainingDTO? updatedTrainig =await _service.UpdateTrainingInfo(trainingDTO);
+        _cache.Remove("Trainings:all");
+        return Ok(updatedTrainig);
+    }
+
     [HttpPost("AddExercisesToTraining")]
     public async Task<ActionResult<TrainingDTO>> AddExercisesTraining(int TrainingId, List<int> ExercisesId)
     {

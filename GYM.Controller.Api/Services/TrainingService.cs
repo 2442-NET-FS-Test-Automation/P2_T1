@@ -315,4 +315,45 @@ public class TrainingService : ITrainingService
 
         return UpdatedDTO;
     }
+
+    public async Task<TrainingDTO?> UpdateTrainingInfo(TrainingDTO trainingDTO)
+    {
+        //Checar si el id es null
+        if(trainingDTO.Id is null)
+            return null;
+        
+        //Buscar el training
+        Training? tr = await _repository.GetTrainingById(trainingDTO.Id.Value);
+
+        //Checar si training es null
+        if(tr is null)
+            return null;
+
+        //Actualizar el trainig en base al dto
+        tr.Difficulty = trainingDTO.Difficulty;
+        tr.Calories = trainingDTO.Calories;
+        tr.Place = trainingDTO.Place;
+        tr.Description = trainingDTO.Description;
+        tr.EstimatedTime = trainingDTO.EstimatedTime;
+        tr.CreatedAt = trainingDTO.CreatedAt ?? DateTime.UtcNow;
+        tr.TrainingName = trainingDTO.TrainingName;
+
+        //Enviar a repo el trainig actualizado
+        Training UpdatedTraining = await _repository.UpdateTrainingInfo(tr);
+
+        //Crear y enviar UpdatedDTO
+        TrainingDTO UpdatedTrainingDTO = new TrainingDTO
+        {
+            Id = UpdatedTraining.Id,
+            Difficulty = UpdatedTraining.Difficulty,
+            Calories = UpdatedTraining.Calories,
+            Place = UpdatedTraining.Place,
+            Description = UpdatedTraining.Description,
+            EstimatedTime = UpdatedTraining.EstimatedTime,
+            CreatedAt = UpdatedTraining.CreatedAt,
+            TrainingName = UpdatedTraining.TrainingName
+        };
+
+        return UpdatedTrainingDTO;
+    }
 }
