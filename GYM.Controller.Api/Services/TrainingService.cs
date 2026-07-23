@@ -264,6 +264,8 @@ public class TrainingService : ITrainingService
     public async Task<bool> DeleteExercisesFromTraining(int trainingId, List<int> Exercises)
     {
         Training? tr = await _repository.GetTrainingById(trainingId);
+        if(tr is null)
+            return false;
 
         List<Exercise> listExercises = new();
         foreach(int num in Exercises)
@@ -274,7 +276,7 @@ public class TrainingService : ITrainingService
             listExercises.Add(ex);
         }
 
-        if(listExercises is null || tr is null)
+        if(listExercises is null)
             return false;
             
         bool result = await _repository.DeleteExercisesFromTraining(tr, listExercises);
@@ -366,5 +368,16 @@ public class TrainingService : ITrainingService
         };
 
         return UpdatedTrainingDTO;
+    }
+
+    public async Task<bool> DeleteTraining(int TrainingID)
+    {
+        Training? training = await _repository.GetTrainingById(TrainingID);
+        
+        if(training is null)
+            return false;
+
+        bool result = await _repository.DeleteTraining(training);
+        return result;
     }
 }

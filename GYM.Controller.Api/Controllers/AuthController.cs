@@ -7,7 +7,7 @@ using GYM.Controller.Api.DTOs;
 using GYM.Data.Entities;
 
 [ApiController]
-[Route("auth")]
+[Route("authentication")]
 
 public class AuthController : ControllerBase
 {

@@ -126,4 +126,13 @@ public class TrainingRepository : ITrainingRepository
         await db.SaveChangesAsync();
         return UpdatedTraining;
     }
+
+    public async Task<bool> DeleteTraining(Training training)
+    {
+        await using var db = await _factory.CreateDbContextAsync();
+
+        db.Trainings.Remove(training);
+        await db.SaveChangesAsync();
+        return true;
+    }
 }

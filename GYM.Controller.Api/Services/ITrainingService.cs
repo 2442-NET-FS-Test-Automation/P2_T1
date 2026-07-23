@@ -16,4 +16,5 @@ public interface ITrainingService
     Task<bool> DeleteExercisesFromTraining(int trainingId, List<int> Exercises);
     Task<ExerciseDTO?> UpdateExercise(ExerciseDTO exerciseDTO);
     Task<TrainingDTO?> UpdateTrainingInfo(TrainingDTO trainingDTO);
+    Task<bool> DeleteTraining(int TrainingID);
 }

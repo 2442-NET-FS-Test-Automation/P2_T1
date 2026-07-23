@@ -15,4 +15,5 @@ public interface ITrainingRepository
     Task<bool> DeleteExercisesFromTraining(Training training, List<Exercise> Exercises);
     Task<Exercise> UpdateExercise(Exercise UpdatedExercise);
     Task<Training> UpdateTrainingInfo(Training UpdatedTraining);
+    Task<bool> DeleteTraining(Training training);
 }
