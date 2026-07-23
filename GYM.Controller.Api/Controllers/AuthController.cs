@@ -3,6 +3,8 @@ using GYM.Controller.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using GYM.Controller.Api.DTOs;
+using GYM.Data.Entities;
 
 [ApiController]
 [Route("auth")]
@@ -10,10 +12,12 @@ using System.Security.Claims;
 public class AuthController : ControllerBase
 {
     private readonly IUserService _userService;
+    private readonly ITokenService _tokenService;
 
-    public AuthController(IUserService userService)
+    public AuthController(IUserService userService, ITokenService tokenService)
     {
         _userService = userService;
+        _tokenService = tokenService;
     }
 
     //RegisterUser
@@ -37,6 +41,25 @@ public class AuthController : ControllerBase
             name = User.Identity?.Name,
             role = User.FindFirstValue(ClaimTypes.Role)
         });
+    }
+
+    [HttpPost("login")]
+    public async Task<ActionResult> LogIn(LogInDTO LogInDto)
+    {
+        var user = await _userService.ValidateAsync(LogInDto);
+
+        if(user is null)
+            return Unauthorized(new {error = "Bad credentials"});
+        
+        return Ok(new {token = _tokenService.Issue(user.Email, user.Role)});
+    }
+
+    [HttpPost("token")]
+    public ActionResult IssueToken(string userEmail, Role role)
+    {
+        var userToken = _tokenService.Issue(userEmail, role);
+
+        return Ok(userToken);
     }
 
 }

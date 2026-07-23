@@ -1,7 +1,9 @@
+using GYM.Controller.Api.DTOs;
 using GYM.Data.Entities;
 using GYM.Data.Repositories;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens; //Password Hasher
+using Microsoft.IdentityModel.Tokens;
+using Serilog; //Password Hasher
 
 namespace GYM.Controller.Api.Services;
 
@@ -30,12 +32,26 @@ public class UserService : IUserService
         User user = new User
         {
             Email = userEmail,
-            Phone = userPhone
+            Phone = userPhone,
+            Role = Role.User //all new users are user not trainer
         };
 
         user.Password = _hasher.HashPassword(user, rUserDTO.Password);
 
         await _UserRepository.RegisterNewUser(user);
         return null;
+    }
+
+    public async Task<User?> ValidateAsync(LogInDTO loginDto)
+    {
+        string email = loginDto.Email.Trim();
+        User? user = await _UserRepository.GetUserByEmail(email);
+
+        if(user is null) //User not found
+            return null;
+        
+        var result = _hasher.VerifyHashedPassword(user, user.Password, loginDto.Password);
+        return result == PasswordVerificationResult.Failed ? null : user;
+
     }
 }
