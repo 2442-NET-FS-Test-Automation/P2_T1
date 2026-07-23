@@ -2,6 +2,8 @@ using GYM.Data;
 using Serilog;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyModel;
+using Microsoft.AspNetCore.Identity;
+using GYM.Data.Entities; 
 using GYM.Data.Repositories;
 using GYM.Controller.Api.Services;
 
@@ -37,9 +39,15 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddMemoryCache(); // adding cache-ing to our server
 builder.Services.AddResponseCaching(); // adding response cache-ing - asking the front end to save request results 
 
+//Password Hashing
+builder.Services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
 //Services
 builder.Services.AddScoped<ITrainingRepository, TrainingRepository>(); //Service
 builder.Services.AddScoped<ITrainingService, TrainingService>(); //Repository
+
+builder.Services.AddScoped<IUserService, UserService>(); //Service User for auth
+builder.Services.AddScoped<IUserRepository, UserRepository>(); //Repository User for auth
+
 var app = builder.Build();
 
 app.UseSwagger();
@@ -56,9 +64,11 @@ if (app.Environment.IsDevelopment())
 app.UseResponseCaching(); //Response caching middleware
 //app.UseSerilogRequestLogging(); No se cuando hay que descomentar
 
-app.UseHttpsRedirection();
+//Must be in this order for Authn/Authz
+app.UseAuthentication(); // read and validate the tokens -> set User
+app.UseAuthorization(); // enforces the [Authorize] / RequireAuthorization() decorators on endpoints 
 
-app.UseAuthorization();
+app.UseHttpsRedirection();
 
 app.MapControllers();
 
