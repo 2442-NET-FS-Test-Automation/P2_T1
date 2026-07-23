@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { achievementsWithStatus, type Achievement } from "../services/achievementService";
 import { getUser } from "../services/auth";
-import type { UserData } from "../interfaces/user";
+import type { UserData } from "../types/user";
 import "../css/Achievements.css"; 
 
 export default function Achievements() {

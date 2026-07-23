@@ -1,6 +1,4 @@
-
-
-export interface exercideDTO{
+export interface exerciseDTO{
     id?: number;
     name: string;
     description: string;
