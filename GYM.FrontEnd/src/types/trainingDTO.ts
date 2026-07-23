@@ -1,4 +1,4 @@
-import type { exercideDTO } from "./exercideDTO";
+import type { exerciseDTO } from "./exerciseDTO";
 
 export type Place = 'Home' | 'Gym' | 'Outdoor';
 
@@ -11,5 +11,5 @@ export interface TrainingDTO {
   description: string;         // string -> string
   estimatedTime: string;       // TimeOnly -> string (ej. "01:30:00")
   createdAt?: string;          // DateTime? -> opcional string en formato ISO (ej. "2026-07-22T...")
-  exercises: exercideDTO[];    // List<ExerciseDTO> -> Array de ExerciseDTO
+  exercises: exerciseDTO[];    // List<ExerciseDTO> -> Array de ExerciseDTO
 }

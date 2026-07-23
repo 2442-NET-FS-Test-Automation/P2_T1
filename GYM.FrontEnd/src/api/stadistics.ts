@@ -1,5 +1,5 @@
 import { api } from "./client";
-import type { StatisticItem, CreateStatisticBody } from "../interfaces/userStadistics";
+import type { StatisticItem, CreateStatisticBody } from "../types/userStadistics";
 
 // Get stats of actual user
 export async function getUserStatistics(): Promise<StatisticItem[]> {

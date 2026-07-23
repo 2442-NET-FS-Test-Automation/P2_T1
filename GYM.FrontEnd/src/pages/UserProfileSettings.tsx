@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { getUser } from "../services/auth";
-import type { UserData } from "../interfaces/user";
+import type { UserData } from "../types/user";
 import "../css/ProfileSettings.css";
 import Navbar from "../components/Navbar";
 
