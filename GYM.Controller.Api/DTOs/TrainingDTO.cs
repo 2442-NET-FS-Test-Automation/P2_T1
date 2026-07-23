@@ -14,3 +14,4 @@ public class TrainingDTO
     public List<ExerciseDTO> Exercises {get;init;} = default!;
 
 }
+

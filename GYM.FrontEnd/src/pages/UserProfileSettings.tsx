@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getUser } from "../services/auth";
 import type { UserData } from "../interfaces/user";
 import "../css/ProfileSettings.css";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/NavBar";
 
 export default function ProfileSettings(){
     const [user, setUser] = useState<UserData | null>(null);

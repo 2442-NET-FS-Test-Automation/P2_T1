@@ -1,8 +1,10 @@
-using GYM.DTOs;
+using Azure.Core.Pipeline;
+using GYM.Controller.Api.DTOs;
 using GYM.Data.Entities;
 using GYM.Data.Repositories;
+using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace GYM.Services;
+namespace GYM.Controller.Api.Services;
 
 public class BookingService : IBookingService
 {
@@ -13,60 +15,80 @@ public class BookingService : IBookingService
     {
         _repo = repo;
     }
-   public async Task<IEnumerable<BookingDto>> GetAllBookingsAsync()
+   public async Task<IReadOnlyList<BookingDTO>> GetAllBookings()
     {
-        var dbEntities = await _repo.GetAllAsync();
+
+        var bookings = await _repo.GetAllBookingsAsync();
         
-        var output = dbEntities.Select(m => new BookingDto(
-              m.BookingID, 
-              m.Name,
-              m.GenericName,
-              m.BrandName,
-              m.DosageForm,
-              m.Strength,
-              m.UnitPrice,
-              m.Inventory != null ? m.Inventory.StockQuantity : 0,
-              m.Inventory != null ? m.Inventory.ExpiryDate : null
-          ));
-
-        return output;
+        if(bookings is null) return null;
+        
+        return bookings
+            .Select(e => new BookingDTO
+            {
+                Id = e.Id,
+                TrainingId = e.TrainingId,
+                UserId = e.UserId,
+                Status = e.Status.ToString(),
+                ExerciseTime = e.ExerciseTime,
+                DoneAt = e.DoneAt
+            })
+            .ToList();
+        
     }
 
-     public async Task<BookingDto?> GetBookingByIdAsync(int id)
+    public async Task<BookingDTO?> GetBookingById(int Id)
     {
-        var m = await _repo.GetByIdAsync(id);
-        if (m == null) return null;
+        var booking = await _repo.GetBookingById(Id);
 
-        return new BookingDto(
-            m.BookingID,
-            m.Name,
-            m.GenericName,
-            m.BrandName,
-            m.DosageForm,
-            m.Strength,
-            m.UnitPrice,
-            m.Inventory != null ? m.Inventory.StockQuantity : 0,
-            m.Inventory != null ? m.Inventory.ExpiryDate : null
-        );
-    }
+        if(booking is null)
+            return null;
 
-
-   public async Task<Booking> CreateBookingAsync(CreateBookingDto dto)
-    {
-        var newBooking = new Booking
+        BookingDTO bookingDto = new BookingDTO
         {
-            Name = dto.Name,
-            GenericName = dto.GenericName,
-            BrandName = dto.BrandName,
-            DosageForm = dto.DosageForm,
-            Strength = dto.Strength,
-            UnitPrice = dto.UnitPrice
+            Id = booking.Id,
+            TrainingId = booking.TrainingId,
+            UserId = booking.UserId,
+            Status = booking.Status.ToString(),
+            ExerciseTime = booking.ExerciseTime,
+            DoneAt = booking.DoneAt
+
         };
 
-        await _repo.AddAsync(newBooking);
-        
-        await _repo.SaveChangesAsync();
+        return bookingDto;
 
-        return newBooking;
+    }
+
+    public async Task<BookingDTO> AddBookingAsync(BookingDTO bookingDTO)
+    {
+        Booking newBooking = new Booking //Se crea una entidad a partir del dto
+        {
+            TrainingId = bookingDTO.TrainingId,
+            UserId = bookingDTO.UserId,
+            ExerciseTime = bookingDTO.ExerciseTime ?? DateTime.Now,
+            Status = Enum.TryParse<BookingStatus>(bookingDTO.Status, true, out var parsedStatus) 
+            ? parsedStatus 
+            : BookingStatus.Book 
+            
+        };
+
+        Booking dbBooking = await _repo.AddBooking(newBooking); //Se pasa a repo layer a crear
+
+        BookingDTO dbBookingDTO = new BookingDTO
+        {
+            Id = dbBooking.Id,
+            TrainingId = dbBooking.TrainingId,
+            UserId = dbBooking.UserId,
+            Status = dbBooking.Status.ToString(),
+            ExerciseTime = dbBooking.ExerciseTime,
+            DoneAt = dbBooking.DoneAt
+        };
+
+        return dbBookingDTO;
+        
+    }
+
+    public Task<bool> DeleteBookingByIdAsync(int BookingId)
+    {
+        return _repo.RemoveBooking(BookingId);
     }
 }

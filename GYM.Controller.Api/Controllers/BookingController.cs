@@ -1,74 +1,79 @@
-using GYM.Data;
-using GYM.DTOs;
-using GYM.Services;
-using Microsoft.AspNetCore.Http;
+using System.Reflection.Metadata.Ecma335;
+using System.Runtime.CompilerServices;
+using  GYM.Controller.Api.DTOs;
+using GYM.Controller.Api.Services;
+using GYM.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 
-namespace GYM.Controllers;
-
-[ApiController]
-[Route("api/pharmacy/[controller]")] 
-[Produces("application/json")]
+[ApiController] //ASP.NET knows to map this controller during app.MapControllers()
+[Route("api/[Controller]")] //route base
 public class BookingController : ControllerBase
 {
-    //private readonly ISeederService _seederService;
     private readonly IBookingService _service;
-
-    public BookingController(IBookingService service/*, ISeederService seederService*/)
+    private readonly IMemoryCache _cache;
+    public BookingController(IBookingService service, IMemoryCache cache)
     {
         _service = service;
-        //_seederService = seederService;
+        _cache = cache;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetBookings()
+    [HttpGet("allBookings")] //get all the exercises from the db
+    public async Task<ActionResult<IEnumerable<BookingDTO>>> GetAllBookings()
     {
-        var Bookings = await _service.GetAllBookingsAsync();
-        return Ok(Bookings);
+        var dtos = await _cache.GetOrCreateAsync("Bookings:all", async entry => //Check cache, if not there search the db via Service Layer
+        {
+            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1); //Will last 1 day
+
+            var items = await _service.GetAllBookings();
+
+            return items; //Falta Mapper, ahorita lo checo
+        });
+
+        return dtos is null ? NotFound() : Ok(dtos); // 404 not found : 200 (list)
+
     }
 
-    // [HttpPost("reset")]
-    // public async Task<IActionResult> ResetPharmacyDomain()
-    // {
-    //     await _seederService.ResetDatabaseAsync();
-    //     return Ok(new { message = "Catalog data reset." });
-    // }
-
-    [HttpPost("add")]
-    public async Task<IActionResult> CreateBooking([FromBody] CreateBookingDto payload)
+    [HttpGet("BookingById/{id}")]
+    public async Task<ActionResult<BookingDTO>> GetBookingById(int id)
     {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
+        var dto = await _service.GetBookingById(id);
 
-        var createdEntity = await _service.CreateBookingAsync(payload);
-
-        var responseDto = new BookingDto(
-            createdEntity.BookingID,
-            createdEntity.Name,
-            createdEntity.GenericName,
-            createdEntity.BrandName,
-            createdEntity.DosageForm,
-            createdEntity.Strength,
-            createdEntity.UnitPrice,
-            0,
-            null
-        );
+        return dto is null ? NotFound() : Ok(dto);
+    }
+    
+    [HttpPost("AddBooking")]//Add 1 exercise
+    //Falta poner quien puede acceder a este endpoint !!!!!!!!!!!!!!!!!
+    public async Task<ActionResult<BookingDTO>> AddBooking(BookingDTO newBooking)
+    {
+        BookingDTO newBookingDto = await _service.AddBookingAsync(newBooking);  
+        _cache.Remove("Bookings:all"); //Se borra el cache
 
         return CreatedAtAction(
             nameof(GetBookingById),
-            new { id = responseDto.BookingID }, 
-            responseDto
-        );
+            new {Id = newBooking.Id},
+            newBookingDto);
+
     }
 
-
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetBookingById(int id)
+    //To delete by exercise by their id
+    [HttpDelete("Booking")]
+    public async Task<ActionResult> DeleteBookingById(int id)
     {
-        var Booking = await _service.GetBookingByIdAsync(id);
+        bool isDeleted = await _service.DeleteBookingByIdAsync(id);
 
-        if (Booking == null) return NotFound($"Booking with ID {id} was not found.");
-        return Ok(Booking);
+        if(isDeleted)
+        {
+            _cache.Remove("Bookings:all");
+            return NoContent();
+        }
+        else
+        {
+            return NotFound();
+        }
     }
+   
 
 }

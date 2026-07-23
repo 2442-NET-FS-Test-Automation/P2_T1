@@ -1,11 +1,11 @@
 import { ExerciseCard } from "../components/ExerciseCard";
 import Navbar from "../components/Navbar"
 import "../css/Training.css";
-export function TrainingDetail() {
+export function Trainings() {
   return (
     <>
       <Navbar onLogout={() => console.log("Cerrando sesión...")} />
-      <section className="trainingDetail">
+      <section className="trainingsContainer">
         <div className="text-center py-5 text-white">
           <h2 className="fw-bold" style={{ letterSpacing: "0.5px" }}>
             Exercises on this training

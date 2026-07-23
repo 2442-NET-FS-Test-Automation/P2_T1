@@ -16,30 +16,27 @@ public class BookingRepository : IBookingRepository
     }
 
 
-    public async Task<IReadOnlyList<Booking>> GetAllAsync()
+    public async Task<IReadOnlyList<Booking>> GetAllBookingsAsync()
     {
         await using var db = await _factory.CreateDbContextAsync();
 
-        return await db.Bookings
-            .Include(m => m.Inventory)
-            .ToListAsync();
+        return await db.Bookings.ToListAsync(); 
     }
 
-    public async Task<Booking?> GetByIdAsync(int id)
+    public async Task<Booking?> GetBookingById(int id)
     {
         await using var db = await _factory.CreateDbContextAsync();
 
-        return await db.Bookings
-            .Include(m => m.Inventory)
-            .FirstOrDefaultAsync(m => m.BookingID == id);
+        return await db.Bookings.FirstOrDefaultAsync(i => i.Id == id);
     }
 
-    public async Task AddAsync(Booking Booking) 
+    public async Task<Booking> AddBooking(Booking booking) 
     {
         await using var db = await _factory.CreateDbContextAsync();
 
-        await db.Bookings.AddAsync(Booking);
+        await db.Bookings.AddAsync(booking);
         await db.SaveChangesAsync(); 
+        return booking;
     }
 
     public async Task UpdateAsync(Booking Booking)
@@ -49,17 +46,23 @@ public class BookingRepository : IBookingRepository
         await db.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(Booking Booking)
+    public async Task<bool> RemoveBooking(int n)
     {
         await using var db = await _factory.CreateDbContextAsync();
-        db.Bookings.Remove(Booking);
-        await db.SaveChangesAsync();
-    }
 
+        Booking? BookingRemoved = await db.Bookings.FirstOrDefaultAsync(i => i.Id == n);
+
+        if(BookingRemoved is null)
+            return false;
+        
+        db.Bookings.Remove(BookingRemoved);
+        await db.SaveChangesAsync();
+        return true;
+    }
     public async Task<bool> ExistsAsync(int id)
     {
         await using var db = await _factory.CreateDbContextAsync();
-        return await db.Bookings.AnyAsync(m => m.BookingID == id);
+        return await db.Bookings.AnyAsync(m => m.Id == id);
     }
 
     public async Task SaveChangesAsync()

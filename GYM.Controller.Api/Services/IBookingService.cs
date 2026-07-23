@@ -1,15 +1,20 @@
+using GYM.Controller.Api.DTOs;
 using GYM.Data.Entities;
-using GYM.DTOs;
-using Microsoft.AspNetCore.Mvc;
-namespace GYM.Services;
+
+namespace GYM.Controller.Api.Services;
+
 
 
 public interface IBookingService
 {
-    public Task<IEnumerable<BookingDto>> GetAllBookingsAsync();
-
-    public Task<BookingDto> GetBookingByIdAsync(int id);
-
-    public Task<Booking> CreateBookingAsync(CreateBookingDto dto);
+    Task<IReadOnlyList<BookingDTO>> GetAllBookings();
+    Task<BookingDTO?> GetBookingById(int Id);
+    Task<BookingDTO> AddBookingAsync(BookingDTO exerciseDTO);
+    Task<bool> DeleteBookingByIdAsync(int BookingId);
+    
+    // Task<TrainingDTO?> GetTrainingDTOAsync(int id);
+    // Task<IReadOnlyList<TrainingDTO>> GetAllTrainings();
+    // Task<TrainingDTO?> AddTrainingsToBooking(int trainingId, List<int> Bookings);
+    // Task<bool> DeleteTrainingsFromBooking(int trainingId, List<int> Bookings);
 
 }

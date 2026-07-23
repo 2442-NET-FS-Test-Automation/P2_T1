@@ -4,13 +4,13 @@ namespace GYM.Data.Repositories;
 
 public interface IBookingRepository
 {
-    public Task<IReadOnlyList<Booking>> GetAllAsync();
-    public Task<Booking?> GetByIdAsync(int id);
-    public  Task AddAsync(Booking Booking);
+    Task<IReadOnlyList<Booking>> GetAllBookingsAsync();
+    Task<Booking?> GetBookingById(int Id);
+    Task<Booking> AddBooking(Booking exercise);
+    Task<bool> RemoveBooking(int n);
 
-    public Task UpdateAsync(Booking Booking);
-    public  Task DeleteAsync(Booking Booking);
+    Task UpdateAsync(Booking Booking);
 
-    public Task<bool> ExistsAsync(int id);
-    public Task SaveChangesAsync();
+    Task<bool> ExistsAsync(int id);
+    Task SaveChangesAsync();
 }
