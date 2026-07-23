@@ -1,0 +1,55 @@
+.trainingDetail {
+  background-color: #121321 !important;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh !important;
+}
+.list-container {
+  display: flex;
+  justify-content: center;
+}
+
+.exercise-card {
+  border-bottom: solid #46f0d2 4px;
+  display: flex;
+  padding: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  height: 12rem;
+}
+
+.exercise-card img {
+  height: 100%;
+  object-fit: cover;
+}
+
+.exercise-card-details {
+  width: calc(100% - 90px);
+  display: flex;
+  margin-left: 10px;
+  color: white;
+  align-items: flex-end;
+  text-align: left;
+  margin: 0rem, 5rem;
+  justify-content: space-between;
+  font-family: "Poppins" sans-serif;
+}
+.exercise-card :hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow);
+}
+.detail-a h3 {
+  font-size: 1.5rem;
+  color: white;
+}
+.detail-a h4 {
+  color: #bfbfbf;
+}
+.exercise-card-details .detail-b {
+  align-items: flex-end;
+}
+
+.exercise-list {
+  align-items: center;
+  width: 50rem;
+  justify-content: center;
+}

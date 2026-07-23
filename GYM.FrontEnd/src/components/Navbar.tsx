@@ -24,6 +24,12 @@ export default function Navbar({ onLogout }: NavbarProps) {
             Gym<span style={{ color: '#00E5FF' }}>Quest</span>
             <span className="ms-2" style={{ fontSize: '0.9rem', color: '#8A8D93' }}>⚔️</span>
           </Link>
+          <Link to="/routines">
+            <span>Routines</span> 
+          </Link>
+          <Link to="/about">
+            <span>About</span>
+          </Link>
 
           {/* Iconos de la derecha */}
           <div className="d-flex align-items-center gap-4" style={{ color: '#FFFFFF', fontSize: '1.4rem' }}>
@@ -68,7 +74,7 @@ export default function Navbar({ onLogout }: NavbarProps) {
             <FiLogOut /> Log Out
           </button>
         </div>
-      </div>
+            </div>
 
       {/* Fondo oscuro traslúcido cuando el menú está abierto */}
       {isOpen && (
@@ -79,5 +85,5 @@ export default function Navbar({ onLogout }: NavbarProps) {
         />
       )}
     </>
-  );
+    );
 }
