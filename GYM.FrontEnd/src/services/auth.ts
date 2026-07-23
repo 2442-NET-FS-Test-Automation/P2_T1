@@ -1,10 +1,11 @@
 import apiClient from './apiClient';
 import { clearToken, getToken, setToken } from '../auth/storage';
-import type { AuthResponse, LoginPayload, RegisterPayload } from '../interfaces/auth';
-import type { UserData } from '../interfaces/user';
+import type { AuthResponse, LogInDTO } from '../types/LogInDTO';
+import type { RegisterUserDTOs } from '../types/RegisterUserDTOs';
+import type { UserData } from '../types/user';
 
-export type { AuthResponse, LoginPayload, RegisterPayload } from '../interfaces/auth';
-export type { UserData } from '../interfaces/user';
+// export type { AuthResponse, LoginPayload, RegisterPayload } from '../types/auth';
+// export type { UserData } from '../types/user';
 
 // Obtain the data of the authenticated user through the JWT Token
 // it sends request to the backend to validate the stored token in localStorage
@@ -27,7 +28,7 @@ export const getUser = async(): Promise<UserData | null> => {
 
 // login with your credentials 
 // save the JWT token send from the backend into the localStorage
-export const login = async(credentials: LoginPayload): Promise<AuthResponse> => {
+export const login = async(credentials: LogInDTO): Promise<AuthResponse> => {
     try {
         const response = await apiClient.post<AuthResponse>('/auth/login', credentials);
 
@@ -42,7 +43,7 @@ export const login = async(credentials: LoginPayload): Promise<AuthResponse> => 
     }
 }
 
-export const register = async(userData: RegisterPayload): Promise<AuthResponse> => {
+export const register = async(userData: RegisterUserDTOs): Promise<AuthResponse> => {
     try {
         const response = await apiClient.post<AuthResponse>('/auth/register', userData);
 
