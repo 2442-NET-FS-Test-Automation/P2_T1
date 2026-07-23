@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 
+//Controller for exercises and training, add, update, delete, get
 
 [ApiController] //ASP.NET knows to map this controller during app.MapControllers()
 [Route("api/[Controller]")] //route base
+//[Authorize] poner cuando todos los endpoints queden hechos !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 public class TrainingController : ControllerBase
 {
     private readonly ITrainingService _service;
@@ -134,4 +136,15 @@ public class TrainingController : ControllerBase
         return NoContent();
     }
 
+    
+    [HttpPut("updateExercise")]
+    public async Task<IActionResult> UpdateExercise(ExerciseDTO exerciseDTO)
+    {
+        if(exerciseDTO is null)
+            return BadRequest();
+
+        ExerciseDTO? updatedExercise =await _service.UpdateExercise(exerciseDTO);
+        _cache.Remove("Exercises:all");
+        return Ok(updatedExercise);
+    }
 }

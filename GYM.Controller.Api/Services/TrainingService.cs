@@ -280,4 +280,39 @@ public class TrainingService : ITrainingService
         bool result = await _repository.DeleteExercisesFromTraining(tr, listExercises);
         return result;
     }
+
+    public async Task<ExerciseDTO?> UpdateExercise(ExerciseDTO exerciseDTO)
+    {
+        //Traer ejercicio, checar si existe, si existe cambiarlo, devolverlo a update db
+
+        if(exerciseDTO.Id is null)
+            return null;
+        
+        Exercise? ex = await _repository.GetExerciseById(exerciseDTO.Id.Value);
+
+        if(ex is null)
+            return null;
+
+        ex.Name = exerciseDTO.Name;
+        ex.Description = exerciseDTO.Description;
+        ex.VisualReferenceUrl = exerciseDTO.VisualReferenceUrl;
+        ex.Sets = exerciseDTO.Sets;
+        ex.Reps = exerciseDTO.Reps;
+
+        //Update exercise in db
+        Exercise UpdatedEx = await _repository.UpdateExercise(ex);
+        
+        //create and send dto
+        ExerciseDTO UpdatedDTO = new ExerciseDTO
+        {
+            Id = UpdatedEx.Id,
+            Name = UpdatedEx.Name,
+            Description = UpdatedEx.Description,
+            VisualReferenceUrl = UpdatedEx.VisualReferenceUrl,
+            Sets = UpdatedEx.Sets,
+            Reps = UpdatedEx.Reps
+        };
+
+        return UpdatedDTO;
+    }
 }

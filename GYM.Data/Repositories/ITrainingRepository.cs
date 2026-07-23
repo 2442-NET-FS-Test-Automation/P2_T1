@@ -13,4 +13,5 @@ public interface ITrainingRepository
     Task<Training> AddTraining(Training training);
     Task<Training> AddExercisesToTraining(Training training, List<Exercise> Exercises);
     Task<bool> DeleteExercisesFromTraining(Training training, List<Exercise> Exercises);
+    Task<Exercise> UpdateExercise(Exercise UpdatedExercise);
 }
