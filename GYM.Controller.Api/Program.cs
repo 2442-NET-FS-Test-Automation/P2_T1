@@ -1,7 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using GYM.Data.Entities;
 using GYM.Data;
+using GYM.Data.Repositories;
 using Serilog;
+using Microsoft.Extensions.DependencyModel;
+using Microsoft.AspNetCore.Identity;
+using GYM.Controller.Api.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +29,28 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog(); // Tell the builder to use Serilog for logging
 
+//Authentication and Authorization -------------------------------------------------------------------------------
+var jwtKey = builder.Configuration["Jwt:Key"]; //AppSettings.Development.json
+
+
+//Issuer and audiende hardcoded
+const string jwtIssuer = "GYM-fulfillment";
+const string jwtAudience = "GYM-fulfillment-users";
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(o=>o.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true, ValidIssuer = jwtIssuer,
+        ValidateAudience = true, ValidAudience = jwtAudience,
+        ValidateIssuerSigningKey = true, IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+        ValidateLifetime = true
+    });
+
+builder.Services.AddAuthorization(); //After authentication
+
+//Stateless, we can use Singleton
+builder.Services.AddSingleton<ITokenService, TokenService>(); //Services for log in
+
 // Adding CORS 
 const string SpaCorsPolicy = "spa"; // string name for our policy
 
@@ -40,6 +69,20 @@ builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//Caching
+builder.Services.AddMemoryCache(); // adding cache-ing to our server
+builder.Services.AddResponseCaching(); // adding response cache-ing - asking the front end to save request results 
+
+//Password Hashing
+builder.Services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
+
+//Services
+builder.Services.AddScoped<ITrainingRepository, TrainingRepository>(); //Service
+builder.Services.AddScoped<ITrainingService, TrainingService>(); //Repository
+
+builder.Services.AddScoped<IUserService, UserService>(); //Service User for auth
+builder.Services.AddScoped<IUserRepository, UserRepository>(); //Repository User for auth
+
 var app = builder.Build();
 
 app.UseSwagger();
@@ -53,11 +96,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseResponseCaching(); //Response caching middleware
 //app.UseSerilogRequestLogging(); No se cuando hay que descomentar
 
-app.UseHttpsRedirection();
+//Must be in this order for Authn/Authz
+app.UseAuthentication(); // read and validate the tokens -> set User
+app.UseAuthorization(); // enforces the [Authorize] / RequireAuthorization() decorators on endpoints 
 
-app.UseAuthorization();
+app.UseHttpsRedirection();
 
 app.MapControllers();
 
