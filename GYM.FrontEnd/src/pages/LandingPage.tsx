@@ -103,13 +103,13 @@ export const LandingPage: React.FC = () => {
 
       {/* Encabezado */}
       <section className="container text-center my-5">
-        <h2 className="fw-semibold fs-3 text-muted mb-1">
+        <h2 className="fw-semibold fs-3 mb-1 text-gold">
           Welcome to
         </h2>
         <h1 className="display-3 fw-bold mb-0">
           Gym<span className="text-neon">Quest</span> ⚔️
         </h1>
-        <p className="text-muted mt-2 fs-5">
+        <p className="text-white mt-2 fs-5">
           Elige tu entrenamiento, gana XP y sube de nivel cada día.
         </p>
       </section>
@@ -188,21 +188,21 @@ export const LandingPage: React.FC = () => {
             <div className="feature-card p-4 rounded-4 text-center h-100">
               <div className="feature-icon-wrapper mb-3">🏆</div>
               <h3 className="fs-5 text-neon fw-bold mb-2">Desbloquea Logros</h3>
-              <p className="text-muted small m-0">Gana experiencia y sube de nivel completando tus rutinas diarias.</p>
+              <p className="text-gold small m-0">Gana experiencia y sube de nivel completando tus rutinas diarias.</p>
             </div>
           </div>
           <div className="col-md-4">
             <div className="feature-card p-4 rounded-4 text-center h-100">
               <div className="feature-icon-wrapper mb-3">📊</div>
               <h3 className="fs-5 text-neon fw-bold mb-2">Sigue tu Progreso</h3>
-              <p className="text-muted small m-0">Visualiza tus estadísticas de fuerza y consistencia semana a semana.</p>
+              <p className="text-gold small m-0">Visualiza tus estadísticas de fuerza y consistencia semana a semana.</p>
             </div>
           </div>
           <div className="col-md-4">
             <div className="feature-card p-4 rounded-4 text-center h-100">
               <div className="feature-icon-wrapper mb-3">📜</div>
               <h3 className="fs-5 text-neon fw-bold mb-2">Misiones Diarias</h3>
-              <p className="text-muted small m-0">Supera desafíos personalizados creados por tu entrenador.</p>
+              <p className="text-gold small m-0">Supera desafíos personalizados creados por tu entrenador.</p>
             </div>
           </div>
         </div>

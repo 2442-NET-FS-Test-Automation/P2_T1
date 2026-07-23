@@ -4,15 +4,8 @@ import { login } from '../services/auth';
 import type { LoginPayload } from '../services/auth';
 import '../css/Login.css';
 
-interface LoginProps {
-  onNavigateToRegister: () => void;
-  onLoginSuccess?: () => void;
-}
+export function Login () { 
 
-export const Login: React.FC<LoginProps> = ({ 
-  onNavigateToRegister, 
-  onLoginSuccess 
-}) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [rememberMe, setRememberMe] = useState<boolean>(false);
@@ -23,27 +16,6 @@ export const Login: React.FC<LoginProps> = ({
     e.preventDefault();
     setError('');
     setLoading(true);
-
-    try {
-      const payload: LoginPayload = { email, password };
-      
-      // Llamada directa a tu función login() de auth.ts
-      await login(payload);
-
-      if (onLoginSuccess) {
-        onLoginSuccess();
-      }
-    } catch (err) {
-      const axiosError = err as AxiosError<{ message?: string }>;
-      
-      if (axiosError.response && axiosError.response.data?.message) {
-        setError(axiosError.response.data.message);
-      } else {
-        setError('Credenciales inválidas o error de conexión');
-      }
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -106,11 +78,9 @@ export const Login: React.FC<LoginProps> = ({
         {/* Link para navegar a Registro */}
         <p className="register-text">
           You don't have an account?{' '}
-          <span className="register-link" onClick={onNavigateToRegister}>
-            Register here
-          </span>
         </p>
       </div>
     </div>
-  );
+  )
+
 };
