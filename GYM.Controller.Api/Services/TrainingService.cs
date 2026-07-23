@@ -342,6 +342,7 @@ public class TrainingService : ITrainingService
         Training UpdatedTraining = await _repository.UpdateTrainingInfo(tr);
 
         //Crear y enviar UpdatedDTO
+        List<ExerciseDTO> exercises = new();
         TrainingDTO UpdatedTrainingDTO = new TrainingDTO
         {
             Id = UpdatedTraining.Id,
@@ -351,7 +352,17 @@ public class TrainingService : ITrainingService
             Description = UpdatedTraining.Description,
             EstimatedTime = UpdatedTraining.EstimatedTime,
             CreatedAt = UpdatedTraining.CreatedAt,
-            TrainingName = UpdatedTraining.TrainingName
+            TrainingName = UpdatedTraining.TrainingName,
+            Exercises = UpdatedTraining.TrainingExercises.Select(te => new ExerciseDTO
+                {
+                    Id = te.Exercise.Id,
+                    Name = te.Exercise.Name,
+                    Description = te.Exercise.Description,
+                    VisualReferenceUrl = te.Exercise.VisualReferenceUrl,
+                    Sets = te.Exercise.Sets,
+                    Reps = te.Exercise.Reps
+                })
+                .ToList()
         };
 
         return UpdatedTrainingDTO;
