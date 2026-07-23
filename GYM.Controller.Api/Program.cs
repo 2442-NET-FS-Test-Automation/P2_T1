@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using GYM.Data.Entities;
 using GYM.Data;
+using GYM.Data.Repositories;
 using Serilog;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.AspNetCore.Identity;
