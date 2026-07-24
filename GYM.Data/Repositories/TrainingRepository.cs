@@ -60,6 +60,8 @@ public class TrainingRepository : ITrainingRepository
             .FirstOrDefaultAsync(i => i.Id == id); //First or default traininig with id ==
     }
 
+    
+
     public async Task<IReadOnlyList<Training>> GetAllTrainingsAsync()
     {
         await using var db = await _factory.CreateDbContextAsync();
