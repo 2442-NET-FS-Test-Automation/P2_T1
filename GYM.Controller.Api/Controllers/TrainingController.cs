@@ -11,7 +11,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 [Authorize]
 [ApiController] //ASP.NET knows to map this controller during app.MapControllers()
-[Route("[Controller]")] //route base
+[Route("api/[Controller]")] //route base
 public class TrainingController : ControllerBase
 {
     private readonly ITrainingService _service;
@@ -22,7 +22,7 @@ public class TrainingController : ControllerBase
         _cache = cache;
     }
 
-    [HttpGet("allExercises")] //get all the exercises from the db
+    [HttpGet("exercises")] //get all the exercises from the db
     public async Task<ActionResult<IEnumerable<ExerciseDTO>>> GetAllExercises()
     {
         var dtos = await _cache.GetOrCreateAsync("Exercises:all", async entry => //Check cache, if not there search the db via Service Layer
@@ -38,7 +38,7 @@ public class TrainingController : ControllerBase
 
     }
 
-    [HttpGet("ExerciseById/{id}")]
+    [HttpGet("exercises/{id}")]
     public async Task<ActionResult<ExerciseDTO>> GetExerciseById(int id)
     {
         var dto = await _service.GetExerciseById(id);
@@ -47,7 +47,7 @@ public class TrainingController : ControllerBase
     }
     
     [Authorize(Roles = "Trainer,Admin")]
-    [HttpPost("AddExercise")]//Add 1 exercise
+    [HttpPost("exercises")]//Add 1 exercise
     //Falta poner quien puede acceder a este endpoint !!!!!!!!!!!!!!!!!
     public async Task<ActionResult<ExerciseDTO>> AddExercise(ExerciseDTO newExercise)
     {
@@ -63,7 +63,7 @@ public class TrainingController : ControllerBase
 
     //To delete by exercise by their id
     [Authorize(Roles = "Trainer,Admin")]
-    [HttpDelete("Exercise")]
+    [HttpDelete("exercises/{id}")]
     public async Task<ActionResult> DeleteExerciseById(int id)
     {
         bool isDeleted = await _service.DeleteExerciseByIdAsync(id);
@@ -79,7 +79,7 @@ public class TrainingController : ControllerBase
         }
     }
     
-    [HttpGet("TrainingById/{id}")]
+    [HttpGet("trainings/{id}")]
     public async Task<ActionResult<TrainingDTO>> GetTrainingById(int id)
     {
         var dto = await _service.GetTrainingDTOAsync(id);
@@ -87,7 +87,7 @@ public class TrainingController : ControllerBase
         return dto is null ? NotFound() : Ok(dto);
     }
 
-    [HttpGet("GetAllTrainings")]
+    [HttpGet("trainings")]
     public async Task<ActionResult<List<TrainingDTO>>> GetAllTrainings()
     {
         var listTrainingDTOs = await _cache.GetOrCreateAsync("Trainings:all", async entry =>
@@ -101,7 +101,7 @@ public class TrainingController : ControllerBase
     }
 
     [Authorize(Roles = "Trainer,Admin")]
-    [HttpPost("AddTraining")]
+    [HttpPost("trainings")]
     public async Task<ActionResult<TrainingDTO>> AddTraining(TrainingAddDTO trainingAddDTO)
     {
         TrainingDTO newTrainingDTO = await _service.AddTrainingAsync(trainingAddDTO);
@@ -114,7 +114,7 @@ public class TrainingController : ControllerBase
     }
 
     [Authorize(Roles = "Trainer,Admin")]
-    [HttpPut("updateTrainingInfo")]
+    [HttpPut("trainings-info")]
     public async Task<IActionResult> UpdateTrainingInfo(TrainingDTO trainingDTO)
     {
         if(trainingDTO is null)
@@ -126,7 +126,7 @@ public class TrainingController : ControllerBase
     }
 
     [Authorize(Roles = "Trainer,Admin")]
-    [HttpPost("AddExercisesToTraining")]
+    [HttpPost("exercises-to-trainings")]
     public async Task<ActionResult<TrainingDTO>> AddExercisesTraining(int TrainingId, List<int> ExercisesId)
     {
         if (ExercisesId is null || ExercisesId.Count == 0)
@@ -142,7 +142,7 @@ public class TrainingController : ControllerBase
     }
 
     [Authorize(Roles = "Trainer,Admin")]
-    [HttpDelete("DeleteExerciseFromTraining")]
+    [HttpDelete("exercises-from-trainings")]
     public async Task<IActionResult> DeleteExerciseFromTraining(int TrainingId,  List<int> ExercisesId)
     {
         bool result = await _service.DeleteExercisesFromTraining(TrainingId, ExercisesId);
@@ -153,7 +153,7 @@ public class TrainingController : ControllerBase
     }
 
     [Authorize(Roles = "Trainer,Admin")]
-    [HttpPut("updateExercise")]
+    [HttpPut("exercises")]
     public async Task<IActionResult> UpdateExercise(ExerciseDTO exerciseDTO)
     {
         if(exerciseDTO is null)
@@ -165,7 +165,7 @@ public class TrainingController : ControllerBase
     }
 
     [Authorize(Roles = "Trainer,Admin")]
-    [HttpDelete("DeleteTraining")]
+    [HttpDelete("training/{trainingID}")]
     public async Task<IActionResult> DeleteTraining(int trainingID)
     {
         

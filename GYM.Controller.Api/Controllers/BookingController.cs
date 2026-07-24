@@ -21,7 +21,7 @@ public class BookingController : ControllerBase
         _cache = cache;
     }
 
-    [HttpGet("allBookings")] //get all the exercises from the db
+    [HttpGet("bookings")] //get all the exercises from the db
     public async Task<ActionResult<IEnumerable<BookingDTO>>> GetAllBookings()
     {
         var dtos = await _cache.GetOrCreateAsync("Bookings:all", async entry => //Check cache, if not there search the db via Service Layer
@@ -37,7 +37,7 @@ public class BookingController : ControllerBase
 
     }
 
-    [HttpGet("BookingById/{id}")]
+    [HttpGet("bookings/{id}")]
     public async Task<ActionResult<BookingDTO>> GetBookingById(int id)
     {
         var dto = await _service.GetBookingById(id);
@@ -45,7 +45,7 @@ public class BookingController : ControllerBase
         return dto is null ? NotFound() : Ok(dto);
     }
     
-    [HttpPost("AddBooking")]//Add 1 exercise
+    [HttpPost("bookings")]//Add 1 exercise
     //Falta poner quien puede acceder a este endpoint !!!!!!!!!!!!!!!!!
     public async Task<ActionResult<BookingDTO>> AddBooking(BookingDTO newBooking)
     {
@@ -61,7 +61,7 @@ public class BookingController : ControllerBase
 
     //To delete by exercise by their id
     [Authorize(Roles = "Trainer,Admin")]
-    [HttpDelete("Booking")]
+    [HttpDelete("bookings/{id}")]
     public async Task<ActionResult> DeleteBookingById(int id)
     {
         bool isDeleted = await _service.DeleteBookingByIdAsync(id);

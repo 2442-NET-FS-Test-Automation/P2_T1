@@ -21,7 +21,7 @@ public class AuthController : ControllerBase
     }
 
     //RegisterUser
-    [HttpPost("Register")]
+    [HttpPost("register")]
     public async Task<ActionResult> Register(RegisterUserDTOs registerDto) 
     //Falta checar que el json si contenga email, contraseña y telefono
     {
@@ -34,7 +34,7 @@ public class AuthController : ControllerBase
     }
 
     //[Authorize(Roles = "Admin")]
-    [HttpPost("RegisterTrainer")]
+    [HttpPost("register-trainer")]
     public async Task<ActionResult> RegisterTrainer(RegisterUserDTOs registerDto) 
     //Falta checar que el json si contenga email, contraseña y telefono
     {
@@ -47,7 +47,7 @@ public class AuthController : ControllerBase
     }
 
     //[Authorize(Roles = "Admin")]
-    [HttpPost("RegisterAdmin")]
+    [HttpPost("register-admin")]
     public async Task<ActionResult> RegisterAdmin(RegisterUserDTOs registerDto) 
     //Falta checar que el json si contenga email, contraseña y telefono
     {
