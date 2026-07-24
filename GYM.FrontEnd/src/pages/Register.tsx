@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import type { SubmitEvent } from "react";
+import { registerUser } from '../services/RegisterUserService';
 import '../css/Register.css';
 
 export function Register() {
@@ -27,7 +28,7 @@ export function Register() {
         return;
     }
 
-    // Basic frontend validation
+    // confirmar que las contraseñas coincidan
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
       return;
@@ -38,13 +39,17 @@ export function Register() {
     try {
       // API Call Placeholder (e.g., registerService({ email, phone, password }))
       console.log('Registering user:', { email, phone, password });
+      registerUser(email, password, phone);
 
-      // Simulated API response
-      setTimeout(() => {
-        setLoading(false);
-        // Navigate to login
-        navigate('/login');
-      }, 1000);
+      //API response
+      setLoading(false);
+      setError(null);
+      // Navigate to login
+      navigate('/login');
+
+      setEmail("");
+      setPassword("");
+      setPhone("");
 
     } catch (err) {
       setLoading(false);
