@@ -21,7 +21,8 @@ public class BookingController : ControllerBase
         _cache = cache;
     }
 
-    [HttpGet("bookings")] //get all the exercises from the db
+    //Get all the bookings from the db
+    [HttpGet("bookings")] 
     public async Task<ActionResult<IEnumerable<BookingDTO>>> GetAllBookings()
     {
         var dtos = await _cache.GetOrCreateAsync("Bookings:all", async entry => //Check cache, if not there search the db via Service Layer
@@ -37,16 +38,26 @@ public class BookingController : ControllerBase
 
     }
 
+    //Get booking by their id
     [HttpGet("bookings/{id}")]
     public async Task<ActionResult<BookingDTO>> GetBookingById(int id)
     {
-        var dto = await _service.GetBookingById(id);
+        var dto = await _cache.GetOrCreateAsync(
+            $"Bookings:{id}", 
+            async entry => //Check cache, if not there search the db via Service Layer
+            {
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1); //Will last 1 day
+
+                var items = await _service.GetBookingById(id);
+
+                return items; //Falta Mapper, ahorita lo checo
+            });
 
         return dto is null ? NotFound() : Ok(dto);
     }
     
-    [HttpPost("bookings")]//Add 1 exercise
-    //Falta poner quien puede acceder a este endpoint !!!!!!!!!!!!!!!!!
+    //Add a new exercise
+    [HttpPost("bookings")]
     public async Task<ActionResult<BookingDTO>> AddBooking(BookingDTO newBooking)
     {
         BookingDTO newBookingDto = await _service.AddBookingAsync(newBooking);  
@@ -69,6 +80,7 @@ public class BookingController : ControllerBase
         if(isDeleted)
         {
             _cache.Remove("Bookings:all");
+            _cache.Remove($"Bookids:{id}");
             return NoContent();
         }
         else
