@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getPublicTrainings } from '../services/TrainingService';
 import type { TrainingDTO } from '../types/trainingDTO';
-import { useAuth } from '../auth/useAuth';
+//import { useAuth } from '../auth/useAuth';
 import '../css/LandingPage.css';
 
 export const LandingPage: React.FC = () => {
@@ -10,7 +10,7 @@ export const LandingPage: React.FC = () => {
   const [workouts, setWorkouts] = useState<TrainingDTO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const {status, logout} = useAuth();
+  //const {status, logout} = useAuth();
 
   useEffect(() => {
     const fetchWorkouts = async () => {
@@ -73,29 +73,9 @@ export const LandingPage: React.FC = () => {
     <div className="landing-bg text-white min-vh-100 pb-5">
       {/* Navbar */}
       <nav className="navbar navbar-expand-lg navbar-dark bg-transparent py-3 container">
-          <span className="navbar-brand fw-bold fs-3 cursor-pointer" onClick={() => navigate('/')}>
-            Gym<span className="text-neon">Quest</span> ⚔️
-          </span>
+          <span className="navbar-brand fw-bold fs-3 cursor-pointer" ></span>
           <div className="d-flex gap-2 ms-auto">        
-          {status === "authenticated" ?( 
-            <div className="container-fluid px-0">         
-              <button 
-              key="btn-logout" className="btn btn-outline-neon rounded-pill px-4 fw-semibold" 
-              onClick={logout}>
-              LOG OUT
-              </button>
-            </div>   
-          ) : (
-          <div className="container-fluid px-0">
-              <button key="btn-group-auth" className="btn btn-outline-neon rounded-pill px-4 fw-semibold" onClick={() => navigate('/login')}>
-                LOG IN
-              </button>
-              <button className="btn btn-neon rounded-pill px-4 fw-bold" onClick={() => navigate('/register')}>
-                REGISTER
-              </button>
           </div>
-          )}
-        </div>
       </nav>
 
       {/* Hero Banner Principal */}
