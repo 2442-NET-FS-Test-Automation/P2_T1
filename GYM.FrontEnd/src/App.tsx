@@ -13,6 +13,7 @@ import { UserStatistics } from './pages/UserStadistics';
 //import { useAuth } from './auth/useAuth';
 import { RequireAuth } from './components/RequireAuth';
 import { Register } from './pages/Register';
+import { UserBooking } from './pages/UserBooking';
 
 import { NotFound } from './pages/NotFound';
 
@@ -39,6 +40,7 @@ function App() {
           <Route path='/register' element={<Register/>} />
           <Route path="/home-user" element={<Home />} />
           <Route path="/user/stadistics" element={<UserStatistics />}/>
+          <Route path="/user/booking" element={<UserBooking />}/>
           <Route path='/admin' element={<RequireAuth role='admin'> <p>Admin page</p> </RequireAuth>} />
           <Route path='/routines' element={<Routines />} />
           <Route path='/routines/myroutines' element= {<MyRoutines /> } />

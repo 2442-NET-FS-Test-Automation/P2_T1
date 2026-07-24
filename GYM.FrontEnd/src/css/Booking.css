@@ -1,14 +1,24 @@
-.trainingsContainer {
+.bookings{
   background-color: #121321 !important;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    min-height: 100vh !important;
-}
-.list-container {
+  min-height: 100vh !important;
   display: flex;
   justify-content: center;
 }
+.bookingsContainer {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
 
-.exercise-card {
+.bookingsContainer h2{
+  color: white;
+}
+.booking-list-container {
+  margin-top: 2rem;
+}
+
+.booking-card {
   border-bottom: solid #46f0d2 4px;
   display: flex;
   padding: 1rem;
@@ -16,33 +26,35 @@
   align-items: center;
   height: 12rem;
   background-color: #1a1b2f; /* Added a dark card color to make shadows visible */
-  border-radius: 8px;        /* Optional: rounds the corners for a modern feel */
+  border-radius: 8px; /* Optional: rounds the corners for a modern feel */
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
 }
 
 /* 2. Fixed space bug and enhanced the "pop" effects */
-.exercise-card:hover {
+.booking-card:hover {
   transform: translateY(-5px) scale(1.02); /* Lifts up slightly and grows */
   box-shadow: 0 10px 20px rgba(70, 240, 210, 0.2); /* Neon glow effect using your accent color */
   border-bottom-color: #ffffff; /* Optional: switches border color on hover */
 }
 
 /* 3. Fixed comma bug and missing comma in font family fallback */
-.exercise-card-details {
+.booking-card-details {
   width: calc(100% - 90px);
   display: flex;
   margin-left: 10px;
   color: white;
-  align-items: flex-end;
   text-align: left;
-  margin: 0rem 5rem; /* Fixed: Removed comma */
   justify-content: space-between;
   font-family: "Poppins", sans-serif; /* Fixed: Added missing comma */
 }
-.exercise-card img {
+.booking-card img {
   height: 100%;
   object-fit: cover;
+  border-radius: 7%;
 }
 
 .detail-a h3 {
@@ -52,12 +64,50 @@
 .detail-a h4 {
   color: #bfbfbf;
 }
-.exercise-card-details .detail-b {
-  align-items: flex-end;
-}
 
-.exercise-list {
+.booking-list-container {
   align-items: center;
   width: 50rem;
   justify-content: center;
+}
+
+.card-button-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.card-button-wrapper button {
+  height: 35px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+.primary {
+  background-color: rgb(98, 230, 212);
+  color: white;
+}
+.primary:hover {
+  background-color: rgb(47, 199, 174);
+}
+.secondary {
+  background-color: #ddd;
+}
+.secondary:hover {
+  background-color: rgb(197, 197, 197);
+}
+
+.detail-b {
+  display: flex;
+  flex-direction: column;
+}
+
+.book-element-section {
+  display: flex;
+}
+.detail-b-content-1 {
+  height: 100%;
 }
