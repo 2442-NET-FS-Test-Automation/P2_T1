@@ -129,6 +129,69 @@
     color: #4a5568;
 }
 
+/* ===== UPDATE BUTTON (Change Password) ===== */
+.update-btn {
+    display: inline-block;
+    margin-top: 0.75rem;
+    padding: 0.65rem 1.5rem;
+    background-color: #4f46e5;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.update-btn:hover {
+    background-color: #4338ca;
+}
+
+.update-btn:active {
+    transform: scale(0.97);
+}
+
+.update-btn:disabled {
+    background-color: #a5a5a5;
+    cursor: not-allowed;
+}
+
+/* ===== LANGUAGE OPTIONS (Choose Language) ===== */
+.language-options {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.lang-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9rem 2rem;
+    min-width: 140px;
+    background-color: #f3f4f6;
+    color: #374151;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.lang-btn:hover {
+    background-color: #e5e7eb;
+    border-color: #d1d5db;
+}
+
+.lang-btn.active {
+    background-color: #eef2ff;
+    color: #4f46e5;
+    border-color: #4f46e5;
+    font-weight: 600;
+}
+
 /* Responsividad para pantallas pequeñas */
 @media (max-width: 768px) {
     .settings-container {

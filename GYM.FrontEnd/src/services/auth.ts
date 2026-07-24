@@ -5,8 +5,6 @@ import type { UserData } from '../types/user';
 import { api as apiClient} from '../api/client';
 
 
-// export type { AuthResponse, LoginPayload, RegisterPayload } from '../types/auth';
-// export type { UserData } from '../types/user';
 
 // Obtain the data of the authenticated user through the JWT Token
 // it sends request to the backend to validate the stored token in localStorage
@@ -17,7 +15,7 @@ export const getUser = async(): Promise<UserData | null> => {
     if(!token) return null;
 
     try{
-        const response = await apiClient.get<UserData>('/auth/me');
+        const response = await apiClient.get<UserData>('/authentication/me');
         return response.data;
     } catch(err) {
         console.error("The user can't be found", err);
