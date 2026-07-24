@@ -1,4 +1,4 @@
-import { createContext, useEffect, useReducer } from "react";
+import { createContext, useReducer } from "react";
 import type { ReactNode } from "react";
 import { login as loginRequest } from "../api/auth";
 import { decodeToken } from "./jwt";
@@ -13,9 +13,23 @@ interface AuthContextValue extends AuthState {
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
 
-export function AuthProvider ({ children }: {children: ReactNode}){
-    const [state, dispatch] = useReducer(authReducer, initialAuthState);
+//Function to read the stored token before the first render
+//That way the guard can read the athenticated user and not see InitialAuthState values
+function InitAuthState(): AuthState {
+    const token = getToken();
+    const user = token ? decodeToken(token) : null;
 
+    if (!user)
+        return initialAuthState; // If nobody is logged in - no token in LocalStorage THEN return
+                                 // initial auth state
+    return {status: "authenticated", user, error: null}
+}
+
+export function AuthProvider ({ children }: {children: ReactNode}){
+
+    const [state, dispatch] = useReducer(authReducer, undefined, InitAuthState);
+
+    /* Old code, the one that didn't work in jonathan class
     useEffect(() => {
         const token = getToken();
 
@@ -26,8 +40,9 @@ export function AuthProvider ({ children }: {children: ReactNode}){
         if (user) dispatch( { type: "login_success", user})
         else clearToken();
             
-    }, []);
+    }, []); */
 
+    //Login method =======================
     async function login(email: string, password: string): Promise<boolean> {
         dispatch({type: "login_start"})
 
@@ -36,11 +51,13 @@ export function AuthProvider ({ children }: {children: ReactNode}){
             const user = decodeToken(token);
 
             if (!user) throw new Error("token missing expected claims")
+                
             setToken(token);
             dispatch({ type: "login_success", user})
             return true;
 
-        } catch {
+        } catch (err) {
+            console.error("Login failed inside AuthContext:", err);
             dispatch({type: "login_failure", error: "Invalid email or password"})
             return false;
         }

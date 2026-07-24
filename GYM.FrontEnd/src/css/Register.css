@@ -1,5 +1,5 @@
-/* Fondo Global del Login */
-.login-bg {
+/* Fondo Global del Registro */
+.register-bg {
   background-color: #121321 !important;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   position: relative;
@@ -27,7 +27,7 @@
 }
 
 /* Tarjeta Principal */
-.login-card {
+.register-card {
   background-color: #1a1c2e;
   border: 1px solid rgba(70, 240, 210, 0.2);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
@@ -41,7 +41,7 @@
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), 0 0 15px rgba(70, 240, 210, 0.08);
 }
 
-/* Custom Inputs de Bootstrap */
+/* Custom Inputs */
 .quest-input {
   background-color: #121321 !important;
   border: 1px solid rgba(255, 255, 255, 0.15) !important;
@@ -57,22 +57,11 @@
 }
 
 .quest-input::placeholder {
-  color: #a0a6b5 !important; /* Gris claro de alto contraste */
-  opacity: 0.8; /* Asegura que no se atenúe en navegadores como Firefox */
+  color: #a0a6b5 !important;
+  opacity: 0.8;
 }
 
-/* Custom Checkbox */
-.quest-checkbox {
-  background-color: #121321;
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-.quest-checkbox:checked {
-  background-color: #46F0D2 !important;
-  border-color: #46F0D2 !important;
-}
-
-/* Botones Neón */
+/* Botones */
 .btn-neon {
   background-color: #46F0D2 !important;
   color: #121321 !important;
@@ -110,9 +99,9 @@
 
 /* Alerta de Error Customizada */
 .alert-danger-quest {
-  background-color: rgba(220, 53, 69, 0.15);
-  border: 1px solid rgba(220, 53, 69, 0.4);
-  color: #ff6b6b;
+  background-color: rgba(220, 53, 69, 0.15) !important;
+  border: 1px solid rgba(220, 53, 69, 0.4) !important;
+  color: #ff6b6b !important;
 }
 
 /* Utilidades */

@@ -6,7 +6,7 @@ export interface AuthResponse {
 }
 
 export interface LogInDTO {
-  email: string;
-  password: string;
+  Email: string;
+  Password: string;
 }
 

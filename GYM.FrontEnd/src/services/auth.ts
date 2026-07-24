@@ -1,11 +1,10 @@
-import apiClient from './apiClient';
 import { clearToken, getToken, setToken } from '../auth/storage';
 import type { AuthResponse, LogInDTO } from '../types/LogInDTO';
 import type { RegisterUserDTOs } from '../types/RegisterUserDTOs';
 import type { UserData } from '../types/user';
+import { api as apiClient} from '../api/client';
 
-// export type { AuthResponse, LoginPayload, RegisterPayload } from '../types/auth';
-// export type { UserData } from '../types/user';
+
 
 // Obtain the data of the authenticated user through the JWT Token
 // it sends request to the backend to validate the stored token in localStorage
@@ -16,7 +15,7 @@ export const getUser = async(): Promise<UserData | null> => {
     if(!token) return null;
 
     try{
-        const response = await apiClient.get<UserData>('/auth/me');
+        const response = await apiClient.get<UserData>('/authentication/me');
         return response.data;
     } catch(err) {
         console.error("The user can't be found", err);
@@ -30,7 +29,7 @@ export const getUser = async(): Promise<UserData | null> => {
 // save the JWT token send from the backend into the localStorage
 export const login = async(credentials: LogInDTO): Promise<AuthResponse> => {
     try {
-        const response = await apiClient.post<AuthResponse>('/auth/login', credentials);
+        const response = await apiClient.post<AuthResponse>('/authentication/login', credentials);
 
         // if we receive the unique token, we store it
         if(response.data && response.data.token){
@@ -45,7 +44,7 @@ export const login = async(credentials: LogInDTO): Promise<AuthResponse> => {
 
 export const register = async(userData: RegisterUserDTOs): Promise<AuthResponse> => {
     try {
-        const response = await apiClient.post<AuthResponse>('/auth/register', userData);
+        const response = await apiClient.post<AuthResponse>('/authentication/register', userData);
 
         if(response.data && response.data.token){
             setToken(response.data.token);

@@ -3,6 +3,7 @@
 // that .NET writes claims with
 const NAME_CLAIM = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name";
 const ROLE_CLAIM = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
+const EMAIL_CLAIM = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress";
 
 // We need an object for our decoded JWT
 interface JwtPayload {
@@ -16,6 +17,8 @@ export interface Identity {
 
 export function decodeToken(token: string): Identity | null {
     try {
+        if (!token || typeof token !== "string") return null;
+
         // JWT are 3 segment encoded strings
         const segment = token.split(".")[1];
         if(!segment) return null; // if we didn't have a token to begin with, return null
@@ -25,13 +28,17 @@ export function decodeToken(token: string): Identity | null {
         const payload = JSON.parse(atob(base64)) as JwtPayload;
 
         // Now that we have the payload, we can grab the info from the claims
-        const name = payload[NAME_CLAIM]
-        const role = payload[ROLE_CLAIM]
+        const name = payload[NAME_CLAIM] || payload[EMAIL_CLAIM] || payload["email"];
+        const role = payload[ROLE_CLAIM] || payload["role"] || payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
 
-        if(typeof name !== "string" || typeof role !== "string") return null;
+        if (typeof name !== "string" || typeof role !== "string") {
+            console.warn("JWT Payload missing required claims. Payload:", payload);
+            return null;
+        }
 
         return {name, role};
-    } catch {
+    } catch (err) {
+        console.error("Error decoding token:", err);
         return null;
     }
 }
