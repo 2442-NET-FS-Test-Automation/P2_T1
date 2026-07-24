@@ -8,4 +8,7 @@ public interface IUserService
     Task<string?> RegisterTrainerAsync(RegisterUserDTOs rUserDTO);
     Task<string?> RegisterAdminAsync(RegisterUserDTOs rUserDTO);
     Task<User?> ValidateAsync(LogInDTO loginDto);
+    Task<UserDetailsDTO?> GetUserDetails(int userId);
+    Task<UserDetailsDTO?> AddUserDetails(UserDetailsDTO userDetailsDTO);
+    Task<UserDetailsDTO?> UpdateUserDetails(UserDetailsDTO userDetailsDTO);
 }

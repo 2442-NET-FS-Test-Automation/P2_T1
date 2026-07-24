@@ -37,9 +37,7 @@ public class TrainingController : ControllerBase
             return items; 
         });
         
-
         return dtos is null ? NotFound() : Ok(dtos); // 404 not found : 200 (list)
-
     }
 
     //Get an exercise by their id

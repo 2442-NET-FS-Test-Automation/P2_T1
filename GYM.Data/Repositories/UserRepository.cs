@@ -11,12 +11,26 @@ public class UserRepository : IUserRepository
         _factory = factory;
     }
 
+    public async Task<UserDetail?> AddUserDetails(UserDetail userDetail)
+    {
+        await using var db = await _factory.CreateDbContextAsync();
+        db.UserDetails.Add(userDetail);
+        await db.SaveChangesAsync();
+        return await db.UserDetails.FirstOrDefaultAsync(i => i.UserId == userDetail.UserId);
+    }
+
     //Get the user or null by email 
     public async Task<User?> GetUserByEmail(string email)
     {
         await using var db = await _factory.CreateDbContextAsync();
 
         return await db.Users.FirstOrDefaultAsync(i => i.Email == email);
+    }
+
+    public async Task<User?> GetUserById(int UserId)
+    {
+        await using var db = await _factory.CreateDbContextAsync();
+        return await db.Users.FirstOrDefaultAsync(i => i.Id == UserId);
     }
 
     //Get the user or null by Phone 
@@ -27,6 +41,13 @@ public class UserRepository : IUserRepository
         return await db.Users.FirstOrDefaultAsync(i => i.Phone == phone);
     }
 
+    public async Task<UserDetail?> GetUserDetailsByUserId(int UserId)
+    {
+        await using var db = await _factory.CreateDbContextAsync();
+
+        return await db.UserDetails.FirstOrDefaultAsync(i => i.UserId == UserId);
+    }
+
     //Add a new user
     public async Task RegisterNewUser(User user)
     {
@@ -34,5 +55,16 @@ public class UserRepository : IUserRepository
 
         await db.Users.AddAsync(user);
         await db.SaveChangesAsync();
+        
+    }
+
+    public async Task<UserDetail?> UpdateUserDetails(UserDetail UserDetail)
+    {
+        await using var db = await _factory.CreateDbContextAsync();
+
+        db.UserDetails.Update(UserDetail);
+        await db.SaveChangesAsync();
+
+        return UserDetail;
     }
 }
