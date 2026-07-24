@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { getUser } from "../services/auth";
 import type { UserData } from "../types/user";
 import "../css/ProfileSettings.css";
-import Navbar from "../components/Navbar";
 
 type SettingSection = "account" | "password" | "language";
 
@@ -47,7 +46,6 @@ export default function ProfileSettings() {
 
     return (
         <div className="profilesettings-page">
-            <Navbar onLogout={() => console.log('Clossing session...')} />
 
             <div className="settings-container">
                 {/* --- LEFT SECTION: Avatar, options --- */}
