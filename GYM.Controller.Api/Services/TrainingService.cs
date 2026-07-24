@@ -276,7 +276,7 @@ public class TrainingService : ITrainingService
             listExercises.Add(ex);
         }
 
-        if(listExercises is null)
+        if(listExercises.Count == 0)
             return false;
             
         bool result = await _repository.DeleteExercisesFromTraining(tr, listExercises);
