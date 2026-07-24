@@ -27,9 +27,15 @@ export default function Navbar({ onLogout }: NavbarProps) {
 
           {/* Iconos de la derecha */}
           <div className="d-flex align-items-center gap-4" style={{ color: '#FFFFFF', fontSize: '1.4rem' }}>
-            <FiCalendar className="role-button" style={{ cursor: 'pointer' }} title="Reservas / Clases" />
-            <FiAward className="role-button" style={{ cursor: 'pointer' }} title="Logros" />
-            <FiUser className="role-button" style={{ cursor: 'pointer', color: '#00E5FF' }} onClick={toggleMenu} title="Perfil" />
+            <Link to="/user/booking">
+            <FiCalendar className="role-button" style={{ cursor: 'pointer' }} title="Booking" />
+            </Link>
+
+            <Link to="/user/achievements">
+              <FiAward className="role-button" style={{ cursor: 'pointer' }} title="Achievements" />
+            </Link>
+            
+            <FiUser className="role-button" style={{ cursor: 'pointer', color: '#00E5FF' }} onClick={toggleMenu} title="Profile" />
           </div>
         </div>
       </nav>
@@ -54,10 +60,10 @@ export default function Navbar({ onLogout }: NavbarProps) {
 
         {/* Enlaces del menú */}
         <div className="d-flex flex-column gap-3">
-          <a href="#perfil" className="text-decoration-none text-white d-flex align-items-center gap-2 p-2 rounded hover-effect" onClick={toggleMenu}>
-            <FiUser style={{ color: '#00E5FF' }} /> Your profile
-          </a>
-          <Link to="/profile/settings" className="text-decoration-none text-white d-flex align-items-center gap-2 p-2 rounded hover-effect" onClick={toggleMenu}>
+          <Link to="/user/stadistics" className="text-decoration-none text-white d-flex align-items-center gap-2 p-2 rounded hover-effect" onClick={toggleMenu}>
+            <FiUser style={{ color: '#00E5FF' }} /> Your profile stats
+          </Link>
+          <Link to="/user/profileSettings" className="text-decoration-none text-white d-flex align-items-center gap-2 p-2 rounded hover-effect" onClick={toggleMenu}>
             <FiSettings /> Configuration
           </Link>
           <hr className="text-muted my-2" />
