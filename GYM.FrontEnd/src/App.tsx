@@ -1,15 +1,20 @@
-import { Route, Routes } from 'react-router-dom';
+import './css/App.css';
+import { Routes, Route } from 'react-router-dom'
+import { About } from './pages/About'
+import { Routines } from './pages/Routines'
+import { MyRoutines } from './pages/MyRoutines'
+import { Trainings } from './pages/Trainings'
 import Home from './pages/UserHome';
 import Achievements from './pages/UserAchievements';
 import ProfileSettings from './pages/UserProfileSettings';
 import { Login } from './pages/Login';
 import { LandingPage } from './pages/LandingPage';
-//import { createBrowserRouter, RouterProvider, useNavigate } from 'react-router-dom';
 import { UserStatistics } from './pages/UserStadistics';
 //import { useAuth } from './auth/useAuth';
 import { RequireAuth } from './components/RequireAuth';
 import { Register } from './pages/Register';
 
+import { NotFound } from './pages/NotFound';
 
 function App() {
 
@@ -23,7 +28,9 @@ function App() {
 
 
   return (
-      <main>
+    <>
+      <div className="app">
+        <main>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/user/achievements" element={<Achievements />} />
@@ -33,9 +40,15 @@ function App() {
           <Route path="/home-user" element={<Home />} />
           <Route path="/user/stadistics" element={<UserStatistics />}/>
           <Route path='/admin' element={<RequireAuth role='admin'> <p>Admin page</p> </RequireAuth>} />
-          <Route path='*' element={<p>Page not found</p>} /> {/* Not found page */}
+          <Route path='/routines' element={<Routines />} />
+          <Route path='/routines/myroutines' element= {<MyRoutines /> } />
+          <Route path='/training' element={<Trainings/>}/>
+          <Route path="/about" element={<About />} />
+          <Route path='*' element={<NotFound/>} />
         </Routes>
       </main>
+      </div>
+    </>
   );
 }
 

@@ -83,6 +83,10 @@ builder.Services.AddScoped<ITrainingService, TrainingService>(); //Repository
 builder.Services.AddScoped<IUserService, UserService>(); //Service User for auth
 builder.Services.AddScoped<IUserRepository, UserRepository>(); //Repository User for auth
 
+builder.Services.AddScoped<IBookingService, BookingService>(); //Booking 
+builder.Services.AddScoped<IBookingRepository, BookingRepository>(); //Booking 
+
+
 var app = builder.Build();
 
 //============================

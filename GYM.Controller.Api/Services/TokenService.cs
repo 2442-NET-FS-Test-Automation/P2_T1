@@ -15,23 +15,14 @@ public class TokenService : ITokenService
     {
         _key = configuration["Jwt:Key"];
     }
-    public string Issue(string email, Role role)
+    public string Issue(int id, string email, Role role)
     {
         var creds = new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key)),
             SecurityAlgorithms.HmacSha256
         );
-        string rol;
-
-        switch (role)
-        {
-            case Role.User : rol = "user"; break;
-            case Role.Trainer: rol = "trainer"; break;
-            default: rol="user"; break;
-        }
-
         var token = new JwtSecurityToken("GYM-fulfillment","GYM-fulfillment-users",
-        new[] {new Claim(ClaimTypes.Email, email), new Claim(ClaimTypes.Role, rol)},
+        new[] {new Claim(ClaimTypes.NameIdentifier, id.ToString()), new Claim(ClaimTypes.Email, email), new Claim(ClaimTypes.Role, role.ToString())},
         expires: DateTime.UtcNow.AddHours(1), signingCredentials:creds);
 
         return new JwtSecurityTokenHandler().WriteToken(token);

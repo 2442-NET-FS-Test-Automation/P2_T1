@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using GYM.Data.Entities;
 
 namespace GYM.Data.Entities;
 

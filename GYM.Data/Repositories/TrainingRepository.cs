@@ -60,6 +60,8 @@ public class TrainingRepository : ITrainingRepository
             .FirstOrDefaultAsync(i => i.Id == id); //First or default traininig with id ==
     }
 
+    
+
     public async Task<IReadOnlyList<Training>> GetAllTrainingsAsync()
     {
         await using var db = await _factory.CreateDbContextAsync();
@@ -84,7 +86,7 @@ public class TrainingRepository : ITrainingRepository
     {
         await using var db = await _factory.CreateDbContextAsync();
         foreach(Exercise ex in exercises)
-        { //Id = 1, TrainingId = 1, ExerciseId = 1
+        { 
            
             await db.TrainingExercises.AddAsync(new TrainingExercises
                 {
@@ -94,7 +96,12 @@ public class TrainingRepository : ITrainingRepository
         }
         await db.SaveChangesAsync();
 
-        return training;
+        Training? Updatedtraining = await db.Trainings
+            .Include(t => t.TrainingExercises)//include bridge table that is as a navigation property of traininig
+            .ThenInclude(te => te.Exercise) //Include the actual exercise
+            .FirstOrDefaultAsync(i => i.Id == training.Id); //First or default traininig with id ==
+
+        return Updatedtraining;
     }
 
     public async Task<bool> DeleteExercisesFromTraining(Training training, List<Exercise> Exercises)
@@ -107,6 +114,31 @@ public class TrainingRepository : ITrainingRepository
             if(te is not null)
                 db.TrainingExercises.Remove(te);
         }
+        await db.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<Exercise> UpdateExercise(Exercise UpdatedExercise)
+    {
+        await using var db = await _factory.CreateDbContextAsync();
+        db.Exercises.Update(UpdatedExercise);
+        await db.SaveChangesAsync();
+        return UpdatedExercise;
+    }
+
+    public async Task<Training> UpdateTrainingInfo(Training UpdatedTraining)
+    {
+        await using var db = await _factory.CreateDbContextAsync();
+        db.Trainings.Update(UpdatedTraining);
+        await db.SaveChangesAsync();
+        return UpdatedTraining;
+    }
+
+    public async Task<bool> DeleteTraining(Training training)
+    {
+        await using var db = await _factory.CreateDbContextAsync();
+
+        db.Trainings.Remove(training);
         await db.SaveChangesAsync();
         return true;
     }

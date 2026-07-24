@@ -264,6 +264,8 @@ public class TrainingService : ITrainingService
     public async Task<bool> DeleteExercisesFromTraining(int trainingId, List<int> Exercises)
     {
         Training? tr = await _repository.GetTrainingById(trainingId);
+        if(tr is null)
+            return false;
 
         List<Exercise> listExercises = new();
         foreach(int num in Exercises)
@@ -274,10 +276,108 @@ public class TrainingService : ITrainingService
             listExercises.Add(ex);
         }
 
-        if(listExercises is null || tr is null)
+        if(listExercises.Count == 0)
             return false;
             
         bool result = await _repository.DeleteExercisesFromTraining(tr, listExercises);
+        return result;
+    }
+
+    public async Task<ExerciseDTO?> UpdateExercise(ExerciseDTO exerciseDTO)
+    {
+        //Traer ejercicio, checar si existe, si existe cambiarlo, devolverlo a update db
+
+        if(exerciseDTO.Id is null)
+            return null;
+        
+        Exercise? ex = await _repository.GetExerciseById(exerciseDTO.Id.Value);
+
+        if(ex is null)
+            return null;
+
+        ex.Name = exerciseDTO.Name;
+        ex.Description = exerciseDTO.Description;
+        ex.VisualReferenceUrl = exerciseDTO.VisualReferenceUrl;
+        ex.Sets = exerciseDTO.Sets;
+        ex.Reps = exerciseDTO.Reps;
+
+        //Update exercise in db
+        Exercise UpdatedEx = await _repository.UpdateExercise(ex);
+        
+        //create and send dto
+        ExerciseDTO UpdatedDTO = new ExerciseDTO
+        {
+            Id = UpdatedEx.Id,
+            Name = UpdatedEx.Name,
+            Description = UpdatedEx.Description,
+            VisualReferenceUrl = UpdatedEx.VisualReferenceUrl,
+            Sets = UpdatedEx.Sets,
+            Reps = UpdatedEx.Reps
+        };
+
+        return UpdatedDTO;
+    }
+
+    public async Task<TrainingDTO?> UpdateTrainingInfo(TrainingDTO trainingDTO)
+    {
+        //Checar si el id es null
+        if(trainingDTO.Id is null)
+            return null;
+        
+        //Buscar el training
+        Training? tr = await _repository.GetTrainingById(trainingDTO.Id.Value);
+
+        //Checar si training es null
+        if(tr is null)
+            return null;
+
+        //Actualizar el trainig en base al dto
+        tr.Difficulty = trainingDTO.Difficulty;
+        tr.Calories = trainingDTO.Calories;
+        tr.Place = trainingDTO.Place;
+        tr.Description = trainingDTO.Description;
+        tr.EstimatedTime = trainingDTO.EstimatedTime;
+        tr.CreatedAt = trainingDTO.CreatedAt ?? DateTime.UtcNow;
+        tr.TrainingName = trainingDTO.TrainingName;
+
+        //Enviar a repo el trainig actualizado
+        Training UpdatedTraining = await _repository.UpdateTrainingInfo(tr);
+
+        //Crear y enviar UpdatedDTO
+        List<ExerciseDTO> exercises = new();
+        TrainingDTO UpdatedTrainingDTO = new TrainingDTO
+        {
+            Id = UpdatedTraining.Id,
+            Difficulty = UpdatedTraining.Difficulty,
+            Calories = UpdatedTraining.Calories,
+            Place = UpdatedTraining.Place,
+            Description = UpdatedTraining.Description,
+            EstimatedTime = UpdatedTraining.EstimatedTime,
+            CreatedAt = UpdatedTraining.CreatedAt,
+            TrainingName = UpdatedTraining.TrainingName,
+            Exercises = UpdatedTraining.TrainingExercises.Select(te => new ExerciseDTO
+                {
+                    Id = te.Exercise.Id,
+                    Name = te.Exercise.Name,
+                    Description = te.Exercise.Description,
+                    VisualReferenceUrl = te.Exercise.VisualReferenceUrl,
+                    Sets = te.Exercise.Sets,
+                    Reps = te.Exercise.Reps
+                })
+                .ToList()
+        };
+
+        return UpdatedTrainingDTO;
+    }
+
+    public async Task<bool> DeleteTraining(int TrainingID)
+    {
+        Training? training = await _repository.GetTrainingById(TrainingID);
+        
+        if(training is null)
+            return false;
+
+        bool result = await _repository.DeleteTraining(training);
         return result;
     }
 }
