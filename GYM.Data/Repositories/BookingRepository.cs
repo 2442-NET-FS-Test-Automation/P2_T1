@@ -30,6 +30,15 @@ public class BookingRepository : IBookingRepository
         return await db.Bookings.FirstOrDefaultAsync(i => i.Id == id);
     }
 
+    public async Task<IEnumerable<Booking>> GetBookingsByUserId(int userid)
+    {
+        await using var db = await _factory.CreateDbContextAsync();
+
+        return await db.Bookings
+            .Where(b => b.UserId == userid)
+            .ToListAsync();
+    }
+
     public async Task<Booking> AddBooking(Booking booking) 
     {
         await using var db = await _factory.CreateDbContextAsync();
