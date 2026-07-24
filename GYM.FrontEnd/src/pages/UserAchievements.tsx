@@ -84,7 +84,6 @@ export default function Achievements() {
 
   return (
     <div>
-      <Navbar />
       <div className="achievements-page py-4">
         <div className="container" style={{ maxWidth: "800px" }}>
 
