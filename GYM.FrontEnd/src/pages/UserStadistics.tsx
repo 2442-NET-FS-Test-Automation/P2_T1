@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import type { StatisticItem } from "../types/userStadistics";
 import { getUserStatistics } from "../api/stadistics";
-import Navbar from "../components/Navbar";
 
 // Tus componentes de gráficas ya conectados
 import { WeeklyMilesChart } from "../components/WeeklyMilesChart";
@@ -59,7 +58,6 @@ export const UserStatistics: React.FC = () => {
 
   return (
     <div>
-      <Navbar onLogout={() => console.log('Cerrando sesión...')} />
       <div className="stats-page space-y-8">
         {/* Encabezado */}
         <div className="border-b border-[#282a42] pb-4 flex justify-between items-end">

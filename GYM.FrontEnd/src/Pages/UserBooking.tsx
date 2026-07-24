@@ -1,4 +1,3 @@
-import Navbar from "../components/Navbar";
 import { useState } from "react";
 import { BookingFilterBar } from "../components/BookingFilterBar";
 import { BookingCard } from "../components/BookingCard";
@@ -8,7 +7,6 @@ export function UserBooking() {
   const [sortBy, setSortBy] = useState("date-asc");
   return (
     <>
-      <Navbar onLogout={() => console.log("Cerrando sesión...")} />
       <div className="bookings">
         <BookingFilterBar />
         <section className="bookingsContainer">
