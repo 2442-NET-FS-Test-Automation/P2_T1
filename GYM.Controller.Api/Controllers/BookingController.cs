@@ -43,6 +43,14 @@ public class BookingController : ControllerBase
 
         return dto is null ? NotFound() : Ok(dto);
     }
+
+    [HttpGet("BookingByUserId/{id}")]
+    public async Task<ActionResult<IEnumerable<BookingDTO>>> GetBookingsByUserId(int id)
+    {
+        var dtos = await _service.GetBookingsByUserId(id);
+
+        return !dtos.Any() ? NotFound("No bookings found for this user.") : Ok(dtos);
+    }
     
     [HttpPost("AddBooking")]//Add 1 exercise
     //Falta poner quien puede acceder a este endpoint !!!!!!!!!!!!!!!!!

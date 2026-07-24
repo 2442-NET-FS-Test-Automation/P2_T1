@@ -9,6 +9,7 @@ public interface IBookingService
 {
     Task<IReadOnlyList<BookingDTO>> GetAllBookings();
     Task<BookingDTO?> GetBookingById(int Id);
+    Task<IEnumerable<BookingDTO>> GetBookingsByUserId(int userId);
     Task<BookingDTO> AddBookingAsync(BookingDTO exerciseDTO);
     Task<bool> DeleteBookingByIdAsync(int BookingId);
     

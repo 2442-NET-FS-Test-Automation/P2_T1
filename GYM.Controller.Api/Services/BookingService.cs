@@ -58,6 +58,20 @@ public class BookingService : IBookingService
 
     }
 
+    public async Task<IEnumerable<BookingDTO>> GetBookingsByUserId(int userId)
+    {
+        var bookings = await _repo.GetBookingsByUserId(userId);
+
+        return bookings.Select(booking => new BookingDTO
+        {
+            Id = booking.Id,
+            TrainingId = booking.TrainingId,
+            UserId = booking.UserId,
+            Status = booking.Status.ToString(),
+            ExerciseTime = booking.ExerciseTime,
+            DoneAt = booking.DoneAt
+        }).ToList();
+    }
     public async Task<BookingDTO> AddBookingAsync(BookingDTO bookingDTO)
     {
         Booking newBooking = new Booking //Se crea una entidad a partir del dto
