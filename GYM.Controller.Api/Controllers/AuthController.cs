@@ -21,7 +21,7 @@ public class AuthController : ControllerBase
     }
 
     //RegisterUser
-    [HttpPost("Register")]
+    [HttpPost("register")]
     public async Task<ActionResult> Register(RegisterUserDTOs registerDto) 
     //Falta checar que el json si contenga email, contraseña y telefono
     {
@@ -33,12 +33,38 @@ public class AuthController : ControllerBase
         return CreatedAtAction(nameof(Me),  result); //201 
     }
 
+    //[Authorize(Roles = "Admin")]
+    [HttpPost("register-trainer")]
+    public async Task<ActionResult> RegisterTrainer(RegisterUserDTOs registerDto) 
+    //Falta checar que el json si contenga email, contraseña y telefono
+    {
+        var result = await _userService.RegisterTrainerAsync(registerDto);
+
+        if(result is not null)
+            return Conflict(new {result}); //409 conflict
+        
+        return CreatedAtAction(nameof(Me),  result); //201 
+    }
+
+    //[Authorize(Roles = "Admin")]
+    [HttpPost("register-admin")]
+    public async Task<ActionResult> RegisterAdmin(RegisterUserDTOs registerDto) 
+    //Falta checar que el json si contenga email, contraseña y telefono
+    {
+        var result = await _userService.RegisterAdminAsync(registerDto);
+
+        if(result is not null)
+            return Conflict(new {result}); //409 conflict
+        
+        return CreatedAtAction(nameof(Me),  result); //201 
+    }
 
     [HttpGet("me")]
     public ActionResult Me()
     {
         return Ok( new
         {
+            id = User.FindFirstValue(ClaimTypes.NameIdentifier),
             name = User.Identity?.Name,
             role = User.FindFirstValue(ClaimTypes.Role)
         });
@@ -52,14 +78,14 @@ public class AuthController : ControllerBase
         if(user is null)
             return Unauthorized(new {error = "Bad credentials"});
         
-        return Ok(new {token = _tokenService.Issue(user.Email, user.Role)});
+        return Ok(new {token = _tokenService.Issue(user.Id, user.Email, user.Role)});
     }
 
     [HttpPost("token")]
     
-    public ActionResult IssueToken(string userEmail, Role role)
+    public ActionResult IssueToken(int id, string userEmail, Role role)
     {
-        var userToken = _tokenService.Issue(userEmail, role);
+        var userToken = _tokenService.Issue(id, userEmail, role);
 
         return Ok(userToken);
     }
