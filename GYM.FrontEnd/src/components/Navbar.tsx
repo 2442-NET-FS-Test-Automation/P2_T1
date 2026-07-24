@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 interface NavbarProps {
   onLogout?: () => void;
 }
-
+    
 export default function Navbar({ onLogout }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -23,12 +23,6 @@ export default function Navbar({ onLogout }: NavbarProps) {
           <Link to="/" className="navbar-brand fw-bold fs-4 d-flex align-items-center" style={{ color: '#FFFFFF' }}>
             Gym<span style={{ color: '#00E5FF' }}>Quest</span>
             <span className="ms-2" style={{ fontSize: '0.9rem', color: '#8A8D93' }}>⚔️</span>
-          </Link>
-          <Link to="/routines">
-            <span>Routines</span> 
-          </Link>
-          <Link to="/about">
-            <span>About</span>
           </Link>
 
           {/* Iconos de la derecha */}
