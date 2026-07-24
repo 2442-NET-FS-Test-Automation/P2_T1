@@ -1,8 +1,9 @@
-import apiClient from './apiClient';
 import { clearToken, getToken, setToken } from '../auth/storage';
 import type { AuthResponse, LogInDTO } from '../types/LogInDTO';
 import type { RegisterUserDTOs } from '../types/RegisterUserDTOs';
 import type { UserData } from '../types/user';
+import { api as apiClient} from '../api/client';
+
 
 
 // Obtain the data of the authenticated user through the JWT Token
