@@ -41,6 +41,55 @@ public class UserService : IUserService
         await _UserRepository.RegisterNewUser(user);
         return null;
     }
+    public async Task<string?> RegisterTrainerAsync(RegisterUserDTOs rUserDTO)
+    {
+        string userEmail = rUserDTO.Email.Trim();
+        User? userEmailX = await _UserRepository.GetUserByEmail(userEmail);
+        string userPhone = rUserDTO.Phone.Trim();
+        User? userPhoneX = await _UserRepository.GetUserByPhone(userPhone);
+
+        if(userEmailX is not null)
+            return "Email already in use";
+        else if(userPhoneX is not null)
+            return "Phone already in use";
+        
+        User user = new User
+        {
+            Email = userEmail,
+            Phone = userPhone,
+            Role = Role.Trainer 
+        };
+
+        user.Password = _hasher.HashPassword(user, rUserDTO.Password);
+
+        await _UserRepository.RegisterNewUser(user);
+        return null;
+    }
+
+    public async Task<string?> RegisterAdminAsync(RegisterUserDTOs rUserDTO)
+    {
+        string userEmail = rUserDTO.Email.Trim();
+        User? userEmailX = await _UserRepository.GetUserByEmail(userEmail);
+        string userPhone = rUserDTO.Phone.Trim();
+        User? userPhoneX = await _UserRepository.GetUserByPhone(userPhone);
+
+        if(userEmailX is not null)
+            return "Email already in use";
+        else if(userPhoneX is not null)
+            return "Phone already in use";
+        
+        User user = new User
+        {
+            Email = userEmail,
+            Phone = userPhone,
+            Role = Role.Admin 
+        };
+
+        user.Password = _hasher.HashPassword(user, rUserDTO.Password);
+
+        await _UserRepository.RegisterNewUser(user);
+        return null;
+    }
 
     public async Task<User?> ValidateAsync(LogInDTO loginDto)
     {

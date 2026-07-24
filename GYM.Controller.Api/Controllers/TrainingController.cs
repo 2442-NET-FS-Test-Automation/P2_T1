@@ -9,9 +9,9 @@ using Microsoft.Extensions.Caching.Memory;
 
 //Controller for exercises and training, add, update, delete, get
 
+[Authorize]
 [ApiController] //ASP.NET knows to map this controller during app.MapControllers()
 [Route("[Controller]")] //route base
-//[Authorize] poner cuando todos los endpoints queden hechos !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 public class TrainingController : ControllerBase
 {
     private readonly ITrainingService _service;
@@ -46,6 +46,7 @@ public class TrainingController : ControllerBase
         return dto is null ? NotFound() : Ok(dto);
     }
     
+    [Authorize(Roles = "Trainer,Admin")]
     [HttpPost("AddExercise")]//Add 1 exercise
     //Falta poner quien puede acceder a este endpoint !!!!!!!!!!!!!!!!!
     public async Task<ActionResult<ExerciseDTO>> AddExercise(ExerciseDTO newExercise)
@@ -61,6 +62,7 @@ public class TrainingController : ControllerBase
     }
 
     //To delete by exercise by their id
+    [Authorize(Roles = "Trainer,Admin")]
     [HttpDelete("Exercise")]
     public async Task<ActionResult> DeleteExerciseById(int id)
     {
@@ -98,6 +100,7 @@ public class TrainingController : ControllerBase
         return listTrainingDTOs is null ? NotFound() : Ok(listTrainingDTOs); // 404 not found : 200 (list)
     }
 
+    [Authorize(Roles = "Trainer,Admin")]
     [HttpPost("AddTraining")]
     public async Task<ActionResult<TrainingDTO>> AddTraining(TrainingAddDTO trainingAddDTO)
     {
@@ -110,6 +113,7 @@ public class TrainingController : ControllerBase
             newTrainingDTO);
     }
 
+    [Authorize(Roles = "Trainer,Admin")]
     [HttpPut("updateTrainingInfo")]
     public async Task<IActionResult> UpdateTrainingInfo(TrainingDTO trainingDTO)
     {
@@ -121,6 +125,7 @@ public class TrainingController : ControllerBase
         return Ok(updatedTrainig);
     }
 
+    [Authorize(Roles = "Trainer,Admin")]
     [HttpPost("AddExercisesToTraining")]
     public async Task<ActionResult<TrainingDTO>> AddExercisesTraining(int TrainingId, List<int> ExercisesId)
     {
@@ -136,6 +141,7 @@ public class TrainingController : ControllerBase
         return Ok(tr);
     }
 
+    [Authorize(Roles = "Trainer,Admin")]
     [HttpDelete("DeleteExerciseFromTraining")]
     public async Task<IActionResult> DeleteExerciseFromTraining(int TrainingId,  List<int> ExercisesId)
     {
@@ -146,7 +152,7 @@ public class TrainingController : ControllerBase
         return NoContent();
     }
 
-    
+    [Authorize(Roles = "Trainer,Admin")]
     [HttpPut("updateExercise")]
     public async Task<IActionResult> UpdateExercise(ExerciseDTO exerciseDTO)
     {
@@ -158,6 +164,7 @@ public class TrainingController : ControllerBase
         return Ok(updatedExercise);
     }
 
+    [Authorize(Roles = "Trainer,Admin")]
     [HttpDelete("DeleteTraining")]
     public async Task<IActionResult> DeleteTraining(int trainingID)
     {

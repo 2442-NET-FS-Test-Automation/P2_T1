@@ -7,9 +7,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 
-
+[Authorize]
 [ApiController] //ASP.NET knows to map this controller during app.MapControllers()
 [Route("api/[Controller]")] //route base
+
 public class BookingController : ControllerBase
 {
     private readonly IBookingService _service;
@@ -59,6 +60,7 @@ public class BookingController : ControllerBase
     }
 
     //To delete by exercise by their id
+    [Authorize(Roles = "Trainer,Admin")]
     [HttpDelete("Booking")]
     public async Task<ActionResult> DeleteBookingById(int id)
     {
@@ -74,6 +76,5 @@ public class BookingController : ControllerBase
             return NotFound();
         }
     }
-   
 
 }

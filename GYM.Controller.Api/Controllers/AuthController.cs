@@ -33,6 +33,32 @@ public class AuthController : ControllerBase
         return CreatedAtAction(nameof(Me),  result); //201 
     }
 
+    //[Authorize(Roles = "Admin")]
+    [HttpPost("RegisterTrainer")]
+    public async Task<ActionResult> RegisterTrainer(RegisterUserDTOs registerDto) 
+    //Falta checar que el json si contenga email, contraseña y telefono
+    {
+        var result = await _userService.RegisterTrainerAsync(registerDto);
+
+        if(result is not null)
+            return Conflict(new {result}); //409 conflict
+        
+        return CreatedAtAction(nameof(Me),  result); //201 
+    }
+
+    //[Authorize(Roles = "Admin")]
+    [HttpPost("RegisterAdmin")]
+    public async Task<ActionResult> RegisterAdmin(RegisterUserDTOs registerDto) 
+    //Falta checar que el json si contenga email, contraseña y telefono
+    {
+        var result = await _userService.RegisterAdminAsync(registerDto);
+
+        if(result is not null)
+            return Conflict(new {result}); //409 conflict
+        
+        return CreatedAtAction(nameof(Me),  result); //201 
+    }
+
 
     [HttpGet("me")]
     public ActionResult Me()
