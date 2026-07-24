@@ -3,7 +3,6 @@ import { achievementsWithStatus, type Achievement } from "../services/achievemen
 import { getUser } from "../services/auth";
 import type { UserData } from "../types/user";
 import "../css/Achievements.css";
-import Navbar from "../components/Navbar";
 
 export default function Achievements() {
   const [user, setUser] = useState<UserData | null>(null);
@@ -43,7 +42,6 @@ export default function Achievements() {
 
   return (
     <div>
-      <Navbar/>
       <div className="achievements-page py-4">
         <div className="container" style={{ maxWidth: "800px" }}>
 

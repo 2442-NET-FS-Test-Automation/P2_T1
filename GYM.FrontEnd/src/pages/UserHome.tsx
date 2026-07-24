@@ -1,5 +1,3 @@
-import Navbar from "../components/Navbar";
-
 interface Training {
   id: number;
   title: string;
@@ -18,8 +16,6 @@ export default function Home() {
 
   return (
     <div style={{ backgroundColor: '#121321', minHeight: '100vh', color: '#FFFFFF' }}>
-      {/* Menu Superior */}
-      <Navbar onLogout={() => console.log('Cerrando sesión...')} />
 
       <div className="container py-4">
         {/* Mensaje de Bienvenida */}
