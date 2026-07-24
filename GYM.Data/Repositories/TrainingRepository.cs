@@ -84,7 +84,7 @@ public class TrainingRepository : ITrainingRepository
     {
         await using var db = await _factory.CreateDbContextAsync();
         foreach(Exercise ex in exercises)
-        { //Id = 1, TrainingId = 1, ExerciseId = 1
+        { 
            
             await db.TrainingExercises.AddAsync(new TrainingExercises
                 {
@@ -94,7 +94,12 @@ public class TrainingRepository : ITrainingRepository
         }
         await db.SaveChangesAsync();
 
-        return training;
+        Training? Updatedtraining = await db.Trainings
+            .Include(t => t.TrainingExercises)//include bridge table that is as a navigation property of traininig
+            .ThenInclude(te => te.Exercise) //Include the actual exercise
+            .FirstOrDefaultAsync(i => i.Id == training.Id); //First or default traininig with id ==
+
+        return Updatedtraining;
     }
 
     public async Task<bool> DeleteExercisesFromTraining(Training training, List<Exercise> Exercises)
