@@ -1,27 +1,36 @@
 import { api } from "./client";
-import type { AchievementItem, UserAchievement, CreateAchievementBody } from "../types/UserAchievements";
+import type { AchievementDTO, UserAchievement, CreateAchievementBody } from "../types/AchievementDTO";
 
 // Here lives the catalog data call to the api
 
 // get all achievements
-export async function getAchievementx(): Promise<AchievementItem[]> {
-    const response = await api.get<AchievementItem[]>("/api/achievements");
+export async function getAchievements(): Promise<AchievementDTO[]> {
+    const response = await api.get<AchievementDTO[]>("/api/Achievement/allAchievements");
     return response.data;
 }
 
-// get userAchievements role: user only
-export async function getUserAchievements(): Promise<UserAchievement> {
-    const response = await api.get<UserAchievement>(`/api/user-achievements/me`);
+export async function getAchievementById(id: number): Promise<UserAchievement> {
+    const response = await api.get<UserAchievement>(`/api/Achievement/AchievementById/${id}`);
     return response.data;
 }
 
-// Finaly - two calls that SHOULD be trainer-only
-export async function createAchievement(body: CreateAchievementBody) : Promise<AchievementItem>{
-    const response = await api.post<AchievementItem>("/api/achievements", body);
+export async function getUserAchievement(id: number): Promise<UserAchievement> {
+    const response = await api.get<UserAchievement>(`/api/Achievement/AchievementByUserId/${id}`);
+    return response.data;
+}
+
+// Finaly - two calls that SHOULD be trainer
+export async function AddAchievement(body: CreateAchievementBody) : Promise<AchievementDTO>{
+    const response = await api.post<AchievementDTO>("/api/Achievement/AddAchievement", body);
+    return response.data;
+}
+
+export async function updateAchievement(achievement: AchievementDTO): Promise<AchievementDTO>{
+    const response = await api.put<AchievementDTO>("/api/Achievement/updateAchievement", achievement);
     return response.data;
 }
 
 // only trainer can delete an achievement
-export async function deleteAchievent(id: number): Promise<void>{
-    await api.delete(`/api/achievements/${id}`)
+export async function deleteAchievement(id: number): Promise<void>{
+    await api.delete(`/api/Achievement/Achievement/${id}`)
 }
