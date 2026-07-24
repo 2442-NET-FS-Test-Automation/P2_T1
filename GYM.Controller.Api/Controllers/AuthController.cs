@@ -59,12 +59,12 @@ public class AuthController : ControllerBase
         return CreatedAtAction(nameof(Me),  result); //201 
     }
 
-
     [HttpGet("me")]
     public ActionResult Me()
     {
         return Ok( new
         {
+            id = User.FindFirstValue(ClaimTypes.NameIdentifier),
             name = User.Identity?.Name,
             role = User.FindFirstValue(ClaimTypes.Role)
         });
@@ -78,14 +78,14 @@ public class AuthController : ControllerBase
         if(user is null)
             return Unauthorized(new {error = "Bad credentials"});
         
-        return Ok(new {token = _tokenService.Issue(user.Email, user.Role)});
+        return Ok(new {token = _tokenService.Issue(user.Id, user.Email, user.Role)});
     }
 
     [HttpPost("token")]
     
-    public ActionResult IssueToken(string userEmail, Role role)
+    public ActionResult IssueToken(int id, string userEmail, Role role)
     {
-        var userToken = _tokenService.Issue(userEmail, role);
+        var userToken = _tokenService.Issue(id, userEmail, role);
 
         return Ok(userToken);
     }
