@@ -1,19 +1,68 @@
-.bookings{
+.bookings {
   background-color: #121321 !important;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   min-height: 100vh !important;
   display: flex;
   justify-content: center;
+  gap: 5rem;
 }
 .bookingsContainer {
   display: flex;
-  justify-content: center;
   flex-direction: column;
+  margin-top: 2.5rem;
 }
 
-.bookingsContainer h2{
-  color: white;
+/* Container for heading + sort control alignment */
+.bookings-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 50rem; /* Matches the width of your booking-list-container */
+  border-bottom: 1px solid #232545;
+  padding-bottom: 0.75rem;
 }
+
+/* Align text label and dropdown horizontally */
+.sort-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Custom Styled Dropdown Menu */
+.sort-dropdown {
+  background-color: #1a1b2f;
+  border: 1px solid #333652;
+  color: white;
+  padding: 0.5rem 2rem 0.5rem 1rem;
+  border-radius: 6px;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease;
+  
+  /* Replaces default browser arrow with a cleaner style */
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://w3.org' viewBox='0 0 24 24' fill='none' stroke='%2346f0d2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+}
+
+/* Dropdown interactive states */
+.sort-dropdown:focus, 
+.sort-dropdown:hover {
+  border-color: #46f0d2;
+  box-shadow: 0 0 10px rgba(70, 240, 210, 0.2);
+}
+
+/* Optional style adjustment to keep header spaced nicely from cards */
+.bookingsContainer h2 {
+  color: white;
+  margin: 0;
+}
+
 .booking-list-container {
   margin-top: 2rem;
 }
@@ -110,4 +159,75 @@
 }
 .detail-b-content-1 {
   height: 100%;
+}
+
+.filter-bar {
+  background-color: #1a1b2f;
+  border: 1px solid #232545;
+  border-bottom: solid #46f0d2 4px;
+  border-radius: 8px;
+  padding: 2rem;
+  width: 22rem; /* Keeps it proportionate next to the 50rem card list */
+  height: fit-content;
+  margin-top: 5.5rem; /* Aligns vertically with the top of the booking cards */
+}
+
+.filter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Label Style matching your custom utility class fallback */
+.text-neon {
+  color: #46f0d2;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Custom Cyberpunk Inputs */
+.filter-input {
+  width: 100%;
+  background-color: #121321;
+  border: 1px solid #333652;
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+/* Input Interactive States */
+.filter-input:focus {
+  outline: none;
+  border-color: #46f0d2;
+  box-shadow: 0 0 10px rgba(70, 240, 210, 0.25);
+  background-color: #15162b;
+}
+
+.filter-input::placeholder {
+  color: #5d6185;
+}
+
+/* Calendar icon color override for dark mode date picker */
+.filter-input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(80%) sepia(50%) saturate(1000%) hue-rotate(120deg);
+  cursor: pointer;
+}
+
+/* Custom Neon Button Utility overrides */
+.btn-neon {
+  background-color: #46f0d2;
+  color: #121321;
+  border: none;
+  font-family: "Poppins", sans-serif;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.btn-neon:hover {
+  background-color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(70, 240, 210, 0.4);
 }

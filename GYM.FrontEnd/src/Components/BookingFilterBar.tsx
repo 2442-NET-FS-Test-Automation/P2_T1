@@ -4,52 +4,40 @@ export function BookingFilterBar() {
   return (
     <section className="filter-bar">
       <form className="filter-form">
-        {/* Input Email */}
-        <div className="mb-3">
-          <label className="form-label text-neon small fw-semibold">
+        <div>
+          <label className="form-label text-neon small fw-semibold mb-2 d-block">
             Location
           </label>
-
-          <div className="input-group">
-            <input
-              type="text"
-              className="filter-input filter-location"
-              placeholder="Location"
-            />
-          </div>
+          <input
+            type="text"
+            className="filter-input"
+            placeholder="Search location..."
+          />
         </div>
 
-        {/* Input Password */}
-        <div className="mb-3">
-          <label className="form-label text-neon small fw-semibold">
+        <div>
+          <label className="form-label text-neon small fw-semibold mb-2 d-block">
             Trainer
           </label>
-
-          <div className="input-group">
-            <input
-              type="text"
-              className="filter-input filter-trainer"
-              placeholder="Trainer"
-            />
-          </div>
+          <input
+            type="text"
+            className="filter-input"
+            placeholder="Search trainer..."
+          />
         </div>
-        <div className="mb-3">
-          <label className="form-label text-neon small fw-semibold">
+
+        <div>
+          <label className="form-label text-neon small fw-semibold mb-2 d-block">
             Date
           </label>
-
-          <div className="input-group">
-            <input
-              type="date"
-              className="filter-input filter-date"
-            />
-          </div>
+          <input type="date" className="filter-input" />
         </div>
+
         <button
           type="submit"
-          className="btn btn-neon w-100 py-2.5 rounded-pill fw-bold text-uppercase shadow-neon"
+          className="btn btn-neon w-100 py-2.5 rounded-pill fw-bold text-uppercase mt-2"
         >
-          "Search"
+          Search
         </button>
       </form>
     </section>
