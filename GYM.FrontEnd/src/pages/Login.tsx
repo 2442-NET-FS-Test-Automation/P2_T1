@@ -21,12 +21,14 @@ export function Login () {
     e.preventDefault();
 
     setError(null);
-    //setLoading(true);
 
     const ok = await login(email, password)
+    console.log("¿Qué devolvió la función login?:", ok);
 
-    if(ok) 
+    if(ok){
+      console.log("Ok on submit Login button");
       navigate("/");
+    } 
     else
       setError("Invalid username or password")
   }

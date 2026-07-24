@@ -56,7 +56,8 @@ export function AuthProvider ({ children }: {children: ReactNode}){
             dispatch({ type: "login_success", user})
             return true;
 
-        } catch {
+        } catch (err) {
+            console.error("Login failed inside AuthContext:", err);
             dispatch({type: "login_failure", error: "Invalid email or password"})
             return false;
         }
