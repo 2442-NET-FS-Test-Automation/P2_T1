@@ -1,6 +1,6 @@
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
-using  GYM.Controller.Api.DTOs;
+using GYM.Controller.Api.DTOs;
 using GYM.Controller.Api.Services;
 using GYM.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -51,19 +51,30 @@ public class BookingController : ControllerBase
 
         return !dtos.Any() ? NotFound("No bookings found for this user.") : Ok(dtos);
     }
-    
+
     [HttpPost("AddBooking")]//Add 1 exercise
     //Falta poner quien puede acceder a este endpoint !!!!!!!!!!!!!!!!!
     public async Task<ActionResult<BookingDTO>> AddBooking(BookingDTO newBooking)
     {
-        BookingDTO newBookingDto = await _service.AddBookingAsync(newBooking);  
+        BookingDTO newBookingDto = await _service.AddBookingAsync(newBooking);
         _cache.Remove("Bookings:all"); //Se borra el cache
 
         return CreatedAtAction(
             nameof(GetBookingById),
-            new {Id = newBooking.Id},
+            new { Id = newBooking.Id },
             newBookingDto);
 
+    }
+
+    [HttpPut("updateBooking")]
+    public async Task<IActionResult> UpdateBooking(BookingDTO bookingDTO)
+    {
+        if (bookingDTO is null)
+            return BadRequest();
+
+        BookingDTO? updatedBooking = await _service.UpdateBooking(bookingDTO);
+        _cache.Remove("Bookings:all");
+        return Ok(updatedBooking);
     }
 
     //To delete by exercise by their id
@@ -72,7 +83,7 @@ public class BookingController : ControllerBase
     {
         bool isDeleted = await _service.DeleteBookingByIdAsync(id);
 
-        if(isDeleted)
+        if (isDeleted)
         {
             _cache.Remove("Bookings:all");
             return NoContent();
@@ -82,6 +93,6 @@ public class BookingController : ControllerBase
             return NotFound();
         }
     }
-   
+
 
 }
