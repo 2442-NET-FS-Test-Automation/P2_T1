@@ -11,4 +11,5 @@ public interface IUserService
     Task<UserDetailsDTO?> GetUserDetails(int userId);
     Task<UserDetailsDTO?> AddUserDetails(UserDetailsDTO userDetailsDTO);
     Task<UserDetailsDTO?> UpdateUserDetails(UserDetailsDTO userDetailsDTO);
+
 }
