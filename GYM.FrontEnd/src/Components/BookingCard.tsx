@@ -5,7 +5,7 @@ interface BookingCardProps {
   trainer?: string;
   location?: string;          // New property
   exerciseCount?: number;     // New property
-  difficulty?: 'easy' | 'medium' | 'hard';
+  difficulty?: 'Beginner' | 'Intermediate' | 'Advanced' | 'Heroic';
 }
 
 export function BookingCard({ 
@@ -13,7 +13,7 @@ export function BookingCard({
   trainer = "Coach Alex", 
   location = "Main Studio - Room A",
   exerciseCount = 8,
-  difficulty = "medium"
+  difficulty = "Intermediate"
 }: BookingCardProps) {
   return (
     <div className="booking-card">

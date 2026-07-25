@@ -1,5 +1,5 @@
 // 1. Define the allowed difficulty levels
-type DifficultyLevel = 'easy' | 'medium' | 'hard';
+type DifficultyLevel = 'Beginner' | 'Intermediate' | 'Advanced' | 'Heroic';
 
 interface DifficultyProps {
   level: DifficultyLevel; // Restricts string values
@@ -8,9 +8,10 @@ interface DifficultyProps {
 export function DifficultyCircles({ level }: DifficultyProps) {
   // 2. Strongly type the map keys to match
   const countMap: Record<DifficultyLevel, number> = { 
-    easy: 1, 
-    medium: 2, 
-    hard: 3 
+    Beginner: 1, 
+    Intermediate: 2, 
+    Advanced: 3,
+    Heroic: 4 
   };
   
   const circlesCount = countMap[level];

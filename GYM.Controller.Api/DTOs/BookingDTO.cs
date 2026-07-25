@@ -6,7 +6,7 @@ public class BookingDTO{
     public int Id;
     public int TrainingId;
     public int UserId;
-    public BookingStatus Status { get; set; } = BookingStatus.Book;
+    public BookingStatus Status { get; set; } = BookingStatus.Booked;
     public DateTime? ExerciseTime;
     public DateTime? DoneAt;
 };
