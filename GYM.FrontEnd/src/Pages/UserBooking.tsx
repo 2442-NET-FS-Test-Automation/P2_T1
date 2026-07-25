@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { BookingFilterBar } from "../components/BookingFilterBar";
+import {
+  BookingFilterBar,
+  type FilterOptions,
+} from "../components/BookingFilterBar";
 import { getPublicBookings } from "../services/BookingService";
 import { BookingCard } from "../components/BookingCard";
 import "../css/Booking.css";
@@ -11,6 +14,75 @@ export function UserBooking() {
   const navigate = useNavigate();
   const [bookings, setBookings] = useState<BookingDTO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
+  const [activeFilters, setActiveFilters] = useState<FilterOptions>({
+    location: "",
+    trainer: "",
+    minExercises: "",
+    difficulty: "all",
+  });
+
+  // Filter evaluation logic
+  const filteredBookings = bookings.filter((booking) => {
+    const training = booking.trainings?.[0];
+    const user = booking.users?.[0];
+
+    const trainerFullName = user?.detail
+      ? `${user.detail.name}`.toLowerCase()
+      : "unknown staff";
+
+    const placeString =
+      typeof training?.place === "number"
+        ? `zone ${training.place}`
+        : (training?.place || "").toLowerCase();
+    const totalExercises = training?.exercises?.length || 0;
+    // 1. Evaluate Location match
+    if (
+      activeFilters.location &&
+      !placeString.includes(activeFilters.location.toLowerCase())
+    ) {
+      return false;
+    }
+    // 2. Evaluate Trainer match
+    if (activeFilters.trainer) {
+      const searchInput = activeFilters.trainer.toLowerCase();
+
+      // Isolate first name and surname cleanly to allow first letter matching on both parts
+      const firstName = (user?.detail?.name || "").toLowerCase();
+
+      // Returns true if either the first name OR the last name starts with the user's typed letters
+      const matchesFirstName = firstName.startsWith(searchInput);
+
+      if (!matchesFirstName) {
+        return false; // Discards row entry if neither field starts with the typed values
+      }
+    }
+    // Exercises threshold filter evaluated cleanly against array length
+    if (
+      activeFilters.minExercises &&
+      totalExercises < parseInt(activeFilters.minExercises, 10)
+    ) {
+      return false;
+    }
+
+    if (
+      activeFilters.difficulty !== "all" &&
+      training?.difficulty !== activeFilters.difficulty
+    ) {
+      return false;
+    }
+
+    return true;
+  });
+
+  // Execute sorting rules over your filtered subsets
+  const finalProcessedData = [...filteredBookings].sort((a, b) => {
+    const nameA = a.trainings?.[0]?.trainingName?.toLowerCase() || "";
+    const nameB = b.trainings?.[0]?.trainingName?.toLowerCase() || "";
+    return sortBy === "name-asc"
+      ? nameA.localeCompare(nameB)
+      : nameB.localeCompare(nameA);
+  });
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -131,16 +203,20 @@ export function UserBooking() {
 
     fetchBookings();
   }, []);
-    return (
+
+  return (
     <>
       <div className="bookings">
-        <BookingFilterBar />
+        <BookingFilterBar onFilterChange={setActiveFilters} />
         <section className="bookingsContainer">
           <div className="bookings-header-row">
             <h2>Bookings</h2>
 
             <div className="sort-wrapper">
-              <label htmlFor="sort-select" className="text-neon small fw-semibold">
+              <label
+                htmlFor="sort-select"
+                className="text-neon small fw-semibold"
+              >
                 Sort By:
               </label>
               <select
@@ -149,42 +225,53 @@ export function UserBooking() {
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
               >
-                <option value="date-asc">Date (Oldest First)</option>
-                <option value="date-desc">Date (Newest First)</option>
-                <option value="trainer-az">Trainer (A - Z)</option>
-                <option value="location-az">Location (A - Z)</option>
+                <option value="name-asc">Name (A - Z)</option>
+                <option value="name-desc">Name (Z - A)</option>
               </select>
             </div>
           </div>
-          
+
           <div className="booking-list-container">
             {loading ? (
               <p>Loading bookings...</p>
             ) : bookings.length === 0 ? (
               <p>No bookings found.</p>
             ) : (
-              bookings.map((booking) => {
+              finalProcessedData.map((booking) => {
                 const training = booking.trainings?.[0];
                 const user = booking.users?.[0];
 
                 // Safely combine name and surname from user.detail DTO
-                const trainerFullName = user?.detail 
+                const trainerFullName = user?.detail
                   ? `${user.detail.name} ${user.detail.surname}`
                   : "Unknown Staff";
 
                 // Parse place type signature safely
-                const placeString = typeof training?.place === "number" 
-                  ? `Zone ${training.place}` 
-                  : training?.place;
+                const placeString =
+                  typeof training?.place === "number"
+                    ? `Zone ${training.place}`
+                    : training?.place;
 
                 return (
                   <BookingCard
                     key={booking.id}
-                    title={training?.trainingName || "Untitled Workout"}
+                    title={training?.trainingName || "Unnamed Workout"}
                     trainer={trainerFullName}
-                    location={placeString || "TBD Location"}
-                    exerciseCount={training?.exercises?.length || 0}
-                    difficulty={(training?.difficulty as "Beginner" | "Intermediate" | "Advanced" | "Heroic") || "Beginner"}
+                    location={placeString || "Main Arena"}
+                    exerciseCount={
+                      training?.exercises?.length || 0
+                    } /* Feeds calculated array length safely */
+                    description={training?.description}
+                    duration={
+                      training?.estimatedTime || "01:00:00"
+                    } /* Uses estimatedTime metric string */
+                    difficulty={
+                      (training?.difficulty as
+                        | "Beginner"
+                        | "Intermediate"
+                        | "Advanced"
+                        | "Heroic") || "Beginner"
+                    }
                   />
                 );
               })

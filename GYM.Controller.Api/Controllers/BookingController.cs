@@ -22,7 +22,7 @@ public class BookingController : ControllerBase
     }
 
     //Get all the bookings from the db
-    [HttpGet("bookings")] 
+    [HttpGet("allBookings")] 
     public async Task<ActionResult<IEnumerable<BookingDTO>>> GetAllBookings()
     {
         var dtos = await _cache.GetOrCreateAsync("Bookings:all", async entry => //Check cache, if not there search the db via Service Layer

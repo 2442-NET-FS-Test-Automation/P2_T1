@@ -231,3 +231,98 @@
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(70, 240, 210, 0.4);
 }
+
+/* Container Wrapper to group the card and the hidden drawer together safely */
+.booking-card-wrapper {
+  background-color: #1a1b2f;
+  border-radius: 8px;
+  border-bottom: solid #46f0d2 4px;
+  margin-bottom: 1.5rem;
+  width: 50rem;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+/* Hover effect transferred to the combined wrapper */
+.booking-card-wrapper:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 10px 20px rgba(70, 240, 210, 0.15);
+}
+
+/* Deployable Drawer using the CSS Grid template height transition method */
+.booking-card-drawer {
+  display: grid;
+  grid-template-rows: 0fr; /* Collapsed state */
+  transition: grid-template-rows 0.3s ease-out;
+  border-top: 1px solid transparent;
+  overflow: hidden;
+}
+
+/* Expands the grid template track when the active wrapper class is present */
+.booking-card-wrapper.expanded .booking-card-drawer {
+  grid-template-rows: 1fr; /* Expanded state */
+  border-top: 1px solid #232545;
+}
+
+/* Inner padding container that updates dynamically with the grid expansion */
+.drawer-inner-content {
+  min-height: 0;
+  padding: 0 1.5rem;
+  transition: padding 0.3s ease;
+}
+
+.booking-card-wrapper.expanded .drawer-inner-content {
+  padding: 1.25rem 1.5rem 1.5rem 1.5rem;
+}
+
+/* Layout flex structure inside the drawer */
+.drawer-grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  color: white;
+  text-align: left;
+}
+
+.drawer-description {
+  flex: 2;
+}
+
+.drawer-description h5 {
+  color: #46f0d2;
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.drawer-description p {
+  color: #bfbfbf;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.drawer-specs {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+/* Small contextual info tag bubbles inside the drawer */
+.spec-badge {
+  background-color: #121321;
+  border: 1px solid #333652;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Active visual response color for the details button when opened */
+.secondary.active-btn {
+  background-color: #333652;
+  color: #ffffff;
+}
