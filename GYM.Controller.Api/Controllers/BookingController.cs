@@ -27,7 +27,7 @@ public class BookingController : ControllerBase
     {
         var dtos = await _cache.GetOrCreateAsync("Bookings:all", async entry => //Check cache, if not there search the db via Service Layer
         {
-            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1); //Will last 1 day
+            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMilliseconds(1); //Will last 1 day
 
             var items = await _service.GetAllBookings();
 

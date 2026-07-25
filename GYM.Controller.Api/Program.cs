@@ -89,6 +89,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>(); //Repository User
 builder.Services.AddScoped<IBookingService, BookingService>(); //Booking 
 builder.Services.AddScoped<IBookingRepository, BookingRepository>(); //Booking 
 
+builder.Services.AddScoped<ISeederService, SeederService>(); //Seeder service
+
 
 var app = builder.Build();
 

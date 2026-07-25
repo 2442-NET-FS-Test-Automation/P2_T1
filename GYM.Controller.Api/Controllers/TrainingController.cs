@@ -30,6 +30,7 @@ public class TrainingController : ControllerBase
     {
         var dtos = await _cache.GetOrCreateAsync("Exercises:all", async entry => //Check cache, if not there search the db via Service Layer
         {
+            Console.WriteLine("No se ocupo el CACHE");
             entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1); //Will last 1 day
 
             var items = await _service.GetAllExercises();
@@ -37,9 +38,7 @@ public class TrainingController : ControllerBase
             return items; 
         });
         
-
         return dtos is null ? NotFound() : Ok(dtos); // 404 not found : 200 (list)
-
     }
 
     //Get an exercise by their id
