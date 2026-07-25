@@ -8,7 +8,7 @@ export const getPublicTrainings = async (): Promise<TrainingDTO[]> => {
     const response = await api.get<TrainingDTO[]>('/Training/trainings');
     return response.data;
   } catch (error) {
-    console.error('Error al obtener entrenamientos:', error);
+    console.error('Error getting trainings:', error);
     return [];
   }
 };

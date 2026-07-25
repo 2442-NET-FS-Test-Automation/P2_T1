@@ -4,7 +4,7 @@ export interface Achievement {
   id: number;
   name: string;
   description: string;
-  completed_at: string | null;
+  completed_At: string | null;
 }
 
 /**

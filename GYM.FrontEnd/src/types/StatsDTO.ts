@@ -1,6 +1,7 @@
 // Representa un registro individual de medición física/rendimiento
-export interface StatisticItem {
+export interface StatsDTO {
   id: number;
+  userId: number;
   weight: number;
   height: number;
   strength: number;
@@ -10,4 +11,4 @@ export interface StatisticItem {
 }
 
 // create stadistics
-export type CreateStatisticBody = Omit<StatisticItem, "id" | "measureAt">; // omitting id and measureAt
+export type CreateStatisticBody = Omit<StatsDTO, "id" | "measureAt">; // omitting id and measureAt

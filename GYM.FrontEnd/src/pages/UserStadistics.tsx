@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import type { StatisticItem } from "../types/userStadistics";
+import type { StatsDTO } from "../types/StatsDTO";
 import { getUserStatistics } from "../api/stadistics";
 
 // Tus componentes de gráficas ya conectados
@@ -13,7 +13,7 @@ const FALLBACK_STRENGTH_DATES = ["01 Jul", "05 Jul", "10 Jul", "15 Jul", "20 Jul
 const FALLBACK_STRENGTH_VALUES = [100, 115, 135, 155, 185];
 
 export const UserStatistics: React.FC = () => {
-  const [stats, setStats] = useState<StatisticItem[]>([]);
+  const [stats, setStats] = useState<StatsDTO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {

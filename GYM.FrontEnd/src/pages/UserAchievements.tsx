@@ -3,13 +3,12 @@ import { getUser } from "../services/auth";
 import type { UserData } from "../types/user";
 import { getAchievements, getUserAchievement } from "../services/achievementService";
 import "../css/Achievements.css";
-import Navbar from "../components/Navbar";
 import type { AchievementDTO } from "../types/AchievementDTO";
 
 // Tipo local con las propiedades calculadas para el render
 interface AchievementDisplay extends AchievementDTO {
   unlocked: boolean;
-  completed_at?: string | null;
+  completed_At?: string | null;
 }
 
 export default function Achievements() {
@@ -70,7 +69,7 @@ export default function Achievements() {
           conditionType: item.conditionType ?? item.condition_type ?? "",
           conditionValue: item.conditionValue ?? item.condition_value ?? 0,
           unlocked: !!found,
-          completed_at: found ? (found.completedAt || found.completed_at || null) : null,
+          completed_At: found ? (found.completedAt || found.completed_At || null) : null,
         } as AchievementDisplay;
       });
 
@@ -175,8 +174,8 @@ export default function Achievements() {
                           {item.unlocked ? (
                             <span className="text-purple-light">
                               Completed at{" "}
-                              {item.completed_at
-                                ? new Date(item.completed_at).toLocaleDateString("es-MX", {
+                              {item.completed_At
+                                ? new Date(item.completed_At).toLocaleDateString("es-MX", {
                                     year: "numeric",
                                     month: "long",
                                     day: "numeric",
@@ -184,7 +183,7 @@ export default function Achievements() {
                                 : "—"}
                             </span>
                           ) : (
-                            <span className="text-muted">Uncompleted</span>
+                            <span className="text-warning">Uncompleted</span>
                           )}
                         </span>
                       </div>
