@@ -103,4 +103,100 @@ public class UserService : IUserService
         return result == PasswordVerificationResult.Failed ? null : user;
 
     }
+
+    public async Task<UserDetailsDTO?> GetUserDetails(int userId)
+    {
+        User? user = await _UserRepository.GetUserById(userId);
+
+        if(user is null)
+            return null;
+        
+        UserDetail? userDetails = await _UserRepository.GetUserDetailsByUserId(user.Id);
+
+        if(userDetails is null)
+            return  null;
+        
+        UserDetailsDTO userDetailsDTO = new UserDetailsDTO
+        {
+            Id = userDetails.Id,
+            UserId = userDetails.UserId,
+            Gender = userDetails.Gender,
+            Name = userDetails.Name,
+            Surname = userDetails.Surname,
+            JoinAt = userDetails.JoinAt
+        };
+
+        return userDetailsDTO;
+    }
+
+    public async Task<UserDetailsDTO?> AddUserDetails(UserDetailsDTO userDetailsDto)
+    {
+        //Check user with id exist
+        if(userDetailsDto.UserId is null)
+            return null;
+
+        User? user = await _UserRepository.GetUserById(userDetailsDto.UserId.Value);
+        //Create an entity
+        if(user is null)
+            return null;
+        //Send entity
+
+        UserDetail? existUserDetails = await _UserRepository.GetUserDetailsByUserId(user.Id);
+        if(existUserDetails is not null)
+            return null;
+
+        UserDetail userDetails= new UserDetail
+        {
+            UserId = userDetailsDto.UserId.Value,
+            Gender = userDetailsDto.Gender,
+            Name = userDetailsDto.Name,
+            Surname = userDetailsDto.Surname,
+            JoinAt = userDetailsDto.JoinAt.Value
+        };
+
+        UserDetail? NewUserDetails = await _UserRepository.AddUserDetails(userDetails);
+        if(NewUserDetails is null)
+            return null;
+        
+        UserDetailsDTO NewUserDetailsDTO = new UserDetailsDTO
+        {
+            Id = NewUserDetails.Id,
+            UserId = NewUserDetails.UserId,
+            Name = NewUserDetails.Name,
+            Surname = NewUserDetails.Surname,
+            JoinAt = NewUserDetails.JoinAt
+        };
+        return NewUserDetailsDTO;
+    }
+
+    public async Task<UserDetailsDTO?> UpdateUserDetails(UserDetailsDTO userDetailsDTO)
+    {
+        if(userDetailsDTO.UserId is null)
+            return null;
+        
+        UserDetail? userDetail = await _UserRepository.GetUserDetailsByUserId(userDetailsDTO.UserId.Value);
+
+        if(userDetail is null)
+            return null;
+        
+        userDetail.Name = userDetailsDTO.Name;
+        userDetail.Surname = userDetailsDTO.Surname;
+        userDetail.Gender = userDetailsDTO.Gender;
+
+        UserDetail? UpdatedUserDetail = await _UserRepository.UpdateUserDetails(userDetail);
+        if(UpdatedUserDetail is null)
+            return null;
+
+        UserDetailsDTO UpdatedUserDetailDTO = new UserDetailsDTO
+        {
+            Id = UpdatedUserDetail.Id,
+            UserId = UpdatedUserDetail.UserId,
+            Name = UpdatedUserDetail.Name,
+            Surname = UpdatedUserDetail.Surname,
+            Gender = UpdatedUserDetail.Gender,
+            JoinAt = UpdatedUserDetail.JoinAt
+        };
+
+        return UpdatedUserDetailDTO;
+    }
 }

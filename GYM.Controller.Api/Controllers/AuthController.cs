@@ -33,7 +33,7 @@ public class AuthController : ControllerBase
         return CreatedAtAction(nameof(Me),  result); //201 
     }
 
-    //[Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")] Desbloquear cuando tengamos cuentas de admin
     [HttpPost("register-trainer")]
     public async Task<ActionResult> RegisterTrainer(RegisterUserDTOs registerDto) 
     //Falta checar que el json si contenga email, contraseña y telefono
@@ -46,7 +46,7 @@ public class AuthController : ControllerBase
         return CreatedAtAction(nameof(Me),  result); //201 
     }
 
-    //[Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")] Desbloquear cuando tengamos cuentas de admin
     [HttpPost("register-admin")]
     public async Task<ActionResult> RegisterAdmin(RegisterUserDTOs registerDto) 
     //Falta checar que el json si contenga email, contraseña y telefono
