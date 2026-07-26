@@ -221,7 +221,7 @@ namespace GYM.Data.Migrations
                 {
                     { 1, 0, "workouts_completed", "Complete your first workout", "fa-trophy", "Newbie", 5 },
                     { 2, 0, "miles_runned", "Run 5 miles", "fa-star", "Rocky Balboa", 10 },
-                    { 3, 0, "workouts_completed", "Complete 5 workouts", "fa-Medal", "Killer machine!", 30 }
+                    { 3, 0, "stats_completed_1", "Your first measures", "fa-Medal", "First Stats", 30 }
                 });
 
             migrationBuilder.InsertData(
@@ -229,10 +229,18 @@ namespace GYM.Data.Migrations
                 columns: new[] { "Id", "Description", "Name", "Reps", "Sets", "VisualReferenceUrl" },
                 values: new object[,]
                 {
-                    { 1, "Flexiones estándar manteniendo la espalda recta.", "Flexiones de Pecho", 15, 4, "https://example.com/pushups.gif" },
-                    { 2, "Sentadillas libres bajando a 90 grados.", "Sentadillas", 20, 4, "https://example.com/squats.gif" },
-                    { 3, "Levantamiento controlado de pesas para bíceps.", "Curl de Biceps con Mancuerna", 12, 3, "https://example.com/biceps.gif" },
-                    { 4, "Mantener la postura isométrica para fuerza de core.", "Plancha Abdominal", 1, 3, "https://example.com/plank.gif" }
+                    { 1, "Perform a standard push-up while keeping your back straight and lowering your chest toward the floor.", "Push-Ups", 15, 4, "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmhqd250ZHlqNjM1eThyZzJnbXFva3czc21hZmptOTZteTN0ZjA2eSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3pY8FQP9uMtDKXkYqX/giphy.gif" },
+                    { 2, "Perform a squat by lowering your hips toward the floor while keeping your chest up and your back straight.", "Bodyweight Squats", 20, 4, "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmx4cmJxOGZwMHUwaXBrbmJqaW9sa3ZlYmU3eGNsYXZpbTR6c2ppcCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/fnmk65werlZFy81pGw/giphy.gif" },
+                    { 3, "Curl dumbbells upward toward your shoulders while keeping your elbows close to your body and controlling the movement.", "Dumbbell Bicep Curls", 12, 3, "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3YTQydzBwZnZxZXlweGt2NmxrbXFydGQ1MjFmdXYwZjZza3YwNnB2diZlcD12MV9naWZzX3NlYXJjaCZjdD1n/kFnaSyOxFVVKFVOi9O/giphy.gif" },
+                    { 4, "Hold a straight-body position supported by your forearms and toes while keeping your core tight.", "Plank", 1, 3, "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZm44bmI1eGs1d2RnbmNxb2I5ajJtMXF4NGd4MmNnc3NpMWJvOXQwdCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/KbOsMppYjfO5a/giphy.gif" },
+                    { 5, "Step forward with one leg and lower your hips until both knees are bent, then return to the starting position and alternate legs.", "Alternating Lunges", 12, 3, "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbzdmMTg5d2tyaHY3eW92MHhja2ZhdzczN3Zra21lMmk1bWNyNTc5MSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/l3q2Q3sUEkEyDvfPO/giphy.gif" },
+                    { 6, "Press dumbbells upward from shoulder level until your arms are extended, then lower them under control.", "Dumbbell Shoulder Press", 10, 3, "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmJ5ZmdrdmJmNzZtZDMxeHo3cTlrcW1zMXZtbWhpeHJud2V3NDUwNyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/s1zHoMpAKEPnKoqW8k/giphy.gif" },
+                    { 7, "Lie on your back with your knees bent and lift your hips upward while squeezing your glutes.", "Glute Bridges", 15, 4, "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmVwM3JhdWlma2gyZTNtY2czNzFsZG50ODhyYnExdHc2cGVnNWV0aiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/oOGc4pXsX22XjE2eTA/giphy.gif" },
+                    { 8, "Start in a plank position and alternate driving your knees toward your chest while keeping your core engaged.", "Mountain Climbers", 20, 3, "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTVhbWxjdTloN3c0cWw1YWFwOW9jczV5cXlmZDFlN2xiOWdnZ2U0MCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/VzlPEkuoqlgjehxvxk/giphy.gif" },
+                    { 9, "Pull a dumbbell toward your torso while keeping your back straight and your elbow close to your body.", "Dumbbell Rows", 12, 3, "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExem52cXIxMDJ6bzdmNTk2d3o3YXZrNjY3MGozZW8zM2F5N3E2NW1pdCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3oEjHM9hzerMdVjYWI/giphy.gif" },
+                    { 10, "Raise your heels off the ground while balancing on the balls of your feet, then slowly lower your heels.", "Standing Calf Raises", 20, 4, "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3eHdqY2l2aDhiOTBuZjh5OHc1YTV5dzdhb29yd2hhaDJodnRhdnpzcyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/4VYaL0JOguZrBgjQOt/giphy.gif" },
+                    { 11, "Normal run", "Run", 45, 1, "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3p1YnNkeHBkczN3b2c3emkxcTQ2cTFlY3NlazdhdGdrNTY5c2E4byZlcD12MV9naWZzX3NlYXJjaCZjdD1n/CUbiYQbsKSGAM/giphy.gif" },
+                    { 12, "Several sprints and rest in between.", "Sprint", 10, 3, "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWY4c2V4YWw5MDYzNTM3YW12dWJ0NjlxbGt4ZndpZ201eWJoamNhdyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/VFwqlu33Ob5ELrRXiw/giphy.gif" }
                 });
 
             migrationBuilder.InsertData(
@@ -240,18 +248,11 @@ namespace GYM.Data.Migrations
                 columns: new[] { "Id", "Calories", "CreatedAt", "Description", "Difficulty", "EstimatedTime", "Place", "TrainingName" },
                 values: new object[,]
                 {
-                    { 1, 250, new DateTime(2026, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Rutina básica ideal para iniciar en casa sin equipo pesado.", "Fácil", new TimeOnly(0, 30, 0), "Home", "Rutina Full Body Principiantes" },
-                    { 2, 400, new DateTime(2026, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Entrenamiento enfocado en aumentar volumen y fuerza muscular.", "Intermedio", new TimeOnly(0, 45, 0), "GYM", "Fuerza e Hipertrofia de Brazos" },
-                    { 3, 600, new DateTime(2026, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Entrenamiento de alta intensidad al aire libre para quemar grasa.", "Avanzado", new TimeOnly(1, 0, 0), "Outdoors", "Desafío Cardio & Core Exterior" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "Id", "Email", "Password", "Phone", "Role" },
-                values: new object[,]
-                {
-                    { 1, "aranda.castillo.miguel@gmail.com", "hola123", "6645709069", "User" },
-                    { 2, "trainer@example.com", "juan123", "8885748622", "Trainer" }
+                    { 1, 250, new DateTime(2026, 7, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), "A beginner-friendly full-body workout that can be performed at home with little to no equipment.", "Easy", new TimeOnly(0, 30, 0), "Home", "Beginner Full Body Workout" },
+                    { 2, 400, new DateTime(2026, 7, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), "A strength-focused workout targeting the chest, shoulders, back, and arms using dumbbells and bodyweight exercises.", "Intermediate", new TimeOnly(0, 45, 0), "GYM", "Upper Body Strength Workout" },
+                    { 3, 600, new DateTime(2026, 7, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), "A high-intensity workout combining cardio and core exercises to improve endurance and burn calories.", "Advanced", new TimeOnly(1, 0, 0), "Outdoors", "High Intensity Cardio & Core" },
+                    { 4, 450, new DateTime(2026, 7, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), "A lower-body focused workout designed to strengthen the legs and glutes using a combination of bodyweight and weighted exercises.", "Intermediate", new TimeOnly(0, 50, 0), "GYM", "Lower Body Strength & Glutes" },
+                    { 5, 300, new DateTime(2026, 7, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), "Cardio full of runs and sprints to archive a better physical condition.", "Intermediate", new TimeOnly(1, 15, 0), "Outdoors", "Full Cardio" }
                 });
 
             migrationBuilder.InsertData(
@@ -261,19 +262,24 @@ namespace GYM.Data.Migrations
                 {
                     { 1, 1, 1 },
                     { 2, 2, 1 },
-                    { 3, 1, 2 },
-                    { 4, 3, 2 },
-                    { 5, 2, 3 },
-                    { 6, 4, 3 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "UserDetails",
-                columns: new[] { "Id", "Age", "Gender", "JoinAt", "Name", "Surname", "UserId" },
-                values: new object[,]
-                {
-                    { 1, 0, "Male", new DateTime(2025, 1, 15, 0, 0, 0, 0, DateTimeKind.Utc), "Miguel Angel", "Aranda Castillo", 1 },
-                    { 2, 0, "Male", new DateTime(2024, 1, 15, 0, 0, 0, 0, DateTimeKind.Utc), "Juan", "Jimenez Ortega", 2 }
+                    { 3, 4, 1 },
+                    { 4, 8, 1 },
+                    { 5, 11, 1 },
+                    { 6, 1, 2 },
+                    { 7, 3, 2 },
+                    { 8, 6, 2 },
+                    { 10, 4, 3 },
+                    { 11, 7, 3 },
+                    { 12, 8, 3 },
+                    { 13, 11, 3 },
+                    { 14, 12, 3 },
+                    { 15, 2, 4 },
+                    { 16, 5, 4 },
+                    { 17, 7, 4 },
+                    { 18, 10, 4 },
+                    { 19, 5, 4 },
+                    { 20, 11, 5 },
+                    { 21, 12, 5 }
                 });
 
             migrationBuilder.CreateIndex(

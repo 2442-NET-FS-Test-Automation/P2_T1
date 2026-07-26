@@ -84,10 +84,10 @@ namespace GYM.Data.Migrations
                         {
                             Id = 3,
                             ConditionValue = 0,
-                            Condition_type = "workouts_completed",
-                            Description = "Complete 5 workouts",
+                            Condition_type = "stats_completed_1",
+                            Description = "Your first measures",
                             Icon = "fa-Medal",
-                            Name = "Killer machine!",
+                            Name = "First Stats",
                             Points = 30
                         });
                 });
@@ -162,38 +162,110 @@ namespace GYM.Data.Migrations
                         new
                         {
                             Id = 1,
-                            Description = "Flexiones estándar manteniendo la espalda recta.",
-                            Name = "Flexiones de Pecho",
+                            Description = "Perform a standard push-up while keeping your back straight and lowering your chest toward the floor.",
+                            Name = "Push-Ups",
                             Reps = 15,
                             Sets = 4,
-                            VisualReferenceUrl = "https://example.com/pushups.gif"
+                            VisualReferenceUrl = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmhqd250ZHlqNjM1eThyZzJnbXFva3czc21hZmptOTZteTN0ZjA2eSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3pY8FQP9uMtDKXkYqX/giphy.gif"
                         },
                         new
                         {
                             Id = 2,
-                            Description = "Sentadillas libres bajando a 90 grados.",
-                            Name = "Sentadillas",
+                            Description = "Perform a squat by lowering your hips toward the floor while keeping your chest up and your back straight.",
+                            Name = "Bodyweight Squats",
                             Reps = 20,
                             Sets = 4,
-                            VisualReferenceUrl = "https://example.com/squats.gif"
+                            VisualReferenceUrl = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmx4cmJxOGZwMHUwaXBrbmJqaW9sa3ZlYmU3eGNsYXZpbTR6c2ppcCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/fnmk65werlZFy81pGw/giphy.gif"
                         },
                         new
                         {
                             Id = 3,
-                            Description = "Levantamiento controlado de pesas para bíceps.",
-                            Name = "Curl de Biceps con Mancuerna",
+                            Description = "Curl dumbbells upward toward your shoulders while keeping your elbows close to your body and controlling the movement.",
+                            Name = "Dumbbell Bicep Curls",
                             Reps = 12,
                             Sets = 3,
-                            VisualReferenceUrl = "https://example.com/biceps.gif"
+                            VisualReferenceUrl = "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3YTQydzBwZnZxZXlweGt2NmxrbXFydGQ1MjFmdXYwZjZza3YwNnB2diZlcD12MV9naWZzX3NlYXJjaCZjdD1n/kFnaSyOxFVVKFVOi9O/giphy.gif"
                         },
                         new
                         {
                             Id = 4,
-                            Description = "Mantener la postura isométrica para fuerza de core.",
-                            Name = "Plancha Abdominal",
+                            Description = "Hold a straight-body position supported by your forearms and toes while keeping your core tight.",
+                            Name = "Plank",
                             Reps = 1,
                             Sets = 3,
-                            VisualReferenceUrl = "https://example.com/plank.gif"
+                            VisualReferenceUrl = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZm44bmI1eGs1d2RnbmNxb2I5ajJtMXF4NGd4MmNnc3NpMWJvOXQwdCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/KbOsMppYjfO5a/giphy.gif"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Step forward with one leg and lower your hips until both knees are bent, then return to the starting position and alternate legs.",
+                            Name = "Alternating Lunges",
+                            Reps = 12,
+                            Sets = 3,
+                            VisualReferenceUrl = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbzdmMTg5d2tyaHY3eW92MHhja2ZhdzczN3Zra21lMmk1bWNyNTc5MSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/l3q2Q3sUEkEyDvfPO/giphy.gif"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "Press dumbbells upward from shoulder level until your arms are extended, then lower them under control.",
+                            Name = "Dumbbell Shoulder Press",
+                            Reps = 10,
+                            Sets = 3,
+                            VisualReferenceUrl = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmJ5ZmdrdmJmNzZtZDMxeHo3cTlrcW1zMXZtbWhpeHJud2V3NDUwNyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/s1zHoMpAKEPnKoqW8k/giphy.gif"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Description = "Lie on your back with your knees bent and lift your hips upward while squeezing your glutes.",
+                            Name = "Glute Bridges",
+                            Reps = 15,
+                            Sets = 4,
+                            VisualReferenceUrl = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmVwM3JhdWlma2gyZTNtY2czNzFsZG50ODhyYnExdHc2cGVnNWV0aiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/oOGc4pXsX22XjE2eTA/giphy.gif"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Description = "Start in a plank position and alternate driving your knees toward your chest while keeping your core engaged.",
+                            Name = "Mountain Climbers",
+                            Reps = 20,
+                            Sets = 3,
+                            VisualReferenceUrl = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTVhbWxjdTloN3c0cWw1YWFwOW9jczV5cXlmZDFlN2xiOWdnZ2U0MCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/VzlPEkuoqlgjehxvxk/giphy.gif"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Description = "Pull a dumbbell toward your torso while keeping your back straight and your elbow close to your body.",
+                            Name = "Dumbbell Rows",
+                            Reps = 12,
+                            Sets = 3,
+                            VisualReferenceUrl = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExem52cXIxMDJ6bzdmNTk2d3o3YXZrNjY3MGozZW8zM2F5N3E2NW1pdCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3oEjHM9hzerMdVjYWI/giphy.gif"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Description = "Raise your heels off the ground while balancing on the balls of your feet, then slowly lower your heels.",
+                            Name = "Standing Calf Raises",
+                            Reps = 20,
+                            Sets = 4,
+                            VisualReferenceUrl = "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3eHdqY2l2aDhiOTBuZjh5OHc1YTV5dzdhb29yd2hhaDJodnRhdnpzcyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/4VYaL0JOguZrBgjQOt/giphy.gif"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Description = "Normal run",
+                            Name = "Run",
+                            Reps = 45,
+                            Sets = 1,
+                            VisualReferenceUrl = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3p1YnNkeHBkczN3b2c3emkxcTQ2cTFlY3NlazdhdGdrNTY5c2E4byZlcD12MV9naWZzX3NlYXJjaCZjdD1n/CUbiYQbsKSGAM/giphy.gif"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Description = "Several sprints and rest in between.",
+                            Name = "Sprint",
+                            Reps = 10,
+                            Sets = 3,
+                            VisualReferenceUrl = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWY4c2V4YWw5MDYzNTM3YW12dWJ0NjlxbGt4ZndpZ201eWJoamNhdyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/VFwqlu33Ob5ELrRXiw/giphy.gif"
                         });
                 });
 
@@ -281,34 +353,56 @@ namespace GYM.Data.Migrations
                         {
                             Id = 1,
                             Calories = 250,
-                            CreatedAt = new DateTime(2026, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "Rutina básica ideal para iniciar en casa sin equipo pesado.",
-                            Difficulty = "Fácil",
+                            CreatedAt = new DateTime(2026, 7, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "A beginner-friendly full-body workout that can be performed at home with little to no equipment.",
+                            Difficulty = "Easy",
                             EstimatedTime = new TimeOnly(0, 30, 0),
                             Place = "Home",
-                            TrainingName = "Rutina Full Body Principiantes"
+                            TrainingName = "Beginner Full Body Workout"
                         },
                         new
                         {
                             Id = 2,
                             Calories = 400,
-                            CreatedAt = new DateTime(2026, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "Entrenamiento enfocado en aumentar volumen y fuerza muscular.",
-                            Difficulty = "Intermedio",
+                            CreatedAt = new DateTime(2026, 7, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "A strength-focused workout targeting the chest, shoulders, back, and arms using dumbbells and bodyweight exercises.",
+                            Difficulty = "Intermediate",
                             EstimatedTime = new TimeOnly(0, 45, 0),
                             Place = "GYM",
-                            TrainingName = "Fuerza e Hipertrofia de Brazos"
+                            TrainingName = "Upper Body Strength Workout"
                         },
                         new
                         {
                             Id = 3,
                             Calories = 600,
-                            CreatedAt = new DateTime(2026, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "Entrenamiento de alta intensidad al aire libre para quemar grasa.",
-                            Difficulty = "Avanzado",
+                            CreatedAt = new DateTime(2026, 7, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "A high-intensity workout combining cardio and core exercises to improve endurance and burn calories.",
+                            Difficulty = "Advanced",
                             EstimatedTime = new TimeOnly(1, 0, 0),
                             Place = "Outdoors",
-                            TrainingName = "Desafío Cardio & Core Exterior"
+                            TrainingName = "High Intensity Cardio & Core"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Calories = 450,
+                            CreatedAt = new DateTime(2026, 7, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "A lower-body focused workout designed to strengthen the legs and glutes using a combination of bodyweight and weighted exercises.",
+                            Difficulty = "Intermediate",
+                            EstimatedTime = new TimeOnly(0, 50, 0),
+                            Place = "GYM",
+                            TrainingName = "Lower Body Strength & Glutes"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Calories = 300,
+                            CreatedAt = new DateTime(2026, 7, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Cardio full of runs and sprints to archive a better physical condition.",
+                            Difficulty = "Intermediate",
+                            EstimatedTime = new TimeOnly(1, 15, 0),
+                            Place = "Outdoors",
+                            TrainingName = "Full Cardio"
                         });
                 });
 
@@ -350,26 +444,110 @@ namespace GYM.Data.Migrations
                         new
                         {
                             Id = 3,
+                            ExerciseId = 4,
+                            TrainingId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ExerciseId = 8,
+                            TrainingId = 1
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ExerciseId = 11,
+                            TrainingId = 1
+                        },
+                        new
+                        {
+                            Id = 6,
                             ExerciseId = 1,
                             TrainingId = 2
                         },
                         new
                         {
-                            Id = 4,
+                            Id = 7,
                             ExerciseId = 3,
                             TrainingId = 2
                         },
                         new
                         {
-                            Id = 5,
-                            ExerciseId = 2,
+                            Id = 8,
+                            ExerciseId = 6,
+                            TrainingId = 2
+                        },
+                        new
+                        {
+                            Id = 10,
+                            ExerciseId = 4,
                             TrainingId = 3
                         },
                         new
                         {
-                            Id = 6,
-                            ExerciseId = 4,
+                            Id = 11,
+                            ExerciseId = 7,
                             TrainingId = 3
+                        },
+                        new
+                        {
+                            Id = 12,
+                            ExerciseId = 8,
+                            TrainingId = 3
+                        },
+                        new
+                        {
+                            Id = 13,
+                            ExerciseId = 11,
+                            TrainingId = 3
+                        },
+                        new
+                        {
+                            Id = 14,
+                            ExerciseId = 12,
+                            TrainingId = 3
+                        },
+                        new
+                        {
+                            Id = 15,
+                            ExerciseId = 2,
+                            TrainingId = 4
+                        },
+                        new
+                        {
+                            Id = 16,
+                            ExerciseId = 5,
+                            TrainingId = 4
+                        },
+                        new
+                        {
+                            Id = 17,
+                            ExerciseId = 7,
+                            TrainingId = 4
+                        },
+                        new
+                        {
+                            Id = 18,
+                            ExerciseId = 10,
+                            TrainingId = 4
+                        },
+                        new
+                        {
+                            Id = 19,
+                            ExerciseId = 5,
+                            TrainingId = 4
+                        },
+                        new
+                        {
+                            Id = 20,
+                            ExerciseId = 11,
+                            TrainingId = 5
+                        },
+                        new
+                        {
+                            Id = 21,
+                            ExerciseId = 12,
+                            TrainingId = 5
                         });
                 });
 
@@ -409,24 +587,6 @@ namespace GYM.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Email = "aranda.castillo.miguel@gmail.com",
-                            Password = "hola123",
-                            Phone = "6645709069",
-                            Role = "User"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Email = "trainer@example.com",
-                            Password = "juan123",
-                            Phone = "8885748622",
-                            Role = "Trainer"
-                        });
                 });
 
             modelBuilder.Entity("GYM.Data.Entities.UserDetail", b =>
@@ -466,28 +626,6 @@ namespace GYM.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("UserDetails");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Age = 0,
-                            Gender = "Male",
-                            JoinAt = new DateTime(2025, 1, 15, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Name = "Miguel Angel",
-                            Surname = "Aranda Castillo",
-                            UserId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Age = 0,
-                            Gender = "Male",
-                            JoinAt = new DateTime(2024, 1, 15, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Name = "Juan",
-                            Surname = "Jimenez Ortega",
-                            UserId = 2
-                        });
                 });
 
             modelBuilder.Entity("GYM.Data.Entities.User_Achievement", b =>

@@ -91,7 +91,7 @@ builder.Services.AddScoped<IAchievementRepository, AchievementRepository>();
 
 builder.Services.AddScoped<IStatsService, StatsService>();
 builder.Services.AddScoped<IStatsRepository, StatsRepository>();
-
+builder.Services.AddScoped<ISeederService, SeederService>(); //Seeder service
 var app = builder.Build();
 
 //============================
