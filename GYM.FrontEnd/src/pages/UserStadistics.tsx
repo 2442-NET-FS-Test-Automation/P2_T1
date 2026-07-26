@@ -12,6 +12,17 @@ const FALLBACK_WEEKLY_MILES = [1.2, 0, 3.5, 2.0, 0, 4.1, 1.5];
 const FALLBACK_STRENGTH_DATES = ["01 Jul", "05 Jul", "10 Jul", "15 Jul", "20 Jul"];
 const FALLBACK_STRENGTH_VALUES = [100, 115, 135, 155, 185];
 
+// Helper: devuelve el lunes de la semana actual a las 00:00
+const getMondayOfCurrentWeek = (): Date => {
+  const now = new Date();
+  const day = now.getDay(); // 0 = domingo, 1 = lunes, ..., 6 = sábado
+  const diff = day === 0 ? -6 : 1 - day; // si es domingo, retrocede 6 días
+  const monday = new Date(now);
+  monday.setDate(now.getDate() + diff);
+  monday.setHours(0, 0, 0, 0);
+  return monday;
+};
+
 export const UserStatistics: React.FC = () => {
   const [stats, setStats] = useState<StatsDTO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -54,7 +65,27 @@ export const UserStatistics: React.FC = () => {
     : FALLBACK_STRENGTH_VALUES;
 
   // Datos para millas semanales
-  const milesData = FALLBACK_WEEKLY_MILES;
+  const milesData = React.useMemo(() => {
+    const result = [0, 0, 0, 0, 0, 0, 0];
+    if (!hasValidStats) return FALLBACK_WEEKLY_MILES;
+
+    const monday = getMondayOfCurrentWeek(); // lo llama, no lo redefine
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    sunday.setHours(23, 59, 59, 999);
+
+    stats.forEach((s) => {
+      const measureDate = new Date(s.measureAt);
+      if (measureDate >= monday && measureDate <= sunday) {
+        const jsDay = measureDate.getDay();
+        const dayIndex = jsDay === 0 ? 6 : jsDay - 1;
+        const [h, m, sec] = s.mileRun.split(":").map(Number);
+        result[dayIndex] = h * 60 + m + sec / 60;
+      }
+    });
+
+        return result;
+  }, [stats, hasValidStats]);
 
   return (
     <div>
