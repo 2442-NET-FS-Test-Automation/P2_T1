@@ -35,6 +35,16 @@ export interface CreateUserDetailDTO {
     age?: number;
 }
 
+export interface StatsDTO {
+    userId: number;
+    weight: number;
+    height: number;
+    strength: number;
+    mileRun: string;
+    measureAt: string;
+    age: number;
+}
+
 export interface AuthMeResponse {
     id: number;
     name: string;

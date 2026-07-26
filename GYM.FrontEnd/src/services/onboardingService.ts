@@ -1,5 +1,5 @@
 import { api, apiCall } from "../api/client";
-import type { CreateUserDetailDTO, Gender, AuthMeResponse, Statistic } from '../types/user';
+import type { CreateUserDetailDTO, Gender, AuthMeResponse, StatsDTO } from '../types/user';
 
 const mapGenderToEnum = (gender?: string | number | Gender): number => {
     if (gender === undefined || gender === null) return 0; // Valor por defecto si no seleccionó nada
@@ -20,6 +20,8 @@ const mapGenderToEnum = (gender?: string | number | Gender): number => {
     }
 };
 
+const todayDateOnly = new Date().toISOString().split('T')[0];
+
 export async function setUserDetails(userDetail: CreateUserDetailDTO): Promise<CreateUserDetailDTO> {
     const meResponse = await apiCall.get<AuthMeResponse>("/authentication/me");
     const currentUserId = meResponse.data.id;
@@ -37,20 +39,21 @@ export async function setUserDetails(userDetail: CreateUserDetailDTO): Promise<C
     return response.data;
 }
 
-export async function setUserStats(statsData: Partial<Statistic>): Promise<Statistic> {
-  const meResponse = await api.get<AuthMeResponse>("/authentication/me");
-  const currentUserId = meResponse.data.id;
+export async function setUserStats(statsData: Partial<StatsDTO>): Promise<StatsDTO> {
+  const meResponse = await apiCall.get<AuthMeResponse>("/authentication/me");
+  const currentUserId = Number(meResponse.data.id);
 
   const payload = {
     userId: currentUserId,
     height: statsData.height ?? 0,
     weight: statsData.weight ?? 0,
     strength: statsData.strength ?? 0,
-    mileRun: statsData.mileRun || "00:00",
-    measureAt: statsData.measureAt || new Date().toISOString(),
+    mileRun: statsData.mileRun || "00:00:00",
+    measureAt: statsData.measureAt || todayDateOnly,
+    age: statsData.age ?? 0
   };
 
-  const response = await api.post<Statistic>("/User/users-stats", payload);
+  const response = await api.post<StatsDTO>("/Stats", payload);
   return response.data;
 }
 

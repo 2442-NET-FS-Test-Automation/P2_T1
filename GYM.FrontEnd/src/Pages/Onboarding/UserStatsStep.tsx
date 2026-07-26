@@ -20,7 +20,7 @@ export function UserStatsStep() {
             await setUserStats({
                 height: height !== '' ? Number(height) : 0,
                 weight: weight !== '' ? Number(weight) : 0,
-                measureAt: new Date().toISOString(),
+                measureAt: new Date().toISOString().split('T')[0]
             });
 
             setLoading(false);
@@ -57,17 +57,18 @@ export function UserStatsStep() {
                     <form onSubmit={handleSubmit}>
                         {/* Height Input */}
                         <div className="mb-3">
-                            <label className="form-label text-neon small fw-semibold">Height (cm)</label>
+                            <label className="form-label text-neon small fw-semibold">Height (m)</label>
                             <div className="input-group">
                                 <span className="input-group-text bg-dark border-secondary text-white">📏</span>
                                 <input
                                     type="number"
+                                    step="0.01"
                                     className="form-control quest-input"
-                                    placeholder="e.g. 175"
-                                    min="50"
-                                    max="250"
+                                    placeholder="e.g. 1.75"
+                                    min="0.5"
+                                    max="2.8"
                                     value={height}
-                                    onChange={(e) => setHeight(e.target.value === '' ? '' : String(Math.max(1, Math.min(250, Number(e.target.value)))))}
+                                    onChange={(e) => setHeight(e.target.value)}
                                 />
                             </div>
                         </div>
