@@ -24,6 +24,7 @@ import { AdminUsersPage } from './pages/admin/AdminUsersPage';
 import { AdminExercisesPage } from './pages/admin/AdminExercisesPage';
 import { AdminTrainingsPage } from './pages/admin/AdminTrainingsPage';
 import { ExerciseDetail } from './pages/ExerciseDetail';
+import { Report } from './pages/Report';
 
 function App() {
 
@@ -84,6 +85,10 @@ function App() {
             <Route 
               path="/user/booking"
               element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><UserBooking /></RequireAuth>} 
+            />
+             <Route 
+              path="/user/report"
+              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><Report /></RequireAuth>} 
             />
             <Route 
               path="/exercise-details"
