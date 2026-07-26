@@ -56,7 +56,7 @@ public class BookingController : ControllerBase
         return dto is null ? NotFound() : Ok(dto);
     }
 
-    [HttpGet("BookingByUserId/{id}")]
+    [HttpGet("BookingByUserId/{id}")] //-----------------------------------------------------------FALTA
     public async Task<ActionResult<IEnumerable<BookingDTO>>> GetBookingsByUserId(int id)
     {
         var dtos = await _service.GetBookingsByUserId(id);
