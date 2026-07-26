@@ -5,7 +5,7 @@ export interface StatsDTO {
   weight: number;
   height: number;
   strength: number;
-  milerun: string;
+  mileRun: string;
   measureAt: string;
   age: number;
 }

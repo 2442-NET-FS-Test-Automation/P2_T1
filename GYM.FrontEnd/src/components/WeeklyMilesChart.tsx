@@ -9,7 +9,7 @@ interface WeeklyMilesProps {
 export const WeeklyMilesChart: React.FC<WeeklyMilesProps> = ({ milesData }) => {
   const option = {
     title: {
-      text: 'Millas Recorridas (Esta Semana)',
+      text: 'Miles runned (this week)',
       left: 'center',
       textStyle: { color: '#ffffff', fontSize: 16 }
     },
@@ -20,18 +20,18 @@ export const WeeklyMilesChart: React.FC<WeeklyMilesProps> = ({ milesData }) => {
     grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
     xAxis: {
       type: 'category',
-      data: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       axisLine: { lineStyle: { color: '#888' } }
     },
     yAxis: {
       type: 'value',
-      name: 'Millas',
+      name: 'Miles',
       splitLine: { lineStyle: { color: '#333' } },
       axisLine: { lineStyle: { color: '#888' } }
     },
     series: [
       {
-        name: 'Millas',
+        name: 'Miles',
         type: 'bar',
         data: milesData,
         barWidth: '40%',

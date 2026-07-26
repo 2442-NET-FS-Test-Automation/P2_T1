@@ -1,14 +1,14 @@
-import { api } from "./client";
-import type { StatisticItem, CreateStatisticBody } from "../types/StatsDTO";
+import { apiCall } from "./client";
+import type { StatsDTO, CreateStatisticBody } from "../types/StatsDTO";
 
 // Get stats of actual user
-export async function getUserStatistics(): Promise<StatisticItem[]> {
-  const response = await api.get<StatisticItem[]>("/api/statistics/me");
+export async function getUserStatistics(): Promise<StatsDTO[]> {
+  const response = await apiCall.get<StatsDTO[]>("/api/Stats");
   return response.data;
 }
 
 // create new stadistic
-export async function createStatistic(body: CreateStatisticBody): Promise<StatisticItem> {
-  const response = await api.post<StatisticItem>("/api/statistics", body);
+export async function createStatistic(body: CreateStatisticBody): Promise<StatsDTO> {
+  const response = await apiCall.post<StatsDTO>("/api/Stats", body);
   return response.data;
 }
