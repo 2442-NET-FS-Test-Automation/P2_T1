@@ -52,7 +52,6 @@ public class AchievementController : ControllerBase
         return !dtos.Any() ? NotFound("No achievements found for this user.") : Ok(dtos);
     }
 
-    /*
     [HttpPost("AddAchievement")]//Add 1 exercise
     //Falta poner quien puede acceder a este endpoint !!!!!!!!!!!!!!!!!
     public async Task<ActionResult<AchievementDTO>> AddAchievement(AchievementDTO newAchievement)
@@ -65,7 +64,7 @@ public class AchievementController : ControllerBase
             new { Id = newAchievement.Id },
             newAchievementDto);
 
-    }*/
+    }
 
     [HttpPut("updateAchievement")]
     public async Task<IActionResult> UpdateAchievement(AchievementDTO bookingDTO)
