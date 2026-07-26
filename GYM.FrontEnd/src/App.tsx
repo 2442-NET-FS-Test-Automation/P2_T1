@@ -16,6 +16,7 @@ import { Register } from './pages/Register';
 import { UserBooking } from './pages/UserBooking';
 import { NotFound } from './pages/NotFound';
 import Navbar from './components/Navbar';
+import { ExerciseDetail } from './pages/ExerciseDetail';
 
 function App() {
 
@@ -76,6 +77,10 @@ function App() {
             <Route 
               path="/user/booking"
               element={<RequireAuth role="User"><UserBooking /></RequireAuth>} 
+            />
+            <Route 
+              path="/exercise-details"
+              element={<RequireAuth role="User"><ExerciseDetail /></RequireAuth>} 
             />
             <Route 
               path="/user/profileSettings" 
