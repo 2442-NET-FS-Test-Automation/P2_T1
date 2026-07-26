@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { TrainingModal } from '../../Components/admin/modals/TrainingModal';
+import type { ExerciseItem } from './AdminExercisesPage';
 
 export interface TrainingItem {
     id: number;
@@ -37,14 +39,74 @@ const MOCK_TRAININGS: TrainingItem[] = [
     },
 ];
 
-export function AdminTrainingsPage() {
-  const [trainings, setTrainings] = useState<TrainingItem[]>(MOCK_TRAININGS);
-  const [searchTerm, setSearchTerm] = useState('');
+const MOCK_EXERCISES_LIST: ExerciseItem[] = [
+    {
+        id: 1,
+        name: 'Push Ups',
+        description: 'Classic chest exercise targeting pectorals and triceps.',
+        visualReferenceUrl: 'https://example.com/pushup.gif',
+        sets: 4,
+        reps: 12,
+    },
+    {
+        id: 2,
+        name: 'Barbell Squat',
+        description: 'Heavy compound leg exercise for quadriceps and glutes.',
+        visualReferenceUrl: 'https://example.com/squat.jpg',
+        sets: 3,
+        reps: 10,
+    },
+];
 
-  const filteredTrainings = trainings.filter(tr => 
-    tr.trainingName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    tr.place.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+export function AdminTrainingsPage() {
+    //Mock Data its used for now, but in the future it will be replaced by API calls to the backend.
+    const [trainings, setTrainings] = useState<TrainingItem[]>(MOCK_TRAININGS);
+    const [availableExercises, setAvailableExercises] = useState<ExerciseItem[]>(MOCK_EXERCISES_LIST);
+
+    const [searchTerm, setSearchTerm] = useState('');
+    
+
+    //Modales 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedTraining, setSelectedTraining] = useState<TrainingItem | null>(null);
+    
+
+    const filteredTrainings = trainings.filter(tr => 
+        tr.trainingName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        tr.place.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    //Modal Handlers ==========================================================
+    const handleOpenCreateModal = () => {
+        setSelectedTraining(null);
+        setIsModalOpen(true);
+    };
+
+    const handleOpenEditModal = (training: TrainingItem) => {
+        setSelectedTraining(training);
+        setIsModalOpen(true);
+    };
+
+    const handleSaveTraining = (trainingData: any) => {
+        if (trainingData.id) {
+        // Modo Edición: Actualizamos el registro existente
+        setTrainings((prev) =>
+            prev.map((item) => (item.id === trainingData.id ? trainingData : item))
+        );
+        } else {
+        // Modo Creación: Asignamos un ID temporal y lo agregamos
+        const newTraining: TrainingItem = {
+            ...trainingData,
+            id: Date.now(), // ID temporal
+        };
+        setTrainings((prev) => [...prev, newTraining]);
+        }
+    };
+
+    const handleDeleteTraining = (id: number) => {
+        setTrainings((prev) => prev.filter((item) => item.id !== id));
+    };
+    //End of Modal Handlers ==========================================================    
 
     return (
         <div className="d-flex flex-column gap-4">
@@ -58,8 +120,8 @@ export function AdminTrainingsPage() {
                     Create and organize routine presets for users (Gym, Home, Outdoors).
                 </p>
                 </div>
-                <button className="btn btn-gq-purple px-3 py-2 d-flex align-items-center gap-2">
-                ➕ <span>Create Training Routine</span>
+                <button className="btn btn-gq-purple px-3 py-2 d-flex align-items-center gap-2" onClick={handleOpenCreateModal}>
+                    ➕ <span>Create Training Routine</span>
                 </button>
             </div>
 
@@ -128,8 +190,14 @@ export function AdminTrainingsPage() {
                         </td>
                         <td className="text-end">
                             <div className="d-flex justify-content-end gap-2">
-                            <button className="btn btn-sm btn-outline-info px-2 py-1" title="View / Edit Routine">👁️ Edit</button>
-                            <button className="btn btn-sm btn-outline-danger px-2 py-1" title="Delete Routine Only (Keeps Exercises)">🗑️</button>
+                            <button className="btn btn-sm btn-outline-info px-2 py-1" title="View / Edit Routine"
+                            onClick={() => handleOpenEditModal(tr)}>
+                                👁️ Edit
+                            </button>
+                            <button className="btn btn-sm btn-outline-danger px-2 py-1" title="Delete Routine Only (Keeps Exercises)"
+                            onClick={() => handleDeleteTraining(tr.id)}>
+                                🗑️
+                            </button>
                             </div>
                         </td>
                         </tr>
@@ -138,6 +206,13 @@ export function AdminTrainingsPage() {
                 </table>
                 </div>
             </div>
+            <TrainingModal 
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSave={handleSaveTraining}
+                initialData={selectedTraining}
+                availableExercises={availableExercises}
+            />            
         </div>
     );
 };

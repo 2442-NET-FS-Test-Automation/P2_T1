@@ -25,6 +25,27 @@ api.interceptors.request.use(
   }
 );
 
+// Interceptor de Respuesta para manejar errores globales, especialmente 401 (No autorizado)
+// Esto es útil para redirigir al usuario a la página de login si su token ha expirado o es inválido
+api.interceptors.response.use(
+  (response) => response, // Si la respuesta es exitosa (200, 201, etc.), no hace nada
+  (error) => {
+    // Si el servidor responde con un 401 (No autorizado / Token vencido)
+    if (error.response && error.response.status === 401) {
+      console.warn('Sesión expirada o token inválido. Redirigiendo a Login...');
+      
+      // 1. Limpiamos las credenciales guardadas
+      localStorage.removeItem('token');
+      localStorage.removeItem('user'); // O las variables de sesión que manejes
+
+      // 2. Redirigimos al usuario a la pantalla de Login
+      window.location.href = '/login'; 
+    }
+    
+    return Promise.reject(error);
+  }
+);
+
 //This apiCall just change http://localhost:5076/api to http://localhost:5076/ without "/api"
 //because for some reason to call auth endpoints you don't need to use "/api" just call /authorization
 export const apiCall = axios.create({
