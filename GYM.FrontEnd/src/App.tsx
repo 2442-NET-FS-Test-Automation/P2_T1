@@ -16,6 +16,13 @@ import { Register } from './pages/Register';
 import { UserBooking } from './pages/UserBooking';
 import { NotFound } from './pages/NotFound';
 import Navbar from './components/Navbar';
+import { UserDetailsStep } from './pages/Onboarding/UserDetailsStep';
+import { UserStatsStep } from './pages/Onboarding/UserStatsStep';
+import { AdminLayout } from './components/admin/AdminLayout';
+import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
+import { AdminUsersPage } from './pages/admin/AdminUsersPage';
+import { AdminExercisesPage } from './pages/admin/AdminExercisesPage';
+import { AdminTrainingsPage } from './pages/admin/AdminTrainingsPage';
 import { ExerciseDetail } from './pages/ExerciseDetail';
 
 function App() {
@@ -68,15 +75,15 @@ function App() {
               ========================================================= */}
             <Route 
               path="/home-user"
-              element={<RequireAuth role="User"><Home /></RequireAuth>} 
+              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><Home /></RequireAuth>} 
             />
             <Route 
               path="/user/achievements" 
-              element={<RequireAuth role="User"><Achievements /></RequireAuth>} 
+              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><Achievements /></RequireAuth>} 
             />
             <Route 
               path="/user/booking"
-              element={<RequireAuth role="User"><UserBooking /></RequireAuth>} 
+              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><UserBooking /></RequireAuth>} 
             />
             <Route 
               path="/exercise-details"
@@ -84,23 +91,31 @@ function App() {
             />
             <Route 
               path="/user/profileSettings" 
-              element={<RequireAuth role="User"><ProfileSettings /></RequireAuth>} 
+              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><ProfileSettings /></RequireAuth>} 
             />
             <Route 
               path="/user/stadistics" 
-              element={<RequireAuth role="User"><UserStatistics /></RequireAuth>} 
+              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><UserStatistics /></RequireAuth>} 
             />
             <Route 
               path="/routines" 
-              element={<RequireAuth role="User"><Routines /></RequireAuth>} 
+              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><Routines /></RequireAuth>} 
             />
             <Route 
               path="/routines/myroutines" 
-              element={<RequireAuth role="User"><MyRoutines /></RequireAuth>} 
+              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><MyRoutines /></RequireAuth>} 
             />
             <Route 
               path="/training" 
-              element={<RequireAuth role="User"><Trainings /></RequireAuth>} 
+              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><Trainings /></RequireAuth>} 
+            />
+            <Route 
+              path="/onboarding/details" 
+              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><UserDetailsStep /></RequireAuth>} 
+            />
+            <Route 
+              path="/onboarding/stats" 
+              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><UserStatsStep /></RequireAuth>} 
             />
 
             {/* =========================================================
@@ -109,19 +124,24 @@ function App() {
             <Route 
               path="/trainer-panel" 
               element={
-                <RequireAuth role="trainer">
-                  <p className="text-white p-4">Trainer page</p>
+                <RequireAuth allowedRoles={["Trainer", "Admin"]}>
+                  <p className="text-white p-4">En desarollo... Iniciar sesión como Admin para ver como se veria Trainer</p>
                 </RequireAuth>
               }
             />
             <Route 
-              path="/admin-panel" 
+              path="/admin" 
               element={
-                <RequireAuth role="admin">
-                  <p className="text-white p-4">Admin page</p>
+                <RequireAuth role="Admin">
+                  <AdminLayout />
                 </RequireAuth>
               } 
-            />
+            >
+              <Route index element={<AdminDashboardPage />} />
+              <Route path="users" element={<AdminUsersPage />} />
+              <Route path="trainings" element={<AdminTrainingsPage />} />
+              <Route path="exercises" element={<AdminExercisesPage />} />
+            </Route>
 
             {/* =========================================================
                 5. RUTA 404

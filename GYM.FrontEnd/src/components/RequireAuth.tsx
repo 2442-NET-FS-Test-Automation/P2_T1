@@ -11,9 +11,10 @@ import { useAuth } from "../auth/useAuth";
 interface RequireAuthProps{
     children: ReactNode,
     role?: string;
+    allowedRoles?: string[]; //Para poder tener más de un rol permitido, por ejemplo "admin" y "trainer" para poder acceder a la misma ruta
 }
 
-export function RequireAuth({children, role}: RequireAuthProps) {
+export function RequireAuth({children, role, allowedRoles}: RequireAuthProps) {
     // We need to see who is logged in - so we need access to auth context
     const { status, user} = useAuth();
     // We want to be able to remember where a user was trying to go before the guard
@@ -23,6 +24,13 @@ export function RequireAuth({children, role}: RequireAuthProps) {
     if(status !== "authenticated") // replace tells the broser not to save the previously attempted
                                    // url - the user can't hit the back button and sidestep the guardm m
         return <Navigate to="/login" state={{from: location}} replace/>
+
+    const roles = allowedRoles || (role ? [role] : []);
+    const userHasPermission = roles.includes(user?.role || "");
+
+    if (userHasPermission === false) {
+        return <Navigate to="/" replace/>
+    }
 
     // When we use the guard we can specify if a specific role is required such as admin
     // if it required (it was passed in) - make sure the logged in user's role matches

@@ -11,6 +11,7 @@ import type { BookingDTO } from "../types/BookingDTO";
 
 export function UserBooking() {
   const [sortBy, setSortBy] = useState("date-asc");
+  const navigate = useNavigate();
   const [bookings, setBookings] = useState<BookingDTO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 

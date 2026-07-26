@@ -9,13 +9,13 @@ interface StrengthProgressProps {
 export const StrengthProgressChart: React.FC<StrengthProgressProps> = ({ dates, strengthValues }) => {
   const option = {
     title: {
-      text: 'Progreso de Fuerza Total',
+      text: 'Total strength progress',
       left: 'center',
       textStyle: { color: '#ffffff', fontSize: 16 }
     },
     tooltip: {
       trigger: 'axis',
-      formatter: 'Puntos de Fuerza: {c} pts'
+      formatter: 'Strength points: {c} pts'
     },
     grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
     xAxis: {
@@ -26,13 +26,13 @@ export const StrengthProgressChart: React.FC<StrengthProgressProps> = ({ dates, 
     },
     yAxis: {
       type: 'value',
-      name: 'Pts Fuerza',
+      name: 'Strength pts',
       splitLine: { lineStyle: { color: '#333' } },
       axisLine: { lineStyle: { color: '#888' } }
     },
     series: [
       {
-        name: 'Fuerza',
+        name: 'Strength',
         type: 'line',
         smooth: true, // Línea curva suave
         data: strengthValues,

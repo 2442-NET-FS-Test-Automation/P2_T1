@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import type { StatisticItem } from "../types/userStadistics";
+import type { StatsDTO } from "../types/StatsDTO";
 import { getUserStatistics } from "../api/stadistics";
 
 // Tus componentes de gráficas ya conectados
@@ -13,7 +13,7 @@ const FALLBACK_STRENGTH_DATES = ["01 Jul", "05 Jul", "10 Jul", "15 Jul", "20 Jul
 const FALLBACK_STRENGTH_VALUES = [100, 115, 135, 155, 185];
 
 export const UserStatistics: React.FC = () => {
-  const [stats, setStats] = useState<StatisticItem[]>([]);
+  const [stats, setStats] = useState<StatsDTO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -98,7 +98,7 @@ export const UserStatistics: React.FC = () => {
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider stats-text-purple">Mile run record</p>
             <p className="text-2xl font-bold stats-text-cyan mt-1">
-              {latestStat ? latestStat.milerun : "06:15"}
+              {latestStat ? latestStat.mileRun : "06:15"}
             </p>
           </div>
         </div>
@@ -149,9 +149,9 @@ export const UserStatistics: React.FC = () => {
                   {(hasValidStats
                     ? stats
                     : [
-                      { id: 1, measureAt: "2026-07-20", weight: 75.5, height: 178, strength: 185, milerun: "06:15" },
-                      { id: 2, measureAt: "2026-07-15", weight: 76.0, height: 178, strength: 155, milerun: "06:30" },
-                      { id: 3, measureAt: "2026-07-10", weight: 76.8, height: 178, strength: 135, milerun: "06:45" },
+                      { id: 1, measureAt: "2026-07-20", weight: 75.5, height: 178, strength: 185, mileRun: "06:15" },
+                      { id: 2, measureAt: "2026-07-15", weight: 76.0, height: 178, strength: 155, mileRun: "06:30" },
+                      { id: 3, measureAt: "2026-07-10", weight: 76.8, height: 178, strength: 135, mileRun: "06:45" },
                     ]
                   ).map((item) => (
                     <tr key={item.id}>
@@ -161,7 +161,7 @@ export const UserStatistics: React.FC = () => {
                       <td>{item.weight} kg</td>
                       <td>{item.height} cm</td>
                       <td className="stats-text-cyan font-semibold">{item.strength} lbs</td>
-                      <td className="stats-text-purple font-mono">{item.milerun}</td>
+                      <td className="stats-text-purple font-mono">{item.mileRun}</td>
                     </tr>
                   ))}
                 </tbody>
