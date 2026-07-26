@@ -102,7 +102,7 @@ public class UserRepository : IUserRepository
         {
             TrainingId = 1,
             UserId = UsersId[0],
-            Status = BookingStatus.Book,
+            Status = BookingStatus.Booked,
             ExerciseTime = new DateTime(2026, 7, 25, 15, 30, 0),
         };
         db.Bookings.Add(bookingBooked);

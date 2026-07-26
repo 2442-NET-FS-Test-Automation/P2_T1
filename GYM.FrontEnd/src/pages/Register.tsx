@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import type { SubmitEvent } from "react";
 import { registerUser } from '../services/RegisterUserService';
 import '../css/Register.css';
+import {useAuth} from '../auth/useAuth';
 
 export function Register() {
   const navigate = useNavigate();
+  const {login} = useAuth();
 
   // Registration Form States
   const [email, setEmail] = useState<string>('');
@@ -16,8 +18,10 @@ export function Register() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
+
   // Submit Handler
-  async function onSubmit(e: SubmitEvent<HTMLFormElement>) {
+  async function onSubmit(e: SubmitEvent<HTMLFormElement>) { 
     e.preventDefault();
     setError(null);
 
@@ -39,17 +43,20 @@ export function Register() {
     try {
       // API Call Placeholder (e.g., registerService({ email, phone, password }))
       console.log('Registering user:', { email, phone, password });
-      registerUser(email, password, phone);
+      await registerUser(email, password, phone);
 
-      //API response
+      if (login) {
+        await login(email, password);
+      }
+
       setLoading(false);
-      setError(null);
-      // Navigate to login
-      navigate('/login');
+      setShowSuccessModal(true);
 
-      setEmail("");
-      setPassword("");
-      setPhone("");
+      //First time automatic redirect to onboarding details page after 2 seconds
+      setTimeout(() => {
+        navigate('/onboarding/details');
+      }, 2000);
+
 
     } catch (err) {
       setLoading(false);
@@ -195,6 +202,29 @@ export function Register() {
 
         </div>
       </div>
+      {/* =========================================================
+          POPUP DE ÉXITO ESTILO GAME / QUEST
+         ========================================================= */}
+      {showSuccessModal && (
+        <div 
+          className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)', zIndex: 1050 }}
+        >
+          <div 
+            className="p-4 rounded-4 border-neon shadow-neon text-center bg-dark"
+            style={{ maxWidth: '380px', width: '90%' }}
+          >
+            <div className="fs-1 mb-2">🎉</div>
+            <h3 className="text-neon fw-bold mb-2">Account Created!</h3>
+            <p className="text-white small mb-3">
+              Welcome aboard, Hero! Logging you in automatically...
+            </p>
+            <div className="spinner-border text-neon" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

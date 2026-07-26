@@ -1,0 +1,328 @@
+.bookings {
+  background-color: #121321 !important;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh !important;
+  display: flex;
+  justify-content: center;
+  gap: 5rem;
+}
+.bookingsContainer {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2.5rem;
+}
+
+/* Container for heading + sort control alignment */
+.bookings-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 50rem; /* Matches the width of your booking-list-container */
+  border-bottom: 1px solid #232545;
+  padding-bottom: 0.75rem;
+}
+
+/* Align text label and dropdown horizontally */
+.sort-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Custom Styled Dropdown Menu */
+.sort-dropdown {
+  background-color: #1a1b2f;
+  border: 1px solid #333652;
+  color: white;
+  padding: 0.5rem 2rem 0.5rem 1rem;
+  border-radius: 6px;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease;
+  
+  /* Replaces default browser arrow with a cleaner style */
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://w3.org' viewBox='0 0 24 24' fill='none' stroke='%2346f0d2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+}
+
+/* Dropdown interactive states */
+.sort-dropdown:focus, 
+.sort-dropdown:hover {
+  border-color: #46f0d2;
+  box-shadow: 0 0 10px rgba(70, 240, 210, 0.2);
+}
+
+/* Optional style adjustment to keep header spaced nicely from cards */
+.bookingsContainer h2 {
+  color: white;
+  margin: 0;
+}
+
+.booking-list-container {
+  margin-top: 2rem;
+}
+
+.booking-card {
+  border-bottom: solid #46f0d2 4px;
+  display: flex;
+  padding: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  height: 12rem;
+  background-color: #1a1b2f; /* Added a dark card color to make shadows visible */
+  border-radius: 8px; /* Optional: rounds the corners for a modern feel */
+  cursor: pointer;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+
+/* 2. Fixed space bug and enhanced the "pop" effects */
+.booking-card:hover {
+  transform: translateY(-5px) scale(1.02); /* Lifts up slightly and grows */
+  box-shadow: 0 10px 20px rgba(70, 240, 210, 0.2); /* Neon glow effect using your accent color */
+  border-bottom-color: #ffffff; /* Optional: switches border color on hover */
+}
+
+/* 3. Fixed comma bug and missing comma in font family fallback */
+.booking-card-details {
+  width: calc(100% - 90px);
+  display: flex;
+  margin-left: 10px;
+  color: white;
+  text-align: left;
+  justify-content: space-between;
+  font-family: "Poppins", sans-serif; /* Fixed: Added missing comma */
+}
+.booking-card img {
+  height: 100%;
+  object-fit: cover;
+  border-radius: 7%;
+}
+
+.detail-a h3 {
+  font-size: 1.5rem;
+  color: white;
+}
+.detail-a h4 {
+  color: #bfbfbf;
+}
+
+.booking-list-container {
+  align-items: center;
+  width: 50rem;
+  justify-content: center;
+}
+
+.card-button-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.card-button-wrapper button {
+  height: 35px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+.primary {
+  background-color: rgb(98, 230, 212);
+  color: white;
+}
+.primary:hover {
+  background-color: rgb(47, 199, 174);
+}
+.secondary {
+  background-color: #ddd;
+}
+.secondary:hover {
+  background-color: rgb(197, 197, 197);
+}
+
+.detail-b {
+  display: flex;
+  flex-direction: column;
+}
+
+.book-element-section {
+  display: flex;
+}
+.detail-b-content-1 {
+  height: 100%;
+}
+
+.filter-bar {
+  background-color: #1a1b2f;
+  border: 1px solid #232545;
+  border-bottom: solid #46f0d2 4px;
+  border-radius: 8px;
+  padding: 2rem;
+  width: 22rem; /* Keeps it proportionate next to the 50rem card list */
+  height: fit-content;
+  margin-top: 5.5rem; /* Aligns vertically with the top of the booking cards */
+}
+
+.filter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Label Style matching your custom utility class fallback */
+.text-neon {
+  color: #46f0d2;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Custom Cyberpunk Inputs */
+.filter-input {
+  width: 100%;
+  background-color: #121321;
+  border: 1px solid #333652;
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+/* Input Interactive States */
+.filter-input:focus {
+  outline: none;
+  border-color: #46f0d2;
+  box-shadow: 0 0 10px rgba(70, 240, 210, 0.25);
+  background-color: #15162b;
+}
+
+.filter-input::placeholder {
+  color: #5d6185;
+}
+
+/* Calendar icon color override for dark mode date picker */
+.filter-input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(80%) sepia(50%) saturate(1000%) hue-rotate(120deg);
+  cursor: pointer;
+}
+
+/* Custom Neon Button Utility overrides */
+.btn-neon {
+  background-color: #46f0d2;
+  color: #121321;
+  border: none;
+  font-family: "Poppins", sans-serif;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.btn-neon:hover {
+  background-color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(70, 240, 210, 0.4);
+}
+
+/* Container Wrapper to group the card and the hidden drawer together safely */
+.booking-card-wrapper {
+  background-color: #1a1b2f;
+  border-radius: 8px;
+  border-bottom: solid #46f0d2 4px;
+  margin-bottom: 1.5rem;
+  width: 50rem;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+/* Hover effect transferred to the combined wrapper */
+.booking-card-wrapper:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 10px 20px rgba(70, 240, 210, 0.15);
+}
+
+/* Deployable Drawer using the CSS Grid template height transition method */
+.booking-card-drawer {
+  display: grid;
+  grid-template-rows: 0fr; /* Collapsed state */
+  transition: grid-template-rows 0.3s ease-out;
+  border-top: 1px solid transparent;
+  overflow: hidden;
+}
+
+/* Expands the grid template track when the active wrapper class is present */
+.booking-card-wrapper.expanded .booking-card-drawer {
+  grid-template-rows: 1fr; /* Expanded state */
+  border-top: 1px solid #232545;
+}
+
+/* Inner padding container that updates dynamically with the grid expansion */
+.drawer-inner-content {
+  min-height: 0;
+  padding: 0 1.5rem;
+  transition: padding 0.3s ease;
+}
+
+.booking-card-wrapper.expanded .drawer-inner-content {
+  padding: 1.25rem 1.5rem 1.5rem 1.5rem;
+}
+
+/* Layout flex structure inside the drawer */
+.drawer-grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  color: white;
+  text-align: left;
+}
+
+.drawer-description {
+  flex: 2;
+}
+
+.drawer-description h5 {
+  color: #46f0d2;
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.drawer-description p {
+  color: #bfbfbf;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.drawer-specs {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+/* Small contextual info tag bubbles inside the drawer */
+.spec-badge {
+  background-color: #121321;
+  border: 1px solid #333652;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Active visual response color for the details button when opened */
+.secondary.active-btn {
+  background-color: #333652;
+  color: #ffffff;
+}

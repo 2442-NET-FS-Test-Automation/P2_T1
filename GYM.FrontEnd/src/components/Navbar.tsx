@@ -131,11 +131,11 @@ export default function Navbar() {
               <hr className="border-secondary my-2" />
               <small className="gq-text-gold text-uppercase fw-bold px-2 mb-1">Trainer Panel</small>
               
-              <Link to="/training/add" className="drawer-link" onClick={toggleMenu}>
+              <Link to="/admin/trainings" className="drawer-link" onClick={toggleMenu}>
                 <FiPlusCircle className="gq-text-gold" /> Add Training
               </Link>
 
-              <Link to="/exercise/add" className="drawer-link" onClick={toggleMenu}>
+              <Link to="/admin/exercises" className="drawer-link" onClick={toggleMenu}>
                 <FiPlusCircle className="gq-text-gold" /> Add Exercise
               </Link>
             </>
@@ -147,7 +147,7 @@ export default function Navbar() {
               <hr className="border-secondary my-2" />
               <small className="text-danger text-uppercase fw-bold px-2 mb-1">Admin Panel</small>
 
-              <Link to="/register-trainer" className="drawer-link" onClick={toggleMenu}>
+              <Link to="/admin/users" className="drawer-link" onClick={toggleMenu}>
                 <FiUserPlus className="text-danger" /> Register Trainer
               </Link>
             </>
