@@ -89,6 +89,11 @@ builder.Services.AddScoped<IUserRepository, UserRepository>(); //Repository User
 builder.Services.AddScoped<IBookingService, BookingService>(); //Booking 
 builder.Services.AddScoped<IBookingRepository, BookingRepository>(); //Booking 
 
+builder.Services.AddScoped<IAchievementService, AchievementService>();
+builder.Services.AddScoped<IAchievementRepository, AchievementRepository>();
+
+builder.Services.AddScoped<IStatsService, StatsService>();
+builder.Services.AddScoped<IStatsRepository, StatsRepository>();
 builder.Services.AddScoped<ISeederService, SeederService>(); //Seeder service
 
 builder.Services.AddScoped<IStatsRepository, StatsRepository>();
