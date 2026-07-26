@@ -10,7 +10,7 @@ public interface IBookingRepository
     Task<Booking> AddBooking(Booking exercise);
     Task<bool> RemoveBooking(int n);
 
-    Task UpdateAsync(Booking Booking);
+    Task<Booking> UpdateBooking(Booking UpdatedBooking);
 
     Task<bool> ExistsAsync(int id);
     Task SaveChangesAsync();

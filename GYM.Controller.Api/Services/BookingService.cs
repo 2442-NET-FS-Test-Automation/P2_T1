@@ -15,32 +15,32 @@ public class BookingService : IBookingService
     {
         _repo = repo;
     }
-   public async Task<IReadOnlyList<BookingDTO>> GetAllBookings()
+    public async Task<IReadOnlyList<BookingDTO>> GetAllBookings()
     {
 
         var bookings = await _repo.GetAllBookingsAsync();
-        
-        if(bookings is null) return null;
-        
+
+        if (bookings is null) return null;
+
         return bookings
             .Select(e => new BookingDTO
             {
                 Id = e.Id,
                 TrainingId = e.TrainingId,
                 UserId = e.UserId,
-                Status = e.Status.ToString(),
+                Status = e.Status,
                 ExerciseTime = e.ExerciseTime,
                 DoneAt = e.DoneAt
             })
             .ToList();
-        
+
     }
 
     public async Task<BookingDTO?> GetBookingById(int Id)
     {
         var booking = await _repo.GetBookingById(Id);
 
-        if(booking is null)
+        if (booking is null)
             return null;
 
         BookingDTO bookingDto = new BookingDTO
@@ -48,7 +48,7 @@ public class BookingService : IBookingService
             Id = booking.Id,
             TrainingId = booking.TrainingId,
             UserId = booking.UserId,
-            Status = booking.Status.ToString(),
+            Status = booking.Status,
             ExerciseTime = booking.ExerciseTime,
             DoneAt = booking.DoneAt
 
@@ -67,7 +67,7 @@ public class BookingService : IBookingService
             Id = booking.Id,
             TrainingId = booking.TrainingId,
             UserId = booking.UserId,
-            Status = booking.Status.ToString(),
+            Status = booking.Status,
             ExerciseTime = booking.ExerciseTime,
             DoneAt = booking.DoneAt
         }).ToList();
@@ -79,10 +79,8 @@ public class BookingService : IBookingService
             TrainingId = bookingDTO.TrainingId,
             UserId = bookingDTO.UserId,
             ExerciseTime = bookingDTO.ExerciseTime ?? DateTime.Now,
-            Status = Enum.TryParse<BookingStatus>(bookingDTO.Status, true, out var parsedStatus) 
-            ? parsedStatus 
-            : BookingStatus.Book 
-            
+            Status = bookingDTO.Status
+
         };
 
         Booking dbBooking = await _repo.AddBooking(newBooking); //Se pasa a repo layer a crear
@@ -92,14 +90,41 @@ public class BookingService : IBookingService
             Id = dbBooking.Id,
             TrainingId = dbBooking.TrainingId,
             UserId = dbBooking.UserId,
-            Status = dbBooking.Status.ToString(),
+            Status = dbBooking.Status,
             ExerciseTime = dbBooking.ExerciseTime,
             DoneAt = dbBooking.DoneAt
         };
 
         return dbBookingDTO;
-        
+
     }
+
+    public async Task<BookingDTO?> UpdateBooking(BookingDTO bookingDTO)
+    {
+        Booking? ex = await _repo.GetBookingById(bookingDTO.Id);
+
+        if (ex is null)
+            return null;
+
+        ex.TrainingId = bookingDTO.TrainingId;
+        ex.UserId = bookingDTO.UserId;
+        ex.ExerciseTime = bookingDTO.ExerciseTime ?? DateTime.Now;
+        ex.Status = bookingDTO.Status;
+
+        Booking updatedEx = await _repo.UpdateBooking(ex);
+
+        BookingDTO updatedDTO = new BookingDTO
+        {
+            Id = updatedEx.Id,
+            TrainingId = updatedEx.TrainingId,
+            UserId = updatedEx.UserId,
+            Status = updatedEx.Status,
+            ExerciseTime = updatedEx.ExerciseTime
+        };
+
+        return updatedDTO;
+    }
+
 
     public Task<bool> DeleteBookingByIdAsync(int BookingId)
     {

@@ -48,13 +48,6 @@ public class BookingRepository : IBookingRepository
         return booking;
     }
 
-    public async Task UpdateAsync(Booking Booking)
-    {
-        await using var db = await _factory.CreateDbContextAsync();
-        db.Entry(Booking).State = EntityState.Modified;
-        await db.SaveChangesAsync();
-    }
-
     public async Task<bool> RemoveBooking(int n)
     {
         await using var db = await _factory.CreateDbContextAsync();
@@ -67,6 +60,14 @@ public class BookingRepository : IBookingRepository
         db.Bookings.Remove(BookingRemoved);
         await db.SaveChangesAsync();
         return true;
+    }
+
+        public async Task<Booking> UpdateBooking(Booking UpdatedBooking)
+    {
+        await using var db = await _factory.CreateDbContextAsync();
+        db.Bookings.Update(UpdatedBooking);
+        await db.SaveChangesAsync();
+        return UpdatedBooking;
     }
     public async Task<bool> ExistsAsync(int id)
     {

@@ -80,6 +80,9 @@ builder.Services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<ITrainingRepository, TrainingRepository>(); //Service
 builder.Services.AddScoped<ITrainingService, TrainingService>(); //Repository
 
+builder.Services.AddScoped<IAchievementService, AchievementService>();
+builder.Services.AddScoped<IAchievementRepository, AchievementRepository>();
+
 builder.Services.AddScoped<IUserService, UserService>(); //Service User for auth
 builder.Services.AddScoped<IUserRepository, UserRepository>(); //Repository User for auth
 
@@ -92,6 +95,11 @@ builder.Services.AddScoped<IAchievementRepository, AchievementRepository>();
 builder.Services.AddScoped<IStatsService, StatsService>();
 builder.Services.AddScoped<IStatsRepository, StatsRepository>();
 builder.Services.AddScoped<ISeederService, SeederService>(); //Seeder service
+
+builder.Services.AddScoped<IStatsRepository, StatsRepository>();
+builder.Services.AddScoped<IStatsService, StatsService>();
+
+
 var app = builder.Build();
 
 //============================
