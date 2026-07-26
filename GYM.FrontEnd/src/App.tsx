@@ -11,11 +11,13 @@ import { Login } from './pages/Login';
 import { LandingPage } from './pages/LandingPage';
 import { UserStatistics } from './pages/UserStadistics';
 import { useAuth } from './auth/useAuth';
-import { RequireAuth } from './components/RequireAuth';
+import { RequireAuth } from './Components/RequireAuth';
 import { Register } from './pages/Register';
 import { UserBooking } from './pages/UserBooking';
 import { NotFound } from './pages/NotFound';
-import Navbar from './components/Navbar';
+import Navbar from './Components/Navbar';
+import { UserDetailsStep } from './pages/onboarding/UserDetailsStep';
+import { UserStatsStep } from './pages/onboarding/UserStatsStep';
 
 function App() {
 
@@ -96,6 +98,14 @@ function App() {
             <Route 
               path="/training" 
               element={<RequireAuth role="User"><Trainings /></RequireAuth>} 
+            />
+            <Route 
+              path="/onboarding/details" 
+              element={<RequireAuth role="User"><UserDetailsStep /></RequireAuth>} 
+            />
+            <Route 
+              path="/onboarding/stats" 
+              element={<RequireAuth role="User"><UserStatsStep /></RequireAuth>} 
             />
 
             {/* =========================================================

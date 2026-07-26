@@ -24,3 +24,19 @@ export interface UserData {
   detail?: UserDetailData;
   stadistic?: Statistic;
 }
+
+export interface CreateUserDetailDTO {
+    id?: number;
+    userId?: number;
+    gender?: Gender | number;
+    name: string;
+    surname: string;
+    joinAt?: string;
+    age?: number;
+}
+
+export interface AuthMeResponse {
+    id: number;
+    name: string;
+    role: string;
+}
