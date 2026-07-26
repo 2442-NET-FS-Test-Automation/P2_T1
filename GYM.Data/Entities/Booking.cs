@@ -22,7 +22,7 @@ public class Booking
     public User User { get; set; } = null!;
 
     [Required]
-    public BookingStatus Status { get; set; } = BookingStatus.Book;
+    public BookingStatus Status { get; set; } = BookingStatus.Booked;
 
     public DateTime ExerciseTime { get; set; }
 

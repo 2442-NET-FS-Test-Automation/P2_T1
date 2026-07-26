@@ -1,6 +1,6 @@
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
-using  GYM.Controller.Api.DTOs;
+using GYM.Controller.Api.DTOs;
 using GYM.Controller.Api.Services;
 using GYM.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -22,7 +22,7 @@ public class BookingController : ControllerBase
     }
 
     //Get all the bookings from the db
-    [HttpGet("bookings")] 
+    [HttpGet("allBookings")] 
     public async Task<ActionResult<IEnumerable<BookingDTO>>> GetAllBookings()
     {
         var dtos = await _cache.GetOrCreateAsync("Bookings:all", async entry => //Check cache, if not there search the db via Service Layer
@@ -68,14 +68,25 @@ public class BookingController : ControllerBase
     [HttpPost("bookings")]
     public async Task<ActionResult<BookingDTO>> AddBooking(BookingDTO newBooking)
     {
-        BookingDTO newBookingDto = await _service.AddBookingAsync(newBooking);  
+        BookingDTO newBookingDto = await _service.AddBookingAsync(newBooking);
         _cache.Remove("Bookings:all"); //Se borra el cache
 
         return CreatedAtAction(
             nameof(GetBookingById),
-            new {Id = newBooking.Id},
+            new { Id = newBooking.Id },
             newBookingDto);
 
+    }
+
+    [HttpPut("updateBooking")]
+    public async Task<IActionResult> UpdateBooking(BookingDTO bookingDTO)
+    {
+        if (bookingDTO is null)
+            return BadRequest();
+
+        BookingDTO? updatedBooking = await _service.UpdateBooking(bookingDTO);
+        _cache.Remove("Bookings:all");
+        return Ok(updatedBooking);
     }
 
     //To delete by exercise by their id
@@ -85,7 +96,7 @@ public class BookingController : ControllerBase
     {
         bool isDeleted = await _service.DeleteBookingByIdAsync(id);
 
-        if(isDeleted)
+        if (isDeleted)
         {
             _cache.Remove("Bookings:all");
             _cache.Remove($"Bookids:{id}");

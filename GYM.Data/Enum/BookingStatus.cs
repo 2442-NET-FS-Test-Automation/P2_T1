@@ -2,7 +2,7 @@ namespace GYM.Data.Entities;
 
 public enum BookingStatus
 {
-    Book,
+    Booked,
     Working,
     Completed,
     Cancelled
