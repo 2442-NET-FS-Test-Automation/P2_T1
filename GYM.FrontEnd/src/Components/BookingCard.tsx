@@ -9,6 +9,8 @@ interface BookingCardProps {
   difficulty?: 'Beginner' | 'Intermediate' | 'Advanced' | 'Heroic';
   description?: string;
   duration?: string;
+  imageUrl?: string;
+  onBook?: () => void;
 }
 
 export function BookingCard({ 
@@ -18,7 +20,9 @@ export function BookingCard({
   exerciseCount = 8,
   difficulty = "Intermediate",
   description = "A high-intensity circuit training session focused on core stability, aerobic threshold endurance, and explosive full-body movement patterns.",
-  duration = "45 mins"
+  duration = "45 mins",
+  imageUrl = "https://i0.wp.com/css-tricks.com/wp-content/uploads/2012/10/threelines.png",
+  onBook
 }: BookingCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -29,7 +33,7 @@ export function BookingCard({
       
       {/* Main Visible Row */}
       <div className="booking-card">
-        <img src="https://i0.wp.com/css-tricks.com/wp-content/uploads/2012/10/threelines.png" alt={title} />
+        <img src={imageUrl} alt={title} />
 
         <div className="booking-card-details">
           <div className="detail-a">
@@ -55,7 +59,7 @@ export function BookingCard({
 
           <div className="detail-b">
             <div className="card-button-wrapper">
-              <button className="primary" onClick={() => console.log("Booking Confirmed!")}>
+              <button className="primary" onClick={(onBook)}>
                 Book Now
               </button>
               {/* Added toggle handler here */}
