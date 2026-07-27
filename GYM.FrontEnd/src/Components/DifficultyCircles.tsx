@@ -24,7 +24,7 @@ export function DifficultyCircles({ level }: DifficultyProps) {
     >
       {Array.from({ length: circlesCount }).map((_, index) => (
         <svg key={index} width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <circle cx="8" cy="8" r="6" stroke="#46f0d2" stroke-width="2" />
+          <circle cx="8" cy="8" r="6" stroke="#46f0d2" strokeWidth="2" />
         </svg>
       ))}
     </div>

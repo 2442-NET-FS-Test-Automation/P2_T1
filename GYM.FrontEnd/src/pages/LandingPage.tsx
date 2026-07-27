@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getPublicTrainings } from '../services/TrainingService';
-import type { TrainingDTO } from '../types/trainingDTO';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getPublicTrainings } from "../services/TrainingService";
+import type { TrainingDTO } from "../types/trainingDTO";
 //import { useAuth } from '../auth/useAuth';
-import '../css/LandingPage.css';
+import "../css/LandingPage.css";
+import { Carousel } from "../components/Carousel";
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -16,49 +17,53 @@ export const LandingPage: React.FC = () => {
     const fetchWorkouts = async () => {
       setLoading(true);
       const data = await getPublicTrainings();
-      
+
       if (!data || data.length === 0) {
         setWorkouts([
           {
             id: 1,
-            trainingName: 'Fuerza Inicial',
-            difficulty: 'Beginner',
-            place: 'Gym',
+            trainingName: "Fuerza Inicial",
+            difficulty: "Beginner",
+            place: "Gym",
             calories: 300,
-            description: 'Aprende los patrones de movimiento básicos y construye una base sólida.',
-            estimatedTime: '00:45:00',
-            exercises: []
+            description:
+              "Aprende los patrones de movimiento básicos y construye una base sólida.",
+            estimatedTime: "00:45:00",
+            exercises: [],
           },
           {
             id: 2,
-            trainingName: 'Resistencia Urbana',
-            difficulty: 'Intermediate',
-            place: 'Outdoor',
+            trainingName: "Resistencia Urbana",
+            difficulty: "Intermediate",
+            place: "Outdoor",
             calories: 450,
-            description: 'Circuito de alta intensidad diseñado para quemar calorías al aire libre.',
-            estimatedTime: '01:00:00',
-            exercises: []
+            description:
+              "Circuito de alta intensidad diseñado para quemar calorías al aire libre.",
+            estimatedTime: "01:00:00",
+            exercises: [],
           },
           {
             id: 3,
-            trainingName: 'Poder de Titán',
-            difficulty: 'Advanced',
-            place: 'Gym',
+            trainingName: "Poder de Titán",
+            difficulty: "Advanced",
+            place: "Gym",
             calories: 600,
-            description: 'Enfocado en hipertrofia y levantamientos pesados para atletas con experiencia.',
-            estimatedTime: '01:15:00',
-            exercises: []
+            description:
+              "Enfocado en hipertrofia y levantamientos pesados para atletas con experiencia.",
+            estimatedTime: "01:15:00",
+            exercises: [],
           },
           {
             id: 4,
-            trainingName: 'Desafío Legendario',
-            difficulty: 'Heroic',
-            place: 'Home',
+            trainingName: "Desafío Legendario",
+            difficulty: "Heroic",
+            place: "Home",
             calories: 750,
-            description: 'Rutina calisténica sin equipo para probar tu resistencia mental y física.',
-            estimatedTime: '01:30:00',
-            exercises: []
-          }
+            description:
+              "Rutina calisténica sin equipo para probar tu resistencia mental y física.",
+            estimatedTime: "01:30:00",
+            exercises: [],
+          },
         ]);
       } else {
         setWorkouts(data);
@@ -73,9 +78,8 @@ export const LandingPage: React.FC = () => {
     <div className="landing-bg text-white min-vh-100 pb-5">
       {/* Navbar */}
       <nav className="navbar navbar-expand-lg navbar-dark bg-transparent py-3 container">
-          <span className="navbar-brand fw-bold fs-3 cursor-pointer" ></span>
-          <div className="d-flex gap-2 ms-auto">        
-          </div>
+        <span className="navbar-brand fw-bold fs-3 cursor-pointer"></span>
+        <div className="d-flex gap-2 ms-auto"></div>
       </nav>
 
       {/* Hero Banner Principal */}
@@ -95,9 +99,7 @@ export const LandingPage: React.FC = () => {
 
       {/* Encabezado */}
       <section className="container text-center my-5">
-        <h2 className="fw-semibold fs-3 mb-1 text-gold">
-          Welcome to
-        </h2>
+        <h2 className="fw-semibold fs-3 mb-1 text-gold">Welcome to</h2>
         <h1 className="display-3 fw-bold mb-0">
           Gym<span className="text-neon">Quest</span> ⚔️
         </h1>
@@ -117,7 +119,6 @@ export const LandingPage: React.FC = () => {
             {workouts.slice(0, 4).map((workout) => (
               <div key={workout.id ?? workout.trainingName} className="col">
                 <div className="card quest-card h-100 rounded-4 overflow-hidden position-relative">
-                  
                   {/* Encabezado de la Tarjeta (Imagen / Badge de Estadísticas) */}
                   <div className="quest-card-header p-3 d-flex flex-column justify-content-between">
                     <div className="d-flex justify-content-between align-items-center">
@@ -151,11 +152,12 @@ export const LandingPage: React.FC = () => {
                     </div>
 
                     <div className="mt-3 pt-2 border-top border-secondary-subtle d-flex align-items-center justify-content-between">
-                      <span className="text-neon small fw-semibold">Ver Quest</span>
+                      <span className="text-neon small fw-semibold">
+                        Ver Quest
+                      </span>
                       <span className="text-neon">➔</span>
                     </div>
                   </div>
-
                 </div>
               </div>
             ))}
@@ -164,14 +166,15 @@ export const LandingPage: React.FC = () => {
 
         {/* Botón Acción Principal */}
         <div className="mt-5">
-          <button 
-            className="btn btn-neon rounded-pill px-5 py-3 fw-bold text-uppercase fs-6 shadow-neon" 
-            onClick={() => navigate('/login')}
+          <button
+            className="btn btn-neon rounded-pill px-5 py-3 fw-bold text-uppercase fs-6 shadow-neon"
+            onClick={() => navigate("/login")}
           >
             More Trainings ⚔️
           </button>
         </div>
       </section>
+      <Carousel/>
 
       {/* Sección de Logros y Funcionalidades */}
       <section className="container my-5 pt-4">
@@ -180,21 +183,29 @@ export const LandingPage: React.FC = () => {
             <div className="feature-card p-4 rounded-4 text-center h-100">
               <div className="feature-icon-wrapper mb-3">🏆</div>
               <h3 className="fs-5 text-neon fw-bold mb-2">Desbloquea Logros</h3>
-              <p className="text-gold small m-0">Gana experiencia y sube de nivel completando tus rutinas diarias.</p>
+              <p className="text-gold small m-0">
+                Gana experiencia y sube de nivel completando tus rutinas
+                diarias.
+              </p>
             </div>
           </div>
           <div className="col-md-4">
             <div className="feature-card p-4 rounded-4 text-center h-100">
               <div className="feature-icon-wrapper mb-3">📊</div>
               <h3 className="fs-5 text-neon fw-bold mb-2">Sigue tu Progreso</h3>
-              <p className="text-gold small m-0">Visualiza tus estadísticas de fuerza y consistencia semana a semana.</p>
+              <p className="text-gold small m-0">
+                Visualiza tus estadísticas de fuerza y consistencia semana a
+                semana.
+              </p>
             </div>
           </div>
           <div className="col-md-4">
             <div className="feature-card p-4 rounded-4 text-center h-100">
               <div className="feature-icon-wrapper mb-3">📜</div>
               <h3 className="fs-5 text-neon fw-bold mb-2">Misiones Diarias</h3>
-              <p className="text-gold small m-0">Supera desafíos personalizados creados por tu entrenador.</p>
+              <p className="text-gold small m-0">
+                Supera desafíos personalizados creados por tu entrenador.
+              </p>
             </div>
           </div>
         </div>
