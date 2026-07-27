@@ -92,5 +92,47 @@ public class UserController : ControllerBase
         _cache.Remove($"Users-Details:{userId}");
         return Ok(result);
     }
+
+    // Obtener todos los usuarios (Admin y Trainer)
+    [HttpGet("all-users")]
+    [Authorize(Roles = "Admin,Trainer")]
+    public async Task<ActionResult<List<UserAdminDTO>>> GetAllUsers()
+    {
+        List<UserAdminDTO> users = await _service.GetAllUsersForAdmin();
+        return Ok(users);
+    }
+
+    // Crear usuario Staff (Trainer o Admin) - Solo Admin
+    [HttpPost("create-staff")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult> CreateStaffUser([FromBody] UserCreateAdminDTO dto)
+    {
+        if (dto is null)
+            return BadRequest("Datos inválidos.");
+
+        string? errorMessage = await _service.CreateStaffUserService(dto);
+        if (errorMessage is not null)
+            return BadRequest(new { message = errorMessage });
+
+        return Ok(new { message = "Usuario de personal creado exitosamente." });
+    }
+
+    // Cambiar Rol de un Usuario - Solo Admin
+    [HttpPatch("{id:int}/role")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult> UpdateUserRole(int id, [FromBody] UserUpdateRoleDTO dto)
+    {
+        if (dto is null || string.IsNullOrWhiteSpace(dto.NewRole))
+            return BadRequest("Rol inválido.");
+
+        bool success = await _service.UpdateUserRole(id, dto.NewRole);
+        if (!success)
+            return NotFound(new { message = "Usuario no encontrado o no se pudo actualizar el rol." });
+
+        // Limpiamos caché del usuario si existe
+        _cache.Remove($"Users-Details:{id}");
+
+        return Ok(new { message = $"Rol actualizado a '{dto.NewRole}' correctamente." });
+    }
 }
 

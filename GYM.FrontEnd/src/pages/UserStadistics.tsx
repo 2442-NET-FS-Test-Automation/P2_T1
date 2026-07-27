@@ -3,8 +3,8 @@ import type { StatsDTO } from "../types/StatsDTO";
 import { getUserStatistics } from "../api/stadistics";
 
 // Tus componentes de gráficas ya conectados
-import { WeeklyMilesChart } from "../components/WeeklyMilesChart";
-import { StrengthProgressChart } from "../components/StrengthProgressChart";
+import { WeeklyMilesChart } from "../Components/WeeklyMilesChart";
+import { StrengthProgressChart } from "../Components/StrengthProgressChart";
 import "../css/UserStadistics.css";
 
 // Datos de prueba (Fallback)
