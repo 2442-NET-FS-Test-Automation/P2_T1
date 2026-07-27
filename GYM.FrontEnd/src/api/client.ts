@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getToken } from '../auth/storage';
+import { clearToken, getToken } from '../auth/storage';
 
 // Instancia centralizada de Axios apuntando a la API de ASP.NET Core
 export const api = axios.create({
@@ -35,8 +35,7 @@ api.interceptors.response.use(
       console.warn('Sesión expirada o token inválido. Redirigiendo a Login...');
       
       // 1. Limpiamos las credenciales guardadas
-      localStorage.removeItem('token');
-      localStorage.removeItem('user'); // O las variables de sesión que manejes
+      clearToken();
 
       // 2. Redirigimos al usuario a la pantalla de Login
       window.location.href = '/login'; 

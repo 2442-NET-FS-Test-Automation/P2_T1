@@ -1,5 +1,6 @@
 import { api } from "../api/client";
 import type { exerciseDTO } from "../types/exerciseDTO";
+import type { TrainingDTO, TrainingCreateDTO } from "../types/trainingDTO";
 
 // ==========================================
 // USERS SERVICES
@@ -93,47 +94,49 @@ export const ExerciseService = {
 // ==========================================
 // TRAININGS SERVICES (Rutinas y Tabla Pivote)
 // ==========================================
-/*
+
 export const TrainingService = {
-    // GET: Obtener todas las rutinas (con sus ejercicios vinculados)
-    getAllTrainings: async () => {
-        const response = await fetch(`${API_BASE_URL}/trainings`, {
-        headers: getAuthHeaders(),
-        });
-        if (!response.ok) throw new Error('Error fetching trainings');
-        return await response.json();
+    // GET: Obtener todas las rutinas con sus ejercicios vinculados
+    getAllTrainings: async (): Promise<TrainingDTO[]> => {
+        try {
+            const response = await api.get<TrainingDTO[]>('/Training/trainings');
+            return response.data;
+        } catch (error) {
+            console.error('Error getting trainings:', error);
+            return Promise.reject(error);
+        }
     },
 
-    // POST: Crear rutina (incluyendo el array de IDs de ejercicios para la tabla pivote TrainingExercises)
-    createTraining: async (trainingData: any) => {
-        const response = await fetch(`${API_BASE_URL}/trainings`, {
-        method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify(trainingData),
-        });
-        if (!response.ok) throw new Error('Error creating training');
-        return await response.json();
+    // POST: Crear nueva rutina con sus ejercicios vinculados
+    createTraining: async (trainingData: TrainingCreateDTO): Promise<TrainingCreateDTO> => {
+        try {
+            const response = await api.post<TrainingCreateDTO>('/Training/trainings', trainingData);
+            return response.data;
+        } catch (error) {
+            console.error('Error creating training:', error);
+            return Promise.reject(error);
+        }
     },
 
-    // PUT: Actualizar rutina
-    updateTraining: async (id: number, trainingData: any) => {
-        const response = await fetch(`${API_BASE_URL}/trainings/${id}`, {
-        method: 'PUT',
-        headers: getAuthHeaders(),
-        body: JSON.stringify(trainingData),
-        });
-        if (!response.ok) throw new Error('Error updating training');
-        return await response.json();
+    // PUT: Editar rutina existente
+    updateTraining: async (trainingData: TrainingDTO): Promise<TrainingDTO> => {
+        try {
+            const response = await api.put<TrainingDTO>(`/Training/trainings-info`, trainingData);
+            return response.data;
+        } catch (error) {
+            console.error('Error updating training:', error);
+            return Promise.reject(error);
+        }
     },
 
-    // DELETE: Borrar rutina (sin eliminar los ejercicios de la BD global)
-    deleteTraining: async (id: number) => {
-        const response = await fetch(`${API_BASE_URL}/trainings/${id}`, {
-        method: 'DELETE',
-        headers: getAuthHeaders(),
-        });
-        if (!response.ok) throw new Error('Error deleting training');
-        return await response.json();
+    // DELETE: Borrar rutina de la base de datos
+    deleteTraining: async (trainingID: number): Promise<void> => {
+        try {
+            const response = await api.delete(`/Training/training/${trainingID}`);
+            return response.data;
+        } catch (error) {
+            console.error('Error deleting training:', error);
+            return Promise.reject(error);
+        }
     },
 };
-*/
