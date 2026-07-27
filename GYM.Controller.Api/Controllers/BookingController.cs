@@ -1,6 +1,7 @@
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
-using GYM.Controller.Api.DTOs;
+using System.Security.Claims;
+using  GYM.Controller.Api.DTOs;
 using GYM.Controller.Api.Services;
 using GYM.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -56,10 +57,16 @@ public class BookingController : ControllerBase
         return dto is null ? NotFound() : Ok(dto);
     }
 
-    [HttpGet("BookingByUserId/{id}")] //-----------------------------------------------------------FALTA
-    public async Task<ActionResult<IEnumerable<BookingDTO>>> GetBookingsByUserId(int id)
+    [HttpGet("BookingByUserId")]
+    public async Task<ActionResult<IEnumerable<BookingDTO>>> GetBookingsByUserId()
     {
-        var dtos = await _service.GetBookingsByUserId(id);
+        string? userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if(userIdString is null)
+            return Unauthorized();
+        int userId = int.Parse(userIdString);
+
+        var dtos = await _service.GetBookingsByUserId(userId);
 
         return !dtos.Any() ? NotFound("No bookings found for this user.") : Ok(dtos);
     }
