@@ -113,7 +113,7 @@ public class UserRepository : IUserRepository
             Weight = 91,
             Height = 1.70M,
             Strength = 45,
-            MileRun = new TimeOnly(30),
+            MileRun = new TimeOnly(0,15),
             MeasureAt = new DateOnly(2026, 7, 1)
         };
         db.Statistics.Add(stats1);
@@ -124,7 +124,7 @@ public class UserRepository : IUserRepository
             Weight = 90,
             Height = 1.71M,
             Strength = 48,
-            MileRun = new TimeOnly(27),
+            MileRun = new TimeOnly(0,13),
             MeasureAt = new DateOnly(2026, 7, 5)
         };
         db.Statistics.Add(stats2);
@@ -135,7 +135,7 @@ public class UserRepository : IUserRepository
             Weight = 87,
             Height = 1.71M,
             Strength = 49,
-            MileRun = new TimeOnly(27),
+            MileRun = new TimeOnly(0, 14),
             MeasureAt = new DateOnly(2026, 7, 8)
         };
         db.Statistics.Add(stats3);
@@ -146,7 +146,7 @@ public class UserRepository : IUserRepository
             Weight = 85,
             Height = 1.71M,
             Strength = 51,
-            MileRun = new TimeOnly(24),
+            MileRun = new TimeOnly(0, 12),
             MeasureAt = new DateOnly(2026, 7, 15)
         };
         db.Statistics.Add(stats4);
@@ -157,7 +157,7 @@ public class UserRepository : IUserRepository
             Weight = 84,
             Height = 1.71M,
             Strength = 53,
-            MileRun = new TimeOnly(25),
+            MileRun = new TimeOnly(0, 12),
             MeasureAt = new DateOnly(2026, 7, 22)
         };
         db.Statistics.Add(stats5);
