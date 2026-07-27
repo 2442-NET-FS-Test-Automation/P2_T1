@@ -75,12 +75,19 @@ public class BookingController : ControllerBase
     [HttpPost("bookings")]
     public async Task<ActionResult<BookingDTO>> AddBooking(BookingDTO newBooking)
     {
+        string? userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if(userIdString is null)
+            return Unauthorized();
+        int userId = int.Parse(userIdString);
+        newBooking.UserId = userId;
+
         BookingDTO newBookingDto = await _service.AddBookingAsync(newBooking);
         _cache.Remove("Bookings:all"); //Se borra el cache
 
         return CreatedAtAction(
             nameof(GetBookingById),
-            new { Id = newBooking.Id },
+            new { Id = newBookingDto.Id },
             newBookingDto);
 
     }
@@ -113,6 +120,23 @@ public class BookingController : ControllerBase
         {
             return NotFound();
         }
+    }
+
+    [HttpPatch("bookings-status/{id}/{newStatus}")]
+    public async Task<ActionResult<BookingDTO>> UpdateBookingStatus(int id, int newStatus)
+    {
+        //Checar que exista el booking, enviarlo a ser modificado (modificarlo, guardarlo en db)
+        //regresar el dto
+        
+        BookingDTO? updatedDTO = await _service.UpdateStatus(id, newStatus);
+
+        if(updatedDTO is null)
+            return BadRequest();
+
+        _cache.Remove("Bookings:all");
+        _cache.Remove($"Bookids:{id}");
+
+        return Ok(updatedDTO);
     }
 
 }

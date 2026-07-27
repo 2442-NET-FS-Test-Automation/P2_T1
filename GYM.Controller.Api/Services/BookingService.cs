@@ -130,4 +130,40 @@ public class BookingService : IBookingService
     {
         return _repo.RemoveBooking(BookingId);
     }
+
+    public async Task<BookingDTO?> UpdateStatus(int bookingID, int status)
+    {
+        Booking? booking = await _repo.GetBookingById(bookingID);
+        if(booking is null) //Check a booking exist with this id
+            return null; 
+
+        if(booking.Status == BookingStatus.Completed) //Change the dont at attribute to nothing
+            booking.DoneAt = null;
+
+        switch (status) //Change status, and done at
+        {
+            case 0 : booking.Status = BookingStatus.Booked; break; //Falta quitar el dont at
+            case 1 : booking.Status = BookingStatus.Working; break;
+            case 2 : booking.Status = BookingStatus.Completed; booking.DoneAt = DateTime.UtcNow; break;
+            case 3 : booking.Status = BookingStatus.Cancelled; break;
+            default: return null; 
+        }
+
+        Booking? updatedBooking = await _repo.UpdateBooking(booking);
+        if(updatedBooking is null)
+            return null;
+
+        BookingDTO updatedBookingDTO = new BookingDTO
+        {
+            Id = updatedBooking.Id,
+            TrainingId = updatedBooking.TrainingId,
+            UserId = updatedBooking.UserId,
+            Status = updatedBooking.Status,
+            ExerciseTime = updatedBooking.ExerciseTime,
+            DoneAt = updatedBooking.DoneAt
+        };
+
+        return updatedBookingDTO;
+
+    }
 }
