@@ -9,7 +9,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 //Controller for exercises and training, add, update, delete, get
 
-//[Authorize]
+[Authorize]
 [ApiController] //ASP.NET knows to map this controller during app.MapControllers()
 [Route("api/[Controller]")] //route base
 public class TrainingController : ControllerBase

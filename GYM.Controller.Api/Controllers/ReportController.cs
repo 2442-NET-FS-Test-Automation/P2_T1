@@ -7,7 +7,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace GYM.Controller.Api.Controllers;
 
-// [Authorize]
+[Authorize]
 [ApiController]
 [Route("api/[controller]")] // Fixed casing token structure
 public class ReportController : ControllerBase
