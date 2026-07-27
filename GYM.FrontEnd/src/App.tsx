@@ -25,6 +25,8 @@ import { AdminExercisesPage } from './pages/admin/AdminExercisesPage';
 import { AdminTrainingsPage } from './pages/admin/AdminTrainingsPage';
 import { ConfirmBooking } from './pages/ConfirmBooking';
 import { useLocation } from 'react-router-dom'; // return current location
+import { ExerciseDetail } from './pages/ExerciseDetail';
+import { Report } from './pages/Report';
 
 function App() {
 
@@ -95,6 +97,14 @@ function App() {
             <Route 
               path="/user/booking"
               element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><UserBooking /></RequireAuth>} 
+            />
+             <Route 
+              path="/user/report"
+              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><Report /></RequireAuth>} 
+            />
+            <Route 
+              path="/exercise-details"
+              element={<RequireAuth role="User"><ExerciseDetail /></RequireAuth>} 
             />
             <Route 
               path="/user/booking/confirm/:trainingid" 

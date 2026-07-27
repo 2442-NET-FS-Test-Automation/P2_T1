@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { ExerciseModal } from '../../Components/admin/modals/ExerciseModal';
+import { ExerciseService } from '../../services/adminServices';
+import type {exerciseDTO} from '../../types/exerciseDTO';
 
 export interface ExerciseItem {
     id: number;
@@ -9,28 +12,73 @@ export interface ExerciseItem {
     reps: number;
 }
 
-const MOCK_EXERCISES: ExerciseItem[] = [
-    {
-        id: 1,
-        name: 'Push Ups',
-        description: 'Classic chest exercise targeting pectorals and triceps.',
-        visualReferenceUrl: 'https://example.com/pushup.gif',
-        sets: 4,
-        reps: 12,
-    },
-    {
-        id: 2,
-        name: 'Barbell Squat',
-        description: 'Heavy compound leg exercise for quadriceps and glutes.',
-        visualReferenceUrl: 'https://example.com/squat.jpg',
-        sets: 3,
-        reps: 10,
-    },
-];
-
 export function AdminExercisesPage() {
-    const [exercises, setExercises] = useState<ExerciseItem[]>(MOCK_EXERCISES);
+    const [exercises, setExercises] = useState<exerciseDTO[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
     const [searchTerm, setSearchTerm] = useState('');
+
+    //Modales
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedExercise, setSelectedExercise] = useState<exerciseDTO | null>(null);
+
+    //Load exercises from API on component mount
+    useEffect(() => {
+        fetchExercises();
+    }, []);
+
+    const fetchExercises = async () => {
+        try {
+        setLoading(true);
+        const data = await ExerciseService.getAllExercises();
+        setExercises(data);
+        } catch (error) {
+        console.error('Error loading exercises from API:', error);
+        alert('Error al cargar la lista de ejercicios desde el servidor.');
+        } finally {
+        setLoading(false);
+        }
+    };
+
+    //Modal Handlers ==========================================================
+    const handleOpenCreateModal = () => {
+        setSelectedExercise(null);
+        setIsModalOpen(true);
+    };
+
+    const handleOpenEditModal = (exercise: exerciseDTO) => {
+        setSelectedExercise(exercise);
+        setIsModalOpen(true);
+    };
+
+    const handleSaveExercise = async (exerciseData: exerciseDTO) => {
+        try {
+            if (exerciseData.id) {
+                // Editar en BD
+                await ExerciseService.updateExercise(exerciseData);
+            } else {
+                // Crear en BD
+                await ExerciseService.createExercise(exerciseData);
+            }
+            setIsModalOpen(false);
+            fetchExercises(); // Recargamos la lista actualizada desde C#
+        } catch (error) {
+            console.error('Error saving exercise:', error);
+            alert('an error occurred while saving the exercise. Please try again.');
+        }
+    };
+
+    const handleDeleteExercise = async (id: number) => {
+        if (!window.confirm('¿Are you sure you want to delete this exercise from the database?')) return;
+
+        try {
+            await ExerciseService.deleteExercise(id);
+            fetchExercises(); // Recargamos la lista desde C#
+        } catch (error) {
+            console.error('Error deleting exercise:', error);
+            alert('Cannot delete the exercise. It might be linked to existing training routines.');
+        }
+    };
+    //End of Modal Handlers ==========================================================
 
     const filteredExercises = exercises.filter(ex => 
         ex.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -49,8 +97,8 @@ export function AdminExercisesPage() {
                     Manage individual exercises, visual guides, sets, and default reps.
                 </p>
                 </div>
-                <button className="btn btn-gq-purple px-3 py-2 d-flex align-items-center gap-2">
-                ➕ <span>Create Exercise</span>
+                <button className="btn btn-gq-purple px-3 py-2 d-flex align-items-center gap-2" onClick={handleOpenCreateModal}>
+                    ➕ <span>Create Exercise</span>
                 </button>
             </div>
 
@@ -101,8 +149,14 @@ export function AdminExercisesPage() {
                         </td>
                         <td className="text-end">
                             <div className="d-flex justify-content-end gap-2">
-                            <button className="btn btn-sm btn-outline-info px-2 py-1" title="Edit">✏️</button>
-                            <button className="btn btn-sm btn-outline-danger px-2 py-1" title="Delete">🗑️</button>
+                            <button className="btn btn-sm btn-outline-info px-2 py-1" title="Edit" 
+                            onClick={() => handleOpenEditModal(ex)}>
+                                ✏️
+                            </button>
+                            <button className="btn btn-sm btn-outline-danger px-2 py-1" title="Delete" 
+                            onClick={() => ex.id && handleDeleteExercise(ex.id)}>
+                                🗑️
+                            </button>
                             </div>
                         </td>
                         </tr>
@@ -110,6 +164,12 @@ export function AdminExercisesPage() {
                     </tbody>
                 </table>
                 </div>
+                <ExerciseModal 
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    onSave={handleSaveExercise}
+                    initialData={selectedExercise}
+                />
             </div>
         </div>
     );
