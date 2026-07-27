@@ -24,7 +24,7 @@ public class TrainingController : ControllerBase
 
     //---------------------Exercises-----------------------------------------
 
-     //Get all the exercises from the db
+    //Get all the exercises from the db
     [HttpGet("exercises")]
     public async Task<ActionResult<IEnumerable<ExerciseDTO>>> GetAllExercises()
     {
