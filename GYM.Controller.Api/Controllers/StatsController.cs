@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using System.Security.Claims;
 using GYM.Controller.Api.DTOs;
 using GYM.Controller.Api.Services;
 using GYM.Data.Entities;
@@ -6,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 
-
+[Authorize]
 [ApiController] //ASP.NET knows to map this controller during app.MapControllers()
 [Route("api/[Controller]")] //route base
 public class StatsController : ControllerBase
@@ -40,9 +41,15 @@ public class StatsController : ControllerBase
         return dto is null ? NotFound() : Ok(dto);
     }
 
-    [HttpGet("user/{userId:int}")] // URL: GET api/stats/user/5
-    public async Task<ActionResult<IEnumerable<StatsDTO>>> GetStatsByUserId(int userId)
+    [HttpGet("user")] // URL: GET api/stats/user
+    public async Task<ActionResult<IEnumerable<StatsDTO>>> GetStatsByUserId()
     {
+        //Get userId from token
+        string? userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if(userIdString is null)
+            return Unauthorized();
+        int userId = int.Parse(userIdString);
+
         var dtos = await _service.GetStatsByUserId(userId);
 
         // Safe evaluation handling for empty returned collections
@@ -51,9 +58,17 @@ public class StatsController : ControllerBase
             : Ok(dtos);
     }
 
-    [HttpPost] // URL: POST api/stats
+    //-----------------------------------------------------------FALTA
+    [HttpPost] // URL: POST api/stats 
     public async Task<ActionResult<StatsDTO>> AddStats([FromBody] StatsDTO newStats)
-    {
+    { 
+        string? userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if(userIdString is null)
+            return Unauthorized();
+        int userId = int.Parse(userIdString);
+
+        newStats.UserId = userId;
+
         StatsDTO createdStatsDto = await _service.AddStatsAsync(newStats);
 
         // Cache eviction
@@ -71,6 +86,13 @@ public class StatsController : ControllerBase
     {
         if (statsDto is null)
             return BadRequest("Payload cannot be null.");
+        
+        string? userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if(userIdString is null)
+            return Unauthorized();
+        int userId = int.Parse(userIdString);
+
+        statsDto.UserId = userId;
 
         StatsDTO? updatedStats = await _service.UpdateStats(statsDto);
 

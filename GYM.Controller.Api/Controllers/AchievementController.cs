@@ -1,5 +1,6 @@
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
+using System.Security.Claims;
 using GYM.Controller.Api.DTOs;
 using GYM.Controller.Api.Services;
 using GYM.Data.Entities;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 
-
+[Authorize]
 [ApiController] //ASP.NET knows to map this controller during app.MapControllers()
 [Route("api/[Controller]")] //route base
 public class AchievementController : ControllerBase
@@ -36,7 +37,7 @@ public class AchievementController : ControllerBase
 
     }
 
-    [HttpGet("AchievementById/{id}")]
+    [HttpGet("AchievementById/{id}")] //Get an archivement by their id
     public async Task<ActionResult<AchievementDTO>> GetAchievementById(int id)
     {
         var dto = await _service.GetAchievementById(id);
@@ -44,16 +45,22 @@ public class AchievementController : ControllerBase
         return dto is null ? NotFound() : Ok(dto);
     }
 
-    [HttpGet("AchievementByUserId/{id}")]
-    public async Task<ActionResult<IEnumerable<AchievementDTO>>> GetAchievementsByUserId(int id)
+    //Get archivements from the userID
+    [HttpGet("AchievementByUserId")] 
+    public async Task<ActionResult<IEnumerable<AchievementDTO>>> GetAchievementsByUserId()
     {
+        //get the userid from the token
+        string? userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if(userIdString is null)
+            return Unauthorized();
+        int id = int.Parse(userIdString);
+
         var dtos = await _service.GetAchievementsByUserId(id);
 
         return !dtos.Any() ? NotFound("No achievements found for this user.") : Ok(dtos);
     }
 
-    [HttpPost("AddAchievement")]//Add 1 exercise
-    //Falta poner quien puede acceder a este endpoint !!!!!!!!!!!!!!!!!
+    [HttpPost("AddAchievement")]//Add 1 archivements
     public async Task<ActionResult<AchievementDTO>> AddAchievement(AchievementDTO newAchievement)
     {
         AchievementDTO newAchievementDto = await _service.AddAchievementAsync(newAchievement);
@@ -66,6 +73,7 @@ public class AchievementController : ControllerBase
 
     }
 
+    //Update an existing archivement
     [HttpPut("updateAchievement")]
     public async Task<IActionResult> UpdateAchievement(AchievementDTO bookingDTO)
     {
