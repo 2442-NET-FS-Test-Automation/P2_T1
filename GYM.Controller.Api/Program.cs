@@ -99,6 +99,8 @@ builder.Services.AddScoped<ISeederService, SeederService>(); //Seeder service
 builder.Services.AddScoped<IStatsRepository, StatsRepository>();
 builder.Services.AddScoped<IStatsService, StatsService>();
 
+builder.Services.AddScoped<IReportService, ReportService>();
+
 
 var app = builder.Build();
 

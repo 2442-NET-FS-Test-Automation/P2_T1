@@ -11,18 +11,20 @@ import { Login } from './pages/Login';
 import { LandingPage } from './pages/LandingPage';
 import { UserStatistics } from './pages/UserStadistics';
 import { useAuth } from './auth/useAuth';
-import { RequireAuth } from './Components/RequireAuth';
+import { RequireAuth } from './components/RequireAuth';
 import { Register } from './pages/Register';
 import { UserBooking } from './pages/UserBooking';
 import { NotFound } from './pages/NotFound';
-import Navbar from './Components/Navbar';
-import { UserDetailsStep } from './pages/onboarding/UserDetailsStep';
-import { UserStatsStep } from './pages/onboarding/UserStatsStep';
-import { AdminLayout } from './Components/admin/AdminLayout';
+import Navbar from './components/Navbar';
+import { UserDetailsStep } from './pages/Onboarding/UserDetailsStep';
+import { UserStatsStep } from './pages/Onboarding/UserStatsStep';
+import { AdminLayout } from './components/admin/AdminLayout';
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { AdminUsersPage } from './pages/admin/AdminUsersPage';
 import { AdminExercisesPage } from './pages/admin/AdminExercisesPage';
 import { AdminTrainingsPage } from './pages/admin/AdminTrainingsPage';
+import { ExerciseDetail } from './pages/ExerciseDetail';
+import { Report } from './pages/Report';
 
 function App() {
 
@@ -83,6 +85,14 @@ function App() {
             <Route 
               path="/user/booking"
               element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><UserBooking /></RequireAuth>} 
+            />
+             <Route 
+              path="/user/report"
+              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><Report /></RequireAuth>} 
+            />
+            <Route 
+              path="/exercise-details"
+              element={<RequireAuth role="User"><ExerciseDetail /></RequireAuth>} 
             />
             <Route 
               path="/user/profileSettings" 
