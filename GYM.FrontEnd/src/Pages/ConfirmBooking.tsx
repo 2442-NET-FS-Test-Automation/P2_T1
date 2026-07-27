@@ -7,7 +7,7 @@ import type { TrainingDTO } from "../types/trainingDTO";
 import "../css/ConfirmBooking.css";
 import { ExerciseList } from "../components/exerciseList";
 import { IoArrowBack } from "react-icons/io5";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from 'react-toastify' 
 
 export function ConfirmBooking() {
 // Returns an object of key/value-pairs of the dynamic params 
@@ -16,7 +16,6 @@ export function ConfirmBooking() {
   const { trainingid } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const Confirmation = () => toast("Booked!");
 
   const [training, setTraining] = useState<TrainingDTO | null>(
     (location.state as { training?: TrainingDTO })?.training || null
@@ -41,7 +40,9 @@ export function ConfirmBooking() {
 
   const handleConfirm = async () => {
     if (!training?.id || !currentUserId) {
-      alert("We can't confirm your identity or the training. Try again.");
+      toast.error("We can't confirm your identity or the training. Try again.", {
+        toastId: 'confirmation-booking-error', // Prevents duplicate toasts
+      });
       return;
     }
 
@@ -59,9 +60,14 @@ export function ConfirmBooking() {
     setSubmitting(false);
 
     if (result) {
+      toast.success("Booked successfully!", {
+        toastId: 'booking-success'
+      });
       navigate("/");
     } else {
-      alert("There has been a problem confirming your booking. Try again.");
+      toast.error("There has been a problem confirming your booking. Try again.", {
+        toastId: "booking-error"
+      });
     }
   };
 

@@ -27,6 +27,7 @@ import { ConfirmBooking } from './pages/ConfirmBooking';
 import { useLocation } from 'react-router-dom'; // return current location
 import { ExerciseDetail } from './pages/ExerciseDetail';
 import { Report } from './pages/Report';
+import { ToastContainer } from "react-toastify"; // library for notifications (success messages/error messages) like an alert in js
 
 function App() {
 
@@ -57,6 +58,8 @@ function App() {
   return (
     <>
       <div className="app">
+        {/* we add the notification container at the top */}
+        <ToastContainer position="top-right" autoClose={3000} /> 
         {!hideNavbar && <Navbar />}
           <main>
           <Routes>
