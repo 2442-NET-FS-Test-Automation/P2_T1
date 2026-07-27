@@ -3,7 +3,7 @@ import type { StatsDTO } from "../types/StatsDTO";
 import { getUserStatistics } from "../api/stadistics";
 
 // Tus componentes de gráficas ya conectados
-import { WeeklyMilesChart } from "../components/WeeklyMilesChart";
+import { MonthlyMilesChart } from "../components/MonthlyMilesChart";
 import { StrengthProgressChart } from "../components/StrengthProgressChart";
 import "../css/UserStadistics.css";
 
@@ -64,28 +64,47 @@ export const UserStatistics: React.FC = () => {
     ? stats.map((s) => s.strength).reverse()
     : FALLBACK_STRENGTH_VALUES;
 
-  // Datos para millas semanales
-  const milesData = React.useMemo(() => {
-    const result = [0, 0, 0, 0, 0, 0, 0];
-    if (!hasValidStats) return FALLBACK_WEEKLY_MILES;
+  // Estado del mes seleccionado (por default, el mes actual)
+const [selectedMonth, setSelectedMonth] = React.useState(() => {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+});
 
-    const monday = getMondayOfCurrentWeek(); // lo llama, no lo redefine
-    const sunday = new Date(monday);
-    sunday.setDate(monday.getDate() + 6);
-    sunday.setHours(23, 59, 59, 999);
+const milesData = React.useMemo(() => {
+  const [yearStr, monthStr] = selectedMonth.split('-');
+  const year = Number(yearStr);
+  const month = Number(monthStr) - 1; // JS Date usa 0-11
 
-    stats.forEach((s) => {
-      const measureDate = new Date(s.measureAt);
-      if (measureDate >= monday && measureDate <= sunday) {
-        const jsDay = measureDate.getDay();
-        const dayIndex = jsDay === 0 ? 6 : jsDay - 1;
-        const [h, m, sec] = s.mileRun.split(":").map(Number);
-        result[dayIndex] = h * 60 + m + sec / 60;
-      }
-    });
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const result = new Array(daysInMonth).fill(0);
 
-        return result;
-  }, [stats, hasValidStats]);
+  if (!hasValidStats) return result;
+
+  stats.forEach((s) => {
+    const measureDate = new Date(s.measureAt);
+    if (measureDate.getFullYear() === year && measureDate.getMonth() === month) {
+      const dayIndex = measureDate.getDate() - 1; // día 1 -> índice 0
+      const [h, m, sec] = s.mileRun.split(":").map(Number);
+      result[dayIndex] += h * 60 + m + sec / 60;
+    }
+  });
+
+    return result;
+  }, [stats, hasValidStats, selectedMonth]);
+
+  const dayLabels = React.useMemo(() => {
+    const [yearStr, monthStr] = selectedMonth.split('-');
+    const year = Number(yearStr);
+    const month = Number(monthStr) - 1;
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    return Array.from({ length: daysInMonth }, (_, i) => String(i + 1));
+  }, [selectedMonth]);
+
+  const monthLabel = React.useMemo(() => {
+    const [yearStr, monthStr] = selectedMonth.split('-');
+    const date = new Date(Number(yearStr), Number(monthStr) - 1);
+    return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  }, [selectedMonth]);
 
   return (
     <div>
@@ -134,20 +153,33 @@ export const UserStatistics: React.FC = () => {
           </div>
         </div>
 
-        {/* Gráficas activas */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 py-4">
-          {/* Gráfica 1: Millas Semanales */}
+          {/* Date filter */}
+          <div className="d-flex justify-content-start mb-2">
+            <input 
+            type="month"
+            className="form-control bg-dark text-white border-secondary"
+            style={{width: 'auto'}}
+            value={selectedMonth}
+            onChange={(e) => setSelectedMonth(e.target.value)} 
+            />
+          </div>
+          {/* chart 1: miles per month */}
           <div className="stats-card">
             <h3 className="text-lg font-semibold text-white mb-4 d-flex align-items-center">
               <span>Miles runned</span>
-              <span className="text-xs stats-text-purple font-normal ms-3">This week</span>
+              <span className="text-xs stats-text-purple font-normal ms-3">This month</span>
             </h3>
             <div className="pt-2">
-              <WeeklyMilesChart milesData={milesData} />
+              <MonthlyMilesChart 
+              milesData={milesData} 
+              dayLabels={dayLabels} 
+              monthLabel={monthLabel}
+              />
             </div>
           </div>
 
-          {/* Gráfica 2: Progresión de Fuerza */}
+          {/* Chart 2: Strength progress */}
           <div className="stats-card mt-4">
             <h3 className="text-lg font-semibold text-white mb-4 flex align-items-center">
               <span>Strength Progress</span>

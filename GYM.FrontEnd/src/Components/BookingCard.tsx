@@ -2,7 +2,7 @@ import { DifficultyCircles } from "./DifficultyCircles";
 import { useState } from "react";
 
 interface BookingCardProps {
-  title?: string;
+  trainingName?: string;
   trainer?: string;
   location?: string;          // New property
   exerciseCount?: number;     // New property
@@ -14,7 +14,7 @@ interface BookingCardProps {
 }
 
 export function BookingCard({ 
-  title = "Full Body HIIT", 
+  trainingName = "Full Body HIIT", 
   trainer = "Coach Alex", 
   location = "Main Studio - Room A",
   exerciseCount = 8,
@@ -33,11 +33,11 @@ export function BookingCard({
       
       {/* Main Visible Row */}
       <div className="booking-card">
-        <img src={imageUrl} alt={title} />
+        <img src={imageUrl} alt={trainingName} />
 
         <div className="booking-card-details">
           <div className="detail-a">
-            <h3>{title}</h3>
+            <h3>{trainingName}</h3>
             <h4>{trainer}</h4>
             
             <div className="card-metadata small mt-1" style={{ color: '#bfbfbf' }}>

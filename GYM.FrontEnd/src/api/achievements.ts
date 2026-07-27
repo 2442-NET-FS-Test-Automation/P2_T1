@@ -19,18 +19,18 @@ export async function getUserAchievement(id: number): Promise<UserAchievement> {
     return response.data;
 }
 
-// Finaly - two calls that SHOULD be trainer
-export async function AddAchievement(body: CreateAchievementBody) : Promise<AchievementDTO>{
-    const response = await api.post<AchievementDTO>("/api/Achievement/AddAchievement", body);
-    return response.data;
-}
+// // Finaly - two calls that SHOULD be trainer
+// export async function AddAchievement(body: CreateAchievementBody) : Promise<AchievementDTO>{
+//     const response = await api.post<AchievementDTO>("/api/Achievement/AddAchievement", body);
+//     return response.data;
+// }
 
-export async function updateAchievement(achievement: AchievementDTO): Promise<AchievementDTO>{
-    const response = await api.put<AchievementDTO>("/api/Achievement/updateAchievement", achievement);
-    return response.data;
-}
+// export async function updateAchievement(achievement: AchievementDTO): Promise<AchievementDTO>{
+//     const response = await api.put<AchievementDTO>("/api/Achievement/updateAchievement", achievement);
+//     return response.data;
+// }
 
-// only trainer can delete an achievement
-export async function deleteAchievement(id: number): Promise<void>{
-    await api.delete(`/api/Achievement/Achievement/${id}`)
-}
+// // only trainer can delete an achievement
+// export async function deleteAchievement(id: number): Promise<void>{
+//     await api.delete(`/api/Achievement/Achievement/${id}`)
+// }

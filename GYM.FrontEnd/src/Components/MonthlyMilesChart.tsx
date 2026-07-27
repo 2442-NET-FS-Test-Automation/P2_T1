@@ -1,15 +1,16 @@
 import React from 'react';
 import ReactECharts from 'echarts-for-react';
 
-interface WeeklyMilesProps {
-  // Datos que vienen del backend para los 7 días de la semana actual
-  milesData: number[]; // Ej: [1.2, 0, 3.5, 2.0, 0, 4.1, 1.5]
+interface MonthlyMilesProps {
+  milesData: number[];   // un valor por cada día del mes seleccionado
+  dayLabels: string[];   // ['1', '2', '3', ..., '31'] según el mes
+  monthLabel: string;    // ej. "March 2026" para el título
 }
 
-export const WeeklyMilesChart: React.FC<WeeklyMilesProps> = ({ milesData }) => {
+export const MonthlyMilesChart: React.FC<MonthlyMilesProps> = ({ milesData, dayLabels, monthLabel }) => {
   const option = {
     title: {
-      text: 'Miles runned (this week)',
+      text: `Miles runned (${monthLabel})`,
       left: 'center',
       textStyle: { color: '#ffffff', fontSize: 16 }
     },
@@ -20,7 +21,7 @@ export const WeeklyMilesChart: React.FC<WeeklyMilesProps> = ({ milesData }) => {
     grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
     xAxis: {
       type: 'category',
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      data: dayLabels,
       axisLine: { lineStyle: { color: '#888' } }
     },
     yAxis: {
@@ -34,9 +35,8 @@ export const WeeklyMilesChart: React.FC<WeeklyMilesProps> = ({ milesData }) => {
         name: 'Miles',
         type: 'bar',
         data: milesData,
-        barWidth: '40%',
+        barWidth: '60%',
         itemStyle: {
-          // Gradiente moderno de color verde/turquesa a azul
           color: {
             type: 'linear',
             x: 0, y: 0, x2: 0, y2: 1,

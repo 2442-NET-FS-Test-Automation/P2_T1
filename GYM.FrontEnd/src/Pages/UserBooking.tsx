@@ -10,6 +10,7 @@ import { BookingCard } from "../components/BookingCard";
 import "../css/Booking.css";
 import type { TrainingDTO } from "../types/trainingDTO";
 import { getTrainingImage } from "../utils/trainingImages";
+import { getPlaceLabel } from "../utils/placeLabels";
 
 export function UserBooking() {
   const [sortBy, setSortBy] = useState("name-asc");
@@ -20,18 +21,25 @@ export function UserBooking() {
 
   const [activeFilters, setActiveFilters] = useState<FilterOptions>({
     location: "",
-    trainer: "",
+    trainingName: "",
     minExercises: "",
     difficulty: "all",
   });
 
   // Filtrado directo sobre TrainingDTO (ya no hay booking/user de por medio)
   const filteredTrainings = trainings.filter((training) => {
-    const placeString =
-      typeof training.place === "number"
-        ? `zone ${training.place}`
-        : (training.place || "").toLowerCase();
+    const placeString = getPlaceLabel(training.place).toLowerCase();
+
     const totalExercises = training.exercises?.length || 0;
+
+    if (
+      activeFilters.trainingName &&
+      !(training.trainingName || "")
+        .toLowerCase()
+        .includes(activeFilters.trainingName.toLowerCase())
+    ) {
+      return false;
+    }
 
     if (
       activeFilters.location &&
@@ -166,8 +174,8 @@ export function UserBooking() {
                 return (
                   <BookingCard
                     key={training.id}
-                    title={training.trainingName || "Unnamed Workout"}
-                    location={placeString || "Main Arena"}
+                    trainingName={training.trainingName || "Unnamed Workout"}
+                    location={getPlaceLabel(training.place) || "Main Arena"}
                     exerciseCount={training.exercises?.length || 0}
                     description={training.description}
                     duration={training.estimatedTime || "01:00:00"}
