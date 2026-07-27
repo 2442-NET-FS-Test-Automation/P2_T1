@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import {
   BookingFilterBar,
   type FilterOptions,
-} from "../components/BookingFilterBar";
+} from "../Components/BookingFilterBar";
 import { getPublicBookings } from "../services/BookingService";
-import { BookingCard } from "../components/BookingCard";
+import { BookingCard } from "../Components/BookingCard";
 import "../css/Booking.css";
 import type { BookingDTO } from "../types/BookingDTO";
 
