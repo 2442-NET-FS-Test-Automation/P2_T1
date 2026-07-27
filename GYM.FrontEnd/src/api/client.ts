@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getToken } from '../auth/storage';
+import { clearToken, getToken } from '../auth/storage';
 
 // Instancia centralizada de Axios apuntando a la API de ASP.NET Core
 export const api = axios.create({
@@ -21,6 +21,26 @@ api.interceptors.request.use(
     return config;
   },
   (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Interceptor de Respuesta para manejar errores globales, especialmente 401 (No autorizado)
+// Esto es útil para redirigir al usuario a la página de login si su token ha expirado o es inválido
+api.interceptors.response.use(
+  (response) => response, // Si la respuesta es exitosa (200, 201, etc.), no hace nada
+  (error) => {
+    // Si el servidor responde con un 401 (No autorizado / Token vencido)
+    if (error.response && error.response.status === 401) {
+      console.warn('Sesión expirada o token inválido. Redirigiendo a Login...');
+      
+      // 1. Limpiamos las credenciales guardadas
+      clearToken();
+
+      // 2. Redirigimos al usuario a la pantalla de Login
+      window.location.href = '/login'; 
+    }
+    
     return Promise.reject(error);
   }
 );

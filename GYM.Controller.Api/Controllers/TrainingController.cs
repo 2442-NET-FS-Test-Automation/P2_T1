@@ -68,7 +68,7 @@ public class TrainingController : ControllerBase
 
         return CreatedAtAction(
             nameof(GetExerciseById),
-            new {Id = newExercise.Id},
+            new {id = newExerciseDto.Id},
             newExerciseDto);
 
     }
