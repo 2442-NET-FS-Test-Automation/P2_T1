@@ -3,7 +3,6 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { About } from './pages/About'
 import { Routines } from './pages/Routines'
 import { MyRoutines } from './pages/MyRoutines'
-import { Trainings } from './pages/Trainings'
 import Home from './pages/UserHome';
 import Achievements from './pages/UserAchievements';
 import ProfileSettings from './pages/UserProfileSettings';
@@ -29,6 +28,8 @@ import { useLocation } from 'react-router-dom'; // return current location
 import { ExerciseDetail } from './pages/ExerciseDetail';
 import { Report } from './pages/Report';
 import { ToastContainer } from "react-toastify"; // library for notifications (success messages/error messages) like an alert in js
+import { TrainingDetail } from './pages/TrainingDetail';
+import { Footer } from './components/Footer';
 
 function App() {
 
@@ -108,7 +109,7 @@ function App() {
             />
             <Route 
               path="/exercise-details"
-              element={<RequireAuth role="User"><ExerciseDetail /></RequireAuth>} 
+              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><ExerciseDetail /></RequireAuth>} 
             />
             <Route 
               path="/user/booking/confirm/:trainingid" 
@@ -136,7 +137,7 @@ function App() {
             />
             <Route 
               path="/training" 
-              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><Trainings /></RequireAuth>} 
+              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><TrainingDetail /></RequireAuth>} 
             />
             <Route 
               path="/onboarding/details" 
@@ -177,6 +178,7 @@ function App() {
               ========================================================= */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <Footer/>
         </main>
       </div>
     </>

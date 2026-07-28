@@ -11,5 +11,8 @@ public interface IUserService
     Task<UserDetailsDTO?> GetUserDetails(int userId);
     Task<UserDetailsDTO?> AddUserDetails(UserDetailsDTO userDetailsDTO);
     Task<UserDetailsDTO?> UpdateUserDetails(UserDetailsDTO userDetailsDTO);
+    Task<List<UserAdminDTO>> GetAllUsersForAdmin();
+    Task<string?> CreateStaffUserService(UserCreateAdminDTO dto);
+    Task<bool> UpdateUserRole(int userId, string newRole);
 
 }
