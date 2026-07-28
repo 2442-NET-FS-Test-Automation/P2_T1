@@ -10,14 +10,14 @@ import { Login } from './pages/Login';
 import { LandingPage } from './pages/LandingPage';
 import { UserStatistics } from './pages/UserStadistics';
 import { useAuth } from './auth/useAuth';
-import { RequireAuth } from './components/RequireAuth';
+import { RequireAuth } from './Components/RequireAuth';
 import { Register } from './pages/Register';
 import { UserBooking } from './pages/UserBooking';
 import { NotFound } from './pages/NotFound';
-import Navbar from './components/Navbar';
+import Navbar from './Components/Navbar';
 import { UserDetailsStep } from './pages/Onboarding/UserDetailsStep';
 import { UserStatsStep } from './pages/Onboarding/UserStatsStep';
-import { AdminLayout } from './components/admin/AdminLayout';
+import { AdminLayout } from './Components/Admin/AdminLayout';
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { AdminUsersPage } from './pages/admin/AdminUsersPage';
 import { AdminExercisesPage } from './pages/admin/AdminExercisesPage';
@@ -93,7 +93,7 @@ function App() {
             />
             <Route 
               path="/exercise-details"
-              element={<RequireAuth role="User"><ExerciseDetail /></RequireAuth>} 
+              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><ExerciseDetail /></RequireAuth>} 
             />
             <Route 
               path="/user/profileSettings" 

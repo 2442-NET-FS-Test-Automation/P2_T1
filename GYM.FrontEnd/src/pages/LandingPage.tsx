@@ -16,9 +16,8 @@ export const LandingPage: React.FC = () => {
   useEffect(() => {
     const fetchWorkouts = async () => {
       setLoading(true);
-      const data = await getPublicTrainings();
-
-      if (!data || data.length === 0) {
+      
+        //Load mockup data for users not authorized
         setWorkouts([
           {
             id: 1,
@@ -65,9 +64,6 @@ export const LandingPage: React.FC = () => {
             exercises: [],
           },
         ]);
-      } else {
-        setWorkouts(data);
-      }
       setLoading(false);
     };
 

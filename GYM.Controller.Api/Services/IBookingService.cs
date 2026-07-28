@@ -13,10 +13,6 @@ public interface IBookingService
     Task<BookingDTO> AddBookingAsync(BookingDTO exerciseDTO);
     Task<BookingDTO?> UpdateBooking(BookingDTO bookingDTO);
     Task<bool> DeleteBookingByIdAsync(int BookingId);
-    
-    // Task<TrainingDTO?> GetTrainingDTOAsync(int id);
-    // Task<IReadOnlyList<TrainingDTO>> GetAllTrainings();
-    // Task<TrainingDTO?> AddTrainingsToBooking(int trainingId, List<int> Bookings);
-    // Task<bool> DeleteTrainingsFromBooking(int trainingId, List<int> Bookings);
+    Task<BookingDTO?> UpdateStatus(int bookingId, int status);
 
 }

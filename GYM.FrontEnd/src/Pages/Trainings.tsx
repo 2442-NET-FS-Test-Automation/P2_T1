@@ -1,9 +1,9 @@
 import { ExerciseCard } from "../Components/ExerciseCard";
 import "../css/Training.css";
-export function TrainingDetail() {
+export function Trainings() {
   return (
     <>
-      <section className="trainingDetail">
+      <section className="trainingsContainer">
         <div className="text-center py-5 text-white">
           <h2 className="fw-bold" style={{ letterSpacing: "0.5px" }}>
             Exercises on this training
