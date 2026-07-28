@@ -3,7 +3,6 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { About } from './pages/About'
 import { Routines } from './pages/Routines'
 import { MyRoutines } from './pages/MyRoutines'
-import { Trainings } from './pages/Trainings'
 import Home from './pages/UserHome';
 import Achievements from './pages/UserAchievements';
 import ProfileSettings from './pages/UserProfileSettings';
@@ -25,6 +24,8 @@ import { AdminExercisesPage } from './pages/admin/AdminExercisesPage';
 import { AdminTrainingsPage } from './pages/admin/AdminTrainingsPage';
 import { ExerciseDetail } from './pages/ExerciseDetail';
 import { Report } from './pages/Report';
+import { TrainingDetail } from './pages/TrainingDetail';
+import { Footer } from './components/Footer';
 
 function App() {
 
@@ -112,7 +113,7 @@ function App() {
             />
             <Route 
               path="/training" 
-              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><Trainings /></RequireAuth>} 
+              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><TrainingDetail /></RequireAuth>} 
             />
             <Route 
               path="/onboarding/details" 
@@ -153,6 +154,7 @@ function App() {
               ========================================================= */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <Footer/>
         </main>
       </div>
     </>

@@ -4,7 +4,7 @@ import type { StatsDTO } from "../types/StatsDTO";
 // GET: api/stats
 export const getPublicStats = async (): Promise<StatsDTO[]> => {
     try {
-        const response = await apiCall.get<StatsDTO[]>('/api/Stats');
+        const response = await apiCall.get<StatsDTO[]>('/stats');
         return response.data;
     } catch (error) {
         console.error('Error fetching all stats rows:', error);

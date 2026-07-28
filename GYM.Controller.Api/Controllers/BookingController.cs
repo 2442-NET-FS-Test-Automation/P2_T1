@@ -16,6 +16,7 @@ public class BookingController : ControllerBase
 {
     private readonly IBookingService _service;
     private readonly IMemoryCache _cache;
+    private const string AllBookingsCacheKey = "Bookings:all";
     public BookingController(IBookingService service, IMemoryCache cache)
     {
         _service = service;
@@ -23,16 +24,16 @@ public class BookingController : ControllerBase
     }
 
     //Get all the bookings from the db
-    [HttpGet("allBookings")] 
+    [HttpGet("bookings")]
     public async Task<ActionResult<IEnumerable<BookingDTO>>> GetAllBookings()
     {
-        var dtos = await _cache.GetOrCreateAsync("Bookings:all", async entry => //Check cache, if not there search the db via Service Layer
+        var dtos = await _cache.GetOrCreateAsync(AllBookingsCacheKey, async entry => //Check cache, if not there search the db via Service Layer
         {
-            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMilliseconds(1); //Will last 1 day
+            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1); //Will last 1 day
 
             var items = await _service.GetAllBookings();
 
-            return items; 
+            return items;
         });
 
         return dtos is null ? NotFound() : Ok(dtos); // 404 not found : 200 (list)
@@ -40,18 +41,15 @@ public class BookingController : ControllerBase
     }
 
     //Get booking by their id
-    [HttpGet("bookings/{id}")]
+    [HttpGet("bookings/{id:int}")]
     public async Task<ActionResult<BookingDTO>> GetBookingById(int id)
     {
         var dto = await _cache.GetOrCreateAsync(
             $"Bookings:{id}", 
-            async entry => //Check cache, if not there search the db via Service Layer
+            async entry => 
             {
-                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1); //Will last 1 day
-
-                var items = await _service.GetBookingById(id);
-
-                return items; //Falta Mapper, ahorita lo checo
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1);
+                return await _service.GetBookingById(id);
             });
 
         return dto is null ? NotFound() : Ok(dto);
@@ -83,43 +81,42 @@ public class BookingController : ControllerBase
         newBooking.UserId = userId;
 
         BookingDTO newBookingDto = await _service.AddBookingAsync(newBooking);
-        _cache.Remove("Bookings:all"); //Se borra el cache
+        _cache.Remove(AllBookingsCacheKey);
 
         return CreatedAtAction(
             nameof(GetBookingById),
-            new { Id = newBookingDto.Id },
+            new { id = newBookingDto.Id },
             newBookingDto);
 
     }
 
-    [HttpPut("updateBooking")]
+
+    [HttpPut("bookings")]
     public async Task<IActionResult> UpdateBooking(BookingDTO bookingDTO)
     {
         if (bookingDTO is null)
             return BadRequest();
 
         BookingDTO? updatedBooking = await _service.UpdateBooking(bookingDTO);
-        _cache.Remove("Bookings:all");
+        _cache.Remove(AllBookingsCacheKey);
         return Ok(updatedBooking);
     }
 
     //To delete by exercise by their id
     [Authorize(Roles = "Trainer,Admin")]
-    [HttpDelete("bookings/{id}")]
+    [HttpDelete("bookings/{id:int}")]
     public async Task<ActionResult> DeleteBookingById(int id)
     {
         bool isDeleted = await _service.DeleteBookingByIdAsync(id);
 
-        if (isDeleted)
-        {
-            _cache.Remove("Bookings:all");
-            _cache.Remove($"Bookids:{id}");
-            return NoContent();
-        }
-        else
-        {
+        if (!isDeleted)
             return NotFound();
-        }
+
+        _cache.Remove(AllBookingsCacheKey);
+
+        _cache.Remove($"Bookings:{id}");
+
+        return NoContent();
     }
 
     [HttpPatch("bookings-status/{id}/{newStatus}")]
