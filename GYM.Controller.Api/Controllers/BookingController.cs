@@ -16,11 +16,13 @@ public class BookingController : ControllerBase
 {
     private readonly IBookingService _service;
     private readonly IMemoryCache _cache;
+    private readonly IAchievementService _achivementService;
     private const string AllBookingsCacheKey = "Bookings:all";
-    public BookingController(IBookingService service, IMemoryCache cache)
+    public BookingController(IBookingService service, IMemoryCache cache, IAchievementService achivementService)
     {
         _service = service;
         _cache = cache;
+        _achivementService = achivementService;
     }
 
     //Get all the bookings from the db
@@ -124,9 +126,30 @@ public class BookingController : ControllerBase
     {
         //Checar que exista el booking, enviarlo a ser modificado (modificarlo, guardarlo en db)
         //regresar el dto
+
+        //Desbloquear logro de primerWorkout
+        string? userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if(userIdString is null)
+            return Unauthorized();
+        int userId = int.Parse(userIdString);
+        var logro = await _service.GetBookingsByUserId(userId);
+        bool bandera = true;
+        foreach(BookingDTO dto in logro)
+        {
+            if(dto.Status == BookingStatus.Completed)
+                bandera = false;
+        }
+
+        if(bandera)
+            await _achivementService.AddUserAchivement(1,userId);
+            
+        //Si no, mandar desbloquear el logro
+
         
         BookingDTO? updatedDTO = await _service.UpdateStatus(id, newStatus);
 
+        
         if(updatedDTO is null)
             return BadRequest();
 
