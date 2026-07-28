@@ -183,3 +183,8 @@
   }
 }
 
+/* Espacio compensatorio para la Navbar fija */
+main, .page-container {
+  padding-top: 85px; 
+}
+

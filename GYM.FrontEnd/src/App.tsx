@@ -63,7 +63,7 @@ function App() {
         {/* we add the notification container at the top */}
         <ToastContainer position="top-right" autoClose={3000} /> 
         {!hideNavbar && <Navbar />}
-          <main>
+          <main className="page-container">
           <Routes>
             {/* =========================================================
                 1. RUTAS LIBRES / PÚBLICAS

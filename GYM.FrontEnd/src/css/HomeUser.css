@@ -1,0 +1,134 @@
+/* Variables de la Paleta GymQuest */
+:root {
+  --gq-bg: #121321;
+  --gq-surface: #1B1C30;
+  --gq-surface-border: #2A2C49;
+  
+  --gq-purple: #8A2BE2;
+  --gq-purple-glow: rgba(138, 43, 226, 0.4);
+  
+  --gq-aqua: #46F0D2;
+  --gq-aqua-glow: rgba(70, 240, 210, 0.4);
+  
+  --gq-magenta: #FF007F;
+  --gq-magenta-glow: rgba(255, 0, 127, 0.4);
+
+  --gq-blue: #00D2FF;
+  --gq-text-white: #F8F9FA;
+  --gq-text-muted: #A0A5BA;
+}
+
+/* Background con gradiente radial y malla de luz Cyberpunk */
+.gq-landing-bg {
+  background-color: var(--gq-bg);
+  background-image: 
+    radial-gradient(circle at 15% 20%, rgba(138, 43, 226, 0.12) 0%, transparent 40%),
+    radial-gradient(circle at 85% 60%, rgba(70, 240, 210, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 50% 90%, rgba(255, 0, 127, 0.08) 0%, transparent 40%);
+  min-height: 100vh;
+  color: var(--gq-text-white);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Gamer HUD Card Container */
+.gq-hud-box {
+  background: rgba(27, 28, 48, 0.85) !important;
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--gq-surface-border);
+  border-radius: 16px;
+  position: relative;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.gq-hud-box-glow-aqua {
+  animation: borderPulse 4s infinite ease-in-out;
+}
+
+.gq-hud-box-glow-magenta {
+  border-color: var(--gq-magenta);
+  box-shadow: 0 0 15px var(--gq-magenta-glow);
+}
+
+/* ⚔️ Tarjeta Quest / Workout (Limpia y Oscura) */
+.gq-quest-card {
+  background-color: var(--gq-surface) !important;
+  border: 1px solid var(--gq-surface-border) !important;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.gq-quest-card:hover {
+  border-color: var(--gq-aqua) !important;
+  box-shadow: 0 8px 25px var(--gq-aqua-glow);
+}
+
+.gq-quest-card-header {
+  background-color: rgba(18, 19, 33, 0.6);
+  border-bottom: 1px solid var(--gq-surface-border);
+}
+
+/* Badges de Dificultad Dinámica */
+.badge-diff-beginner {
+  background-color: rgba(70, 240, 210, 0.15) !important;
+  color: var(--gq-aqua) !important;
+  border: 1px solid var(--gq-aqua) !important;
+}
+
+.badge-diff-intermediate {
+  background-color: rgba(0, 210, 255, 0.15) !important;
+  color: var(--gq-blue) !important;
+  border: 1px solid var(--gq-blue) !important;
+}
+
+.badge-diff-advanced {
+  background-color: rgba(138, 43, 226, 0.15) !important;
+  color: var(--gq-purple) !important;
+  border: 1px solid var(--gq-purple) !important;
+}
+
+.badge-diff-heroic {
+  background-color: rgba(255, 0, 127, 0.15) !important;
+  color: var(--gq-magenta) !important;
+  border: 1px solid var(--gq-magenta) !important;
+}
+
+/* Botones Neón Cyberpunk */
+.btn-gq-neon {
+  background: linear-gradient(90deg, var(--gq-aqua) 0%, var(--gq-blue) 100%);
+  color: #000 !important;
+  font-weight: 800;
+  border: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px var(--gq-aqua-glow);
+}
+
+.btn-gq-neon:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 25px var(--gq-aqua-glow);
+}
+
+/* Indicador de Status Online Pulsante */
+.pulse-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gq-aqua);
+  box-shadow: 0 0 10px var(--gq-aqua);
+  animation: pulse 1.8s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(70, 240, 210, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(70, 240, 210, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(70, 240, 210, 0); }
+}
+
+/* Brillo respirante en los bordes */
+@keyframes borderPulse {
+  0% { border-color: rgba(70, 240, 210, 0.4); box-shadow: 0 0 15px rgba(70, 240, 210, 0.2); }
+  50% { border-color: rgba(70, 240, 210, 0.8); box-shadow: 0 0 25px rgba(70, 240, 210, 0.4); }
+  100% { border-color: rgba(70, 240, 210, 0.4); box-shadow: 0 0 15px rgba(70, 240, 210, 0.2); }
+}
