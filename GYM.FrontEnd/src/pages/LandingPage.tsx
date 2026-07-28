@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getPublicTrainings } from "../services/TrainingService";
 import type { TrainingDTO } from "../types/trainingDTO";
 //import { useAuth } from '../auth/useAuth';
 import "../css/LandingPage.css";

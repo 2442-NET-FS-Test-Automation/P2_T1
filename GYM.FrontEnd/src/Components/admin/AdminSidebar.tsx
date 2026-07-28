@@ -1,6 +1,10 @@
 import { NavLink } from 'react-router-dom';
+import {useAuth} from '../../auth/useAuth';
 
 export function AdminSidebar() {
+    const { user } = useAuth();
+    const isAdmin = user?.role === 'Admin';
+
     return (
         <aside 
         className="d-flex flex-column flex-shrink-0 p-3 gq-card rounded-0 border-top-0 border-bottom-0 border-start-0" 
@@ -9,9 +13,16 @@ export function AdminSidebar() {
         {/* GymQuest Brand */}
         <NavLink to="/admin" className="d-flex align-items-center mb-3 text-decoration-none px-2">
             <span className="fs-4 fw-bold text-aqua tracking-wider">GymQuest</span>
-            <span className="badge ms-2 px-2 py-1" style={{ backgroundColor: 'var(--gq-purple)', fontSize: '0.65rem' }}>
-            ADMIN HQ
-            </span>
+            {isAdmin ? (
+                <span className="badge ms-2 px-2 py-1" style={{ backgroundColor: 'var(--gq-purple)', fontSize: '0.65rem' }}>
+                ADMIN HQ
+                </span>
+                ) : (
+                <span className="badge ms-2 px-2 py-1" style={{ backgroundColor: 'var(--gq-purple)', fontSize: '0.65rem' }}>
+                ADMIN HQ
+                </span>
+                ) 
+            }
         </NavLink>
         
         <hr style={{ borderColor: 'var(--gq-surface-border)' }} />
@@ -69,11 +80,20 @@ export function AdminSidebar() {
             className="rounded-circle d-flex align-items-center justify-content-center me-3 border"
             style={{ width: '40px', height: '40px', borderColor: 'var(--gq-magenta)', backgroundColor: 'var(--gq-purple)' }}
             >
-            👑
+            💪
             </div>
             <div className="lh-sm">
-            <strong className="d-block text-white small">Admin Master</strong>
-            <small className="text-aqua" style={{ fontSize: '0.72rem' }}>Level 99 Admin</small>
+            {isAdmin ? (
+                <>
+                    <strong className="d-block text-white small">Admin Master</strong>
+                    <small className="text-aqua" style={{ fontSize: '0.72rem' }}>Level 99 Admin </small>
+                </>
+            ) : (
+                <>
+                    <strong className="d-block text-white small">Trainer Master</strong>
+                    <small className="text-aqua" style={{ fontSize: '0.72rem' }}>Level 99 Trainer</small>
+                </>
+            )}
             </div>
         </div>
         </aside>

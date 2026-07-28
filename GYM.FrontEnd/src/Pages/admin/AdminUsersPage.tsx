@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { UserModal } from '../../Components/Admin/modals/UserModal';
 import { UserService } from '../../services/adminServices';
-import type { UserAdminDTO, UserCreateAdminDTO } from '../../types/user';
+import type { UserAdminDTO } from '../../types/user';
+import { useAuth } from '../../auth/useAuth';
+import { Pagination } from '../../Components/Pagination';
 
 export function AdminUsersPage() {
     const [users, setUsers] = useState<UserAdminDTO[]>([]);
@@ -13,6 +15,17 @@ export function AdminUsersPage() {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState<UserAdminDTO | null>(null);
+
+    const {user} = useAuth();
+    const isAdmin = user?.role === 'Admin';
+
+    //pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 8; 
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm, selectedRoleFilter]);
 
     const fetchUsers = async () => {
         try {
@@ -58,18 +71,6 @@ export function AdminUsersPage() {
         setIsModalOpen(true);
     };
 
-    const handleSaveUser = async (userData: UserCreateAdminDTO) => {
-        try {
-            await UserService.createStaffUser(userData);
-            setIsModalOpen(false);
-            await fetchUsers(); // Recargar la lista limpia de la BD
-        } catch (err: any) {
-            console.error("Error creating staff:", err);
-            const message = err.response?.data?.message || "Failed to create staff user.";
-            alert(message);
-        }
-    };
-
     const filteredUsers = users.filter(user => {
         const fullName = `${user.name} ${user.surname}`.toLowerCase();
         const matchesSearch = fullName.includes(searchTerm.toLowerCase()) ||
@@ -78,8 +79,14 @@ export function AdminUsersPage() {
         return matchesSearch && matchesRole;
     });
 
-    return (
-        <div className="d-flex flex-column gap-4">
+    const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+    const paginatedUsers = filteredUsers.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    return (    
+    <div className="d-flex flex-column gap-4">
             {/* Header del Módulo */}
             <div className="d-flex justify-content-between align-items-center">
                 <div>
@@ -87,15 +94,21 @@ export function AdminUsersPage() {
                         Users & Roles <span className="text-aqua">Management</span> 👥
                     </h1>
                     <p className="small mb-0 text-muted">
-                        Inspect accounts, manage privileges, and promote athletes to Trainers.
+                        {isAdmin 
+                            ? "Inspect accounts, manage privileges, and promote athletes to Trainers." 
+                            : "Inspect accounts and review athlete profiles."}
                     </p>
                 </div>
-                <button 
-                    className="btn btn-gq-purple px-3 py-2 d-flex align-items-center gap-2"
-                    onClick={handleOpenCreateModal}
-                >
-                    ➕ <span>Create Staff User</span>
-                </button>
+                
+                {/* 🔒 Botón Crear Usuario: Oculto para Trainers */}
+                {isAdmin && (
+                    <button 
+                        className="btn btn-gq-purple px-3 py-2 d-flex align-items-center gap-2"
+                        onClick={handleOpenCreateModal}
+                    >
+                        ➕ <span>Create Staff User</span>
+                    </button>
+                )}
             </div>
 
             {/* Contenedor Principal / Tabla + Filtros */}
@@ -148,99 +161,112 @@ export function AdminUsersPage() {
 
                 {/* Tabla de Usuarios */}
                 {!isLoading && !error && (
-                    <div className="table-responsive">
-                        <table className="table table-dark table-hover align-middle mb-0" style={{ backgroundColor: 'transparent' }}>
-                            <thead>
-                                <tr className="text-muted border-bottom border-secondary small">
-                                    <th scope="col">ATHLETE</th>
-                                    <th scope="col">EMAIL</th>
-                                    <th scope="col">PHONE</th>
-                                    <th scope="col">ROLE</th>
-                                    <th scope="col">JOINED DATE</th>
-                                    <th scope="col" className="text-end">ACTIONS</th>
-                                </tr>
-                            </thead>
-                            <tbody className="border-0">
-                                {filteredUsers.length > 0 ? (
-                                    filteredUsers.map((user) => (
-                                        <tr key={user.id}>
-                                            <td>
-                                                <div className="d-flex align-items-center gap-3">
-                                                    <div 
-                                                        className="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold"
-                                                        style={{ 
-                                                            width: '38px', 
-                                                            height: '38px', 
-                                                            backgroundColor: user.role === 'Trainer' ? 'var(--gq-purple)' : user.role === 'Admin' ? '#d9534f' : '#2A2C49',
-                                                            border: `1px solid ${user.role === 'Trainer' ? 'var(--gq-aqua)' : 'transparent'}`
-                                                        }}
-                                                    >
-                                                        {user.name.charAt(0)}
-                                                    </div>
-                                                    <div>
-                                                        <span className="fw-semibold text-white d-block">{user.name} {user.surname}</span>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td className="text-muted small">{user.email}</td>
-                                            <td className="text-muted small">{user.phone || '—'}</td>
-                                            <td>
-                                                {user.role === 'Admin' ? (
-                                                    <span className="badge bg-danger text-white">⚙️ Admin</span>
-                                                ) : user.role === 'Trainer' ? (
-                                                    <span 
-                                                        className="badge px-2 py-1 fw-semibold" 
-                                                        style={{ backgroundColor: 'var(--gq-purple)', color: '#fff', boxShadow: '0 0 8px var(--gq-purple-glow)' }}
-                                                    >
-                                                        🏋️‍♂️ Trainer
-                                                    </span>
-                                                ) : (
-                                                    <span className="badge bg-secondary text-white">🛡️ User</span>
-                                                )}
-                                            </td>
-                                            <td className="text-muted small">
-                                                {user.joinAt ? new Date(user.joinAt).toLocaleDateString() : 'N/A'}
-                                            </td>
-                                            <td className="text-end">
-                                                <div className="d-flex justify-content-end gap-2">
-                                                    {/* Botón para Promover / Demoler Rol (Inhabilitado para Admins) */}
-                                                    {user.role !== 'Admin' && (
-                                                        <button 
-                                                            className="btn btn-sm px-2 py-1"
+                    <>
+                        <div className="table-responsive">
+                            <table className="table table-dark table-hover align-middle mb-0" style={{ backgroundColor: 'transparent' }}>
+                                <thead>
+                                    <tr className="text-muted border-bottom border-secondary small">
+                                        <th scope="col">ATHLETE</th>
+                                        <th scope="col">EMAIL</th>
+                                        <th scope="col">PHONE</th>
+                                        <th scope="col">ROLE</th>
+                                        <th scope="col">JOINED DATE</th>
+                                        {/* Mostrar columna ACTIONS solo si es Admin */}
+                                        {isAdmin && <th scope="col" className="text-end">ACTIONS</th>}
+                                    </tr>
+                                </thead>
+                                <tbody className="border-0">
+                                    {/* 👈 Ojo aquí: iteramos paginatedUsers en vez de filteredUsers */}
+                                    {paginatedUsers.length > 0 ? (
+                                        paginatedUsers.map((user) => (
+                                            <tr key={user.id}>
+                                                <td>
+                                                    <div className="d-flex align-items-center gap-3">
+                                                        <div 
+                                                            className="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold"
                                                             style={{ 
-                                                                backgroundColor: 'rgba(70, 240, 210, 0.1)', 
-                                                                color: 'var(--gq-aqua)', 
-                                                                border: '1px solid var(--gq-aqua)' 
+                                                                width: '38px', 
+                                                                height: '38px', 
+                                                                backgroundColor: user.role === 'Trainer' ? 'var(--gq-purple)' : user.role === 'Admin' ? '#d9534f' : '#2A2C49',
+                                                                border: `1px solid ${user.role === 'Trainer' ? 'var(--gq-aqua)' : 'transparent'}`
                                                             }}
-                                                            title={user.role === 'User' ? 'Promote to Trainer' : 'Demote to User'}
-                                                            onClick={() => handleToggleRole(user)}
                                                         >
-                                                            {user.role === 'User' ? '👑 Promote' : '⬇️ Demote'}
-                                                        </button>
+                                                            {user.name.charAt(0)}
+                                                        </div>
+                                                        <div>
+                                                            <span className="fw-semibold text-white d-block">{user.name} {user.surname}</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td className="text-muted small">{user.email}</td>
+                                                <td className="text-muted small">{user.phone || '—'}</td>
+                                                <td>
+                                                    {user.role === 'Admin' ? (
+                                                        <span className="badge bg-danger text-white">⚙️ Admin</span>
+                                                    ) : user.role === 'Trainer' ? (
+                                                        <span 
+                                                            className="badge px-2 py-1 fw-semibold" 
+                                                            style={{ backgroundColor: 'var(--gq-purple)', color: '#fff', boxShadow: '0 0 8px var(--gq-purple-glow)' }}
+                                                        >
+                                                            🏋️‍♂️ Trainer
+                                                        </span>
+                                                    ) : (
+                                                        <span className="badge bg-secondary text-white">🛡️ User</span>
                                                     )}
+                                                </td>
+                                                <td className="text-muted small">
+                                                    {user.joinAt ? new Date(user.joinAt).toLocaleDateString() : 'N/A'}
+                                                </td>
 
-                                                    {/* Botón Editar */}
-                                                    <button 
-                                                        className="btn btn-sm btn-outline-info px-2 py-1"
-                                                        title="Edit User Info"
-                                                        onClick={() => handleOpenEditModal(user)}
-                                                    >
-                                                        ✏️
-                                                    </button>
-                                                </div>
+                                                {/* 🔒 Columna de Acciones: Oculta para Trainers */}
+                                                {isAdmin && (
+                                                    <td className="text-end">
+                                                        <div className="d-flex justify-content-end gap-2">
+                                                            {user.role !== 'Admin' && (
+                                                                <button 
+                                                                    className="btn btn-sm px-2 py-1"
+                                                                    style={{ 
+                                                                        backgroundColor: 'rgba(70, 240, 210, 0.1)', 
+                                                                        color: 'var(--gq-aqua)', 
+                                                                        border: '1px solid var(--gq-aqua)' 
+                                                                    }}
+                                                                    title={user.role === 'User' ? 'Promote to Trainer' : 'Demote to User'}
+                                                                    onClick={() => handleToggleRole(user)}
+                                                                >
+                                                                    {user.role === 'User' ? '👑 Promote' : '⬇️ Demote'}
+                                                                </button>
+                                                            )}
+
+                                                            <button 
+                                                                className="btn btn-sm btn-outline-info px-2 py-1"
+                                                                title="Edit User Info"
+                                                                onClick={() => handleOpenEditModal(user)}
+                                                            >
+                                                                ✏️
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                )}
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan={isAdmin ? 6 : 5} className="text-center py-4 text-muted">
+                                                No athletes found matching your search criteria.
                                             </td>
                                         </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan={6} className="text-center py-4 text-muted">
-                                            No athletes found matching your search criteria.
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {/* 👈 Componente de Paginación al pie de la tabla */}
+                        <Pagination 
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={(page) => setCurrentPage(page)}
+                        />
+                    </>
                 )}
             </div>
 
