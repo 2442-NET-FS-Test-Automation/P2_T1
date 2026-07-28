@@ -50,6 +50,40 @@
   font-size: 0.75rem;
 }
 
+/* Filtro de fecha/mes */
+.stats-filter-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #171a33;
+  border: 1px solid #282a42;
+  padding: 0.75rem 1rem;
+  border-radius: 16px;
+  margin-bottom: 1rem;
+}
+
+.stats-filter-label {
+  color: #bfa2ff;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.stats-filter-input {
+  min-width: 170px;
+  border: 1px solid #3d4063;
+  background-color: #0d1225;
+  color: #ffffff;
+  padding: 0.75rem 0.9rem;
+  border-radius: 12px;
+  outline: none;
+}
+
+.stats-filter-input:focus {
+  border-color: #7c72ff;
+  box-shadow: 0 0 0 4px rgba(124, 114, 255, 0.12);
+}
+
 /* Tabla de historial */
 .stats-table {
   width: 100%;

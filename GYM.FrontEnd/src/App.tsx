@@ -10,27 +10,42 @@ import { Login } from './pages/Login';
 import { LandingPage } from './pages/LandingPage';
 import { UserStatistics } from './pages/UserStadistics';
 import { useAuth } from './auth/useAuth';
-import { RequireAuth } from './Components/RequireAuth';
+import { RequireAuth } from './components/RequireAuth';
 import { Register } from './pages/Register';
 import { UserBooking } from './pages/UserBooking';
 import { NotFound } from './pages/NotFound';
-import Navbar from './Components/Navbar';
+import Navbar from './components/Navbar';
 import { UserDetailsStep } from './pages/Onboarding/UserDetailsStep';
 import { UserStatsStep } from './pages/Onboarding/UserStatsStep';
-import { AdminLayout } from './Components/Admin/AdminLayout';
+import { UserMyBookings } from './pages/UserMyBookings';
+import { AdminLayout } from './components/admin/AdminLayout';
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { AdminUsersPage } from './pages/admin/AdminUsersPage';
 import { AdminExercisesPage } from './pages/admin/AdminExercisesPage';
 import { AdminTrainingsPage } from './pages/admin/AdminTrainingsPage';
+import { ConfirmBooking } from './pages/ConfirmBooking';
+import { useLocation } from 'react-router-dom'; // return current location
 import { ExerciseDetail } from './pages/ExerciseDetail';
 import { Report } from './pages/Report';
+import { ToastContainer } from "react-toastify"; // library for notifications (success messages/error messages) like an alert in js
 import { TrainingDetail } from './pages/TrainingDetail';
 import { Footer } from './components/Footer';
 
 function App() {
 
+
   const { status, user } = useAuth();
   const isAuthenticated = status === "authenticated";
+
+
+  // Paths where we want to hide the navBar
+  const HIDDEN_NAVBAR_PREFIXES = ['/user/booking/confirm'];
+
+  const location = useLocation();
+
+  const hideNavbar = HIDDEN_NAVBAR_PREFIXES.some((prefix) => 
+    location.pathname.startsWith(prefix)
+  );
 
   //Vamos a utilizar const {status, user, logout} = useAuth(); cada vez que queramos poner
   //validaciones, por ejemplo quien deberia poder ver "AdminPanel" en nuestro panel de opciones
@@ -42,11 +57,12 @@ function App() {
   }
   checkUserRole();
 
-
   return (
     <>
       <div className="app">
-        <Navbar />
+        {/* we add the notification container at the top */}
+        <ToastContainer position="top-right" autoClose={3000} /> 
+        {!hideNavbar && <Navbar />}
           <main>
           <Routes>
             {/* =========================================================
@@ -96,12 +112,20 @@ function App() {
               element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><ExerciseDetail /></RequireAuth>} 
             />
             <Route 
+              path="/user/booking/confirm/:trainingid" 
+              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><ConfirmBooking /></RequireAuth>} 
+            />
+            <Route 
               path="/user/profileSettings" 
               element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><ProfileSettings /></RequireAuth>} 
             />
             <Route 
               path="/user/stadistics" 
               element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><UserStatistics /></RequireAuth>} 
+            />
+            <Route 
+              path="/user/mybookings" 
+              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><UserMyBookings /></RequireAuth>} 
             />
             <Route 
               path="/routines" 

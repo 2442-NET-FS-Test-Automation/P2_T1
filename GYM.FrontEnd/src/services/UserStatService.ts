@@ -34,36 +34,36 @@ export const getStatsByUserId = async (userId: number): Promise<StatsDTO[]> => {
     }
 };
 
-// POST: api/stats
-export const addStatsAsync = async (newStats: Omit<StatsDTO, 'id'>): Promise<StatsDTO | null> => {
-    try {
-        const response = await apiCall.post<StatsDTO>('/api/Stats', newStats);
-        return response.data;
-    } catch (error) {
-        console.error('Error adding new biometric metric log entry:', error);
-        return null;
-    }
-};
+// // POST: api/stats
+// export const addStatsAsync = async (newStats: Omit<StatsDTO, 'id'>): Promise<StatsDTO | null> => {
+//     try {
+//         const response = await apiCall.post<StatsDTO>('/api/Stats', newStats);
+//         return response.data;
+//     } catch (error) {
+//         console.error('Error adding new biometric metric log entry:', error);
+//         return null;
+//     }
+// };
 
-// PUT: api/stats
-export const updateStatsAsync = async (updatedStats: StatsDTO): Promise<StatsDTO | null> => {
-    try {
-        const response = await apiCall.put<StatsDTO>('/api/Stats', updatedStats);
-        return response.data;
-    } catch (error) {
-        console.error(`Error updating tracking metrics row ID ${updatedStats.id}:`, error);
-        return null;
-    }
-};
+// // PUT: api/stats
+// export const updateStatsAsync = async (updatedStats: StatsDTO): Promise<StatsDTO | null> => {
+//     try {
+//         const response = await apiCall.put<StatsDTO>('/api/Stats', updatedStats);
+//         return response.data;
+//     } catch (error) {
+//         console.error(`Error updating tracking metrics row ID ${updatedStats.id}:`, error);
+//         return null;
+//     }
+// };
 
-// DELETE: api/stats/{id}
-export const deleteStatsByIdAsync = async (id: number): Promise<boolean> => {
-    try {
-        // Your controller returns NoContent (244 status codes) upon success
-        await apiCall.delete(`/api/Stats/${id}`);
-        return true;
-    } catch (error) {
-        console.error(`Failed to execute deletion route for record ID ${id}:`, error);
-        return false;
-    }
-};
+// // DELETE: api/stats/{id}
+// export const deleteStatsByIdAsync = async (id: number): Promise<boolean> => {
+//     try {
+//         // Your controller returns NoContent (244 status codes) upon success
+//         await apiCall.delete(`/api/Stats/${id}`);
+//         return true;
+//     } catch (error) {
+//         console.error(`Failed to execute deletion route for record ID ${id}:`, error);
+//         return false;
+//     }
+// };

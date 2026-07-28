@@ -140,6 +140,10 @@ export default function Navbar() {
             <FiActivity className="gq-text-neon" /> Profile Stats
           </Link>
 
+          <Link to="/user/mybookings" className="drawer-link" onClick={toggleMenu}>
+            <FiBookOpen className="gq-text-neon" /> My Bookings
+          </Link>
+
           <Link to="/routines" className="drawer-link" onClick={toggleMenu}>
             <FiBookOpen className="gq-text-neon" /> Routines
           </Link>
