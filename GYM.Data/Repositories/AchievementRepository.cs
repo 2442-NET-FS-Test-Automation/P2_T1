@@ -85,5 +85,14 @@ public class AchievementRepository : IAchievementRepository
         return await db.Achievements.AnyAsync(m => m.Id == id);
     }
 
+    public async Task<DateTime> GetCompletedAtByUserArchivementID(int AchivementId, int UserId)
+    {
+        await using var db = await _factory.CreateDbContextAsync();
 
+        return db.UserAchievements
+                .Where(e => e.AchievementId == AchivementId && e.UserId == UserId)
+                .Select(e => e.Completed_At)
+                .FirstOrDefault();
+
+    }
 }
