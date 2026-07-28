@@ -67,16 +67,31 @@ export function UserMyBookings() {
   };
 
   const handleCancelWorkout = async (bookingId: number) => {
-    const isDeleted = await deleteBooking(bookingId);
-    if (isDeleted) {
-      toast.success("Reservation removed from your calendar.");
-      // Force a fresh fetch invocation to update your states layout dynamically
-      const updatedData = await getBookingByUserId();
-      setBookings(updatedData || []);
-    } else {
-      toast.error("Failed to cancel this session profile. Try again.");
+    // 1. Look up the specific item record inside your state array list matrix
+    const targetBooking = bookings.find((b) => b.id === bookingId);
+
+    // 2. FIXED GUARD: Terminate processing immediately if the entry has a 'Completed' index string code matching 2
+    if (targetBooking && Number(targetBooking.status) === 2) {
+      toast.warning("Completed workouts cannot be cancelled.");
+      return;
+    }
+
+    try {
+      const result = await UpdateBookingStatus(bookingId, 3);
+
+      if (result) {
+        toast.success("Reservation removed from your schedule feed.");
+        const updatedData = await getBookingByUserId();
+        setBookings(updatedData || []);
+      } else {
+        toast.error("Could not process your cancellation request.");
+      }
+    } catch (err) {
+      console.error("Cancellation network processing error:", err);
     }
   };
+
+  // Inside your return markup block, apply Number() type conversions to resolve the overlap:
 
   return (
     <>
@@ -92,67 +107,62 @@ export function UserMyBookings() {
               <p className="text-center text-white">
                 Loading your active schedule logs...
               </p>
-            ) : bookings.length === 0 ? (
+            ) : bookings.filter((b) => Number(b.status) !== 3).length === 0 ? ( // FIXED OVERLAP GUARD
               <p className="text-center text-white-50">
                 You have no active routine bookings scheduled yet.
               </p>
             ) : (
-              bookings.map((booking, index) => {
-                const training = booking.trainings?.[0];
+              bookings
+                .filter((booking) => Number(booking.status) !== 3) // FIXED OVERLAP FILTER
+                .map((booking, index) => {
+                  const training = booking.trainings?.[0];
+                  const user = booking.users?.[0] as any;
 
-                const normalizedName = (
-                  training?.trainingName || ""
-                ).toLowerCase();
-                const matchedKeyword = Object.keys(WORKOUT_COACH_MAP).find(
-                  (keyword) => normalizedName.includes(keyword),
-                );
-                const assignedTrainerName = matchedKeyword
-                  ? WORKOUT_COACH_MAP[matchedKeyword]
-                  : "GymQuest Staff Coach";
+                  const firstName = user?.name ?? user?.Name ?? "";
+                  const lastName = user?.surname ?? user?.Surname ?? "";
+                  const trainerFullName = firstName
+                    ? `${firstName} ${lastName}`.trim()
+                    : "GymQuest Staff Coach";
 
-                const rawPlaceValue = training?.place;
-                const placeString =
-                  typeof rawPlaceValue === "number"
-                    ? PLACE_ENUM_MAP[rawPlaceValue] || `Zone ${rawPlaceValue}`
-                    : rawPlaceValue || "Main Gym Floor";
+                  const placeString =
+                    typeof training?.place === "number"
+                      ? PLACE_ENUM_MAP[training.place] ||
+                        `Zone ${training.place}`
+                      : training?.place || "Main Gym Floor";
 
-                const resolvedCardImage = getTrainingImage(
-                  training?.trainingName,
-                );
+                  const resolvedCardImage = getTrainingImage(
+                    training?.trainingName,
+                  );
 
-                return (
-                  <BookingCard
-                    key={booking.id ?? index}
-                    trainingName={
-                      training?.trainingName || "GymQuest Workout Track"
-                    }
-                    trainer={assignedTrainerName}
-                    location={placeString}
-                    exerciseCount={training?.exercises?.length ?? 0}
-                    imageUrl={resolvedCardImage}
-                    description={training?.description}
-                    difficulty={training?.difficulty as any}
-                    isMyBookingFeed={true}
-                    status={Number(booking.status ?? 0)} // Ensures numerical stability
-                    onStatusChange={(targetNextStateCode) => {
-                      if (booking.id) {
-                        handleStatusMutation(booking.id, targetNextStateCode);
+                  return (
+                    <BookingCard
+                      key={booking.id ?? index}
+                      trainingName={
+                        training?.trainingName || "GymQuest Workout Track"
                       }
-                    }}
-                    onViewExercises={() => {
-                      if (training) {
-                        navigate("/training", { state: { training } });
-                      }
-                    }}
-                    // FIXED PROPERTY NAME: Must be labeled 'onDelete' to match the component contract definitions
-                    onDelete={() => {
-                      if (booking.id) {
-                        handleCancelWorkout(booking.id);
-                      }
-                    }}
-                  />
-                );
-              })
+                      trainer={trainerFullName}
+                      location={placeString}
+                      exerciseCount={training?.exercises?.length ?? 0}
+                      imageUrl={resolvedCardImage}
+                      description={training?.description}
+                      difficulty={training?.difficulty as any}
+                      isMyBookingFeed={true}
+                      // Maps cleanly as a normalized numeric value down to the card interface components
+                      status={Number(booking.status)}
+                      onStatusChange={(targetNextStateCode) => {
+                        if (booking.id)
+                          handleStatusMutation(booking.id, targetNextStateCode);
+                      }}
+                      onViewExercises={() => {
+                        if (training)
+                          navigate("/training", { state: { training } });
+                      }}
+                      onDelete={() => {
+                        if (booking.id) handleCancelWorkout(booking.id);
+                      }}
+                    />
+                  );
+                })
             )}
           </section>
         </div>

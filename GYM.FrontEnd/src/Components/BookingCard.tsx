@@ -76,15 +76,15 @@ export function BookingCard({
               </span>
             </div>
 
-            <h4>{trainer}</h4>
+            {/* <h4>{trainer}</h4> */}
 
             <div
               className="card-metadata small mt-1"
               style={{ color: "#bfbfbf" }}
             >
-              <div className="d-flex align-items-center gap-1 mb-1">
+              {/* <div className="d-flex align-items-center gap-1 mb-1">
                 <span>{location}</span>
-              </div>
+              </div> */}
               <div className="d-flex align-items-center gap-1">
                 <span>{exerciseCount} Exercises</span>
               </div>
@@ -127,19 +127,12 @@ export function BookingCard({
                     Track Exercises ➔
                   </button>
 
-                  {/* FIXED: Removed strict status integer checks to prevent string-parsing evaluation failures */}
-                  {onDelete && (
+                  {status !== 2 && onDelete && (
                     <button
                       className="btn-delete"
                       onClick={(e) => {
-                        e.stopPropagation(); // Stops card from expanding when clicking cancel
-                        if (
-                          window.confirm(
-                            `Are you sure you want to cancel your session booking?`,
-                          )
-                        ) {
-                          onDelete();
-                        }
+                        e.stopPropagation(); // Prevents layout row toggle conflicts
+                        onDelete();
                       }}
                     >
                       Cancel Booking
