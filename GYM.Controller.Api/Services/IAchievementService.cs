@@ -13,10 +13,5 @@ public interface IAchievementService
     Task<AchievementDTO> AddAchievementAsync(AchievementDTO exerciseDTO);
     Task<AchievementDTO?> UpdateAchievement(AchievementDTO bookingDTO);
     Task<bool> DeleteAchievementByIdAsync(int AchievementId);
-    
-    // Task<TrainingDTO?> GetTrainingDTOAsync(int id);
-    // Task<IReadOnlyList<TrainingDTO>> GetAllTrainings();
-    // Task<TrainingDTO?> AddTrainingsToAchievement(int trainingId, List<int> Achievements);
-    // Task<bool> DeleteTrainingsFromAchievement(int trainingId, List<int> Achievements);
 
 }

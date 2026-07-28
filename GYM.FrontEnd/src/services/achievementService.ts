@@ -23,9 +23,9 @@ export const getAchievements = async (id: number | null): Promise<Achievement[]>
   }
 };
 
-export const getUserAchievement = async(id: number | null): Promise<Achievement[]> => {
+export const getUserAchievement = async(): Promise<Achievement[]> => {
   try {
-    const url = `/api/Achievement/AchievementByUserId/${id}`;
+    const url = `/api/Achievement/AchievementByUserId`; 
 
     const response = await apiClient.get<Achievement[]>(url);
     return response.data;

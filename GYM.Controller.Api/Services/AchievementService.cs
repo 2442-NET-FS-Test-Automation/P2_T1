@@ -61,7 +61,7 @@ public class AchievementService : IAchievementService
     {
         var achievements = await _repo.GetAchievementsByUserId(userId);
 
-        return achievements.Select(e => new AchievementDTO
+        var list = achievements.Select(e => new AchievementDTO
         {
             Id = e.Id,
             Name = e.Name,
@@ -71,7 +71,15 @@ public class AchievementService : IAchievementService
             Condition_type = e.Condition_type,
             ConditionValue = e.ConditionValue,
             UserAchievements = e.UserAchievements
+            
         }).ToList();
+
+        //Ponemos el completed at a todos los de la lista
+        foreach(AchievementDTO dto in list)
+        {
+            dto.CompletedAt = await _repo.GetCompletedAtByUserArchivementID(dto.Id, userId);
+        }
+        return list;
     }
 
     public async Task<AchievementDTO> AddAchievementAsync(AchievementDTO achievementDTO)
