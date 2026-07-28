@@ -1,56 +1,191 @@
-QuestFitt
-# P2_T1
-Project 2 — Full-Stack Web Application (Teams of 4, Weeks 6–7)
+# QuestFitt
 
--Stefano Herrejon Antuñano
--Carlos Otero
--Miguel Angel Aranda Castillo
--Alan Ernesto Nares Molina
+**Project 2 — Full-Stack Web Application**
+**Team Project (4 Members)**
 
-Web application for working out routines. 
-All types of users.
+QuestFitt is a full-stack web application designed to help users create, manage, and follow workout routines while tracking their fitness progress over time. The platform supports multiple user roles, each with different permissions and features.
 
-Users -> Log in, Log out, Book Trainings, See User Details, Set stats, See stats over time, Unlock Achivements, Workout, See Catalog of trainings and filter search
-    (As a user I wanto to Set stats to see my progress over time, As a user I want to Unlock archivements to feel motivated)
-Trainer -> Add new trainings, add new Exercices, update/Delete existing ones
-Admin -> Create Trainer Users and Admins, see reports
+---
 
-Technologies Used : 
-- SqlServer, Docker, DOTNET / C#, Controllers / API, Axios, React, BootStrap.
+## 👥 Team Members
 
-DB Diagram -> https://lucid.app/lucidchart/73bb86a6-e723-4efb-811b-0669394f345e/edit?viewport_loc=-278%2C-267%2C1459%2C752%2C0_0&invitationId=inv_f2229796-bf4e-443a-8a98-1466cdfa8b5f 
+* Stefano Herrejon Antuñano
+* Carlos Otero
+* Miguel Angel Aranda Castillo
+* Alan Ernesto Nares Molina
 
-Figma Mockup -> https://www.figma.com/design/F1GREzLiRTwrRopCkzEAXh/GymQuest?node-id=0-1&t=OZw1mEOewxiSBiKj-1
+---
 
-EndPoints mapper -> 
+## 🚀 Features
 
-1) https://lucid.app/lucidchart/ab3dd9a0-e29a-4f7e-a599-9db189529364/edit?beaconFlowId=6730FC3221389A3A&invitationId=inv_b432906e-3af8-493a-9308-98e2a1be28c3&page=0_0#
+### User
 
-2) https://lucid.app/lucidchart/339392b5-6e1e-479e-86c1-1fc42247fdf8/edit?beaconFlowId=356BEE7985BD001B&invitationId=inv_67c428c2-cfae-4885-9c7d-316654705ced&page=0_0#
+* Register, Log In, and Log Out
+* Book training sessions
+* View and update personal profile
+* Record personal fitness statistics
+* Track progress over time
+* Unlock achievements
+* Complete workout routines
+* Browse and search the training catalog
 
-How to run ->
-Download the repository
+**User Stories**
 
-Docker ->
-Migrations -> dotnet ef migrations list --project GYM.Data --startup-project GYM.Controller.Api
-Run Backend -> Go to P2_T1\GYM.Controller.Api, on CLI DOTNET run
-Run Frontend -> Go to P2_T1\GYM.FrontEnd, on CLI npm run dev
+* As a user, I want to record my fitness statistics so I can monitor my progress over time.
+* As a user, I want to unlock achievements to stay motivated throughout my fitness journey.
 
-Seed Data -> SeedData with
+### Trainer
+
+* Create new training routines
+* Add new exercises
+* Update existing trainings and exercises
+* Delete trainings and exercises
+
+### Administrator
+
+* Create Trainer and Administrator accounts
+* View application reports
+
+---
+
+## 🛠️ Technologies Used
+
+### Backend
+
+* .NET / C#
+* ASP.NET Web API
+* Entity Framework Core
+* SQL Server
+* Docker
+* Swagger
+
+### Frontend
+
+* React
+* Axios
+* Bootstrap
+
+---
+
+## 📊 Database Diagram
+
+https://lucid.app/lucidchart/73bb86a6-e723-4efb-811b-0669394f345e/edit?viewport_loc=-278%2C-267%2C1459%2C752%2C0_0&invitationId=inv_f2229796-bf4e-443a-8a98-1466cdfa8b5f
+
+---
+
+## 🎨 Figma Mockup
+
+https://www.figma.com/design/F1GREzLiRTwrRopCkzEAXh/GymQuest?node-id=0-1&t=OZw1mEOewxiSBiKj-1
+
+---
+
+## 📌 API Endpoint Maps
+
+### Endpoint Map 1
+
+https://lucid.app/lucidchart/ab3dd9a0-e29a-4f7e-a599-9db189529364/edit?beaconFlowId=6730FC3221389A3A&invitationId=inv_b432906e-3af8-493a-9308-98e2a1be28c3&page=0_0#
+
+### Endpoint Map 2
+
+https://lucid.app/lucidchart/339392b5-6e1e-479e-86c1-1fc42247fdf8/edit?beaconFlowId=356BEE7985BD001B&invitationId=inv_67c428c2-cfae-4885-9c7d-316654705ced&page=0_0#
+
+---
+
+# Getting Started
+
+## 1. Clone the Repository
+
+```bash
+git clone <repository-url>
+cd P2_T1
+```
+
+---
+
+## 2. Start SQL Server
+
+Start the SQL Server Docker container.
+
+---
+
+## 3. Apply Database Migrations
+
+```bash
+dotnet ef database update --project GYM.Data --startup-project GYM.Controller.Api
+```
+
+To view the available migrations:
+
+```bash
+dotnet ef migrations list --project GYM.Data --startup-project GYM.Controller.Api
+```
+
+---
+
+## 4. Run the Backend
+
+Navigate to the API project:
+
+```bash
+cd GYM.Controller.Api
+dotnet run
+```
+
+The API will be available through Swagger.
+
+---
+
+## 5. Run the Frontend
+
+Navigate to the frontend project:
+
+```bash
+cd GYM.FrontEnd
+npm install
+npm run dev
+```
+
+---
+
+# Seed Data
+
+Create the default users by calling the **SeedData** endpoint with the following payload:
+
+```json
 [
   {
     "email": "user@test.com",
     "phone": "1212121212",
     "password": "1234"
   },
-{
+  {
     "email": "trainer@test.com",
     "phone": "1313131313",
     "password": "1234"
   },
-{
+  {
     "email": "admin@test.com",
     "phone": "1414141414",
     "password": "1234"
   }
 ]
+```
+
+---
+
+# Project Structure
+
+```text
+P2_T1
+│
+├── GYM.Controller.Api      # ASP.NET Web API
+├── GYM.Data                # Entities, DbContext, Repositories
+├── GYM.FrontEnd            # React Application
+└── README.md
+```
+
+---
+
+# License
+
+This project was developed as part of **Project 2 – Full-Stack Web Application** for educational purposes.
