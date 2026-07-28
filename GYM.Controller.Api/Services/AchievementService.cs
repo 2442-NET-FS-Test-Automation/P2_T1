@@ -143,4 +143,16 @@ public class AchievementService : IAchievementService
         return _repo.RemoveAchievement(AchievementId);
     }
 
+    public async Task<bool> AddUserAchivement(int AchivementId, int UserId)
+    {
+        User_Achievement ua = new User_Achievement
+        {
+            AchievementId = AchivementId,
+            UserId = UserId,
+            Completed_At = DateTime.UtcNow
+        };
+
+        bool res = await _repo.AddUserAchivement(ua);
+        return res;
+    }
 }

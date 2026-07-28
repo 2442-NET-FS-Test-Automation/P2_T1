@@ -95,4 +95,14 @@ public class AchievementRepository : IAchievementRepository
                 .FirstOrDefault();
 
     }
+
+    public async Task<bool> AddUserAchivement(User_Achievement UA)
+    {
+        await using var db = await _factory.CreateDbContextAsync();
+
+        db.UserAchievements.Add(UA);
+        await db.SaveChangesAsync();
+
+        return true;
+    }
 }
