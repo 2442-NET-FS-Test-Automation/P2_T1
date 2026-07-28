@@ -56,7 +56,7 @@ export function ExerciseDetail() {
 
       <div className="abstract-media-node">
         <img
-          src={exercise.visualReferenceUrl || "https://unsplash.com"}
+          src={exercise.visualReferenceUrl}
           alt={`${exercise.name} mechanical movement layout`}
           className="abstract-image-element"
         />
