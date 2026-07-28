@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import type { ExerciseDTO } from "../types/ExerciseDTO";
+import type { ExerciseDTO } from "../types/exerciseDTO";
 import "../css/ExerciseDetail.css";
 
 export function ExerciseDetail() {

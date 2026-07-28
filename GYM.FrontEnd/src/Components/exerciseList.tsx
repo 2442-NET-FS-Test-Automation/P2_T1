@@ -1,4 +1,4 @@
-import type { ExerciseDTO } from "../types/ExerciseDTO";
+import type { ExerciseDTO } from "../types/exerciseDTO";
 import { ExerciseCard } from "./ExerciseCard";
 
 interface ExerciseListProps {

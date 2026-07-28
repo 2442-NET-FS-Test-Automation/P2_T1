@@ -4,7 +4,7 @@ import { ExerciseService } from '../../services/adminServices';
 import {TrainingModal} from '../../components/admin/modals/TrainingModal';
 import { ViewExercisesModal } from '../../components/admin/modals/ViewExercisesModal';
 import type { TrainingDTO, TrainingCreateDTO } from '../../types/trainingDTO';
-import type { ExerciseDTO } from '../../types/ExerciseDTO';
+import type { ExerciseDTO } from '../../types/exerciseDTO';
 
 export const AdminTrainingsPage: React.FC = () => {
     const [trainings, setTrainings] = useState<TrainingDTO[]>([]);

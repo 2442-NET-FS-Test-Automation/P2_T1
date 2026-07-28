@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ExerciseModal } from '../../Components/Admin/modals/ExerciseModal';
 import { ExerciseService } from '../../services/adminServices';
-import type {exerciseDTO} from '../../types/ExerciseDTO';
+import type {exerciseDTO} from '../../types/exerciseDTO';
 
 export interface ExerciseItem {
     id: number;
