@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import type { TrainingDTO } from "../types/trainingDTO";
 //import { useAuth } from '../auth/useAuth';
 import "../css/LandingPage.css";
-import { Carousel } from "../components/Carousel";
+import { Carousel } from "../Components/Carousel";
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
