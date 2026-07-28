@@ -10,5 +10,6 @@ public class AchievementDTO
     public int Points {get; set;}
     public string Condition_type {get; set;} = default!;
     public int ConditionValue { get; set; }
+    public DateTime? CompletedAt{get;set;}
     public List<User_Achievement> UserAchievements {get; set;} = new();
 }

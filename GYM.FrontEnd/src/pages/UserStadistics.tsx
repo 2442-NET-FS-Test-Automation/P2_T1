@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import type { StatsDTO } from "../types/StatsDTO";
 import { getUserStatistics } from "../api/stadistics";
+import { UserStatsModal } from "../components/UserStatsModal";
 
 // Tus componentes de gráficas ya conectados
 import { MonthlyMilesChart } from "../components/MonthlyMilesChart";
@@ -17,27 +18,30 @@ export const UserStatistics: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        setLoading(true);
-        const data = await getUserStatistics();
+  const fetchStats = async () => {
+    try {
+      setLoading(true);
+      const data = await getUserStatistics();
 
-        // VALIDACIÓN ANTI-ERROR: Nos aseguramos de que realmente sea un Array
-        if (Array.isArray(data)) {
-          setStats(data);
-        } else {
-          console.warn("La respuesta de la API no es un arreglo válido:", data);
-          setStats([]);
-        }
-      } catch (error) {
-        console.warn("Servicio no disponible, usando datos de prueba.", error);
+      // VALIDACIÓN ANTI-ERROR: Nos aseguramos de que realmente sea un Array
+      if (Array.isArray(data)) {
+        const sorted = [...data].sort(
+          (a, b) => new Date(b.measureAt).getTime() - new Date(a.measureAt).getTime()
+        );
+        setStats(sorted);
+      } else {
+        console.warn("La respuesta de la API no es un arreglo válido:", data);
         setStats([]);
-      } finally {
-        setLoading(false);
       }
-    };
+    } catch (error) {
+      console.warn("Servicio no disponible, usando datos de prueba.", error);
+      setStats([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchStats();
   }, []);
 
@@ -122,6 +126,8 @@ export const UserStatistics: React.FC = () => {
     return result;
   }, [stats, hasValidStats, selectedMonth]);
 
+  const hasChartData = milesData.some((value) => value > 0);
+
   const dayLabels = React.useMemo(() => {
     const [yearStr, monthStr] = selectedMonth.split('-');
     const year = Number(yearStr);
@@ -153,7 +159,7 @@ export const UserStatistics: React.FC = () => {
             </button>
 
             {isModalOpen && (
-              <Modal onClose={() => setIsModalOpen(false)} />
+              <UserStatsModal onClose={() => setIsModalOpen(false)} onCreated={fetchStats} />
             )}
           </div>
           {!hasValidStats && !loading && (
@@ -197,15 +203,15 @@ export const UserStatistics: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 py-4">
           {/* Date filter */}
           <div className="stats-filter-row">
-          <label htmlFor="stats-month-selector" className="stats-filter-label">Select month</label>
-          <input
-            id="stats-month-selector"
-            type="month"
-            className="stats-filter-input"
-            value={selectedMonth}
-            onChange={(e) => setSelectedMonth(e.target.value)}
-          />
-        </div>
+            <label htmlFor="stats-month-selector" className="stats-filter-label">Select month</label>
+            <input
+              id="stats-month-selector"
+              type="month"
+              className="stats-filter-input"
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+            />
+          </div>
           {/* chart 1: miles per month */}
           <div className="stats-card">
             <h3 className="text-lg font-semibold text-white mb-4 d-flex align-items-center">
@@ -218,6 +224,9 @@ export const UserStatistics: React.FC = () => {
                 dayLabels={dayLabels}
                 monthLabel={monthLabel}
               />
+              {!hasChartData && (
+                <p className="text-sm stats-text-muted mt-3">No mile run data for this month.</p>
+              )}
             </div>
           </div>
 
@@ -277,48 +286,4 @@ export const UserStatistics: React.FC = () => {
       </div>
     </div>
   );
-
-  function Modal({ onClose }: { onClose: () => void }) {
-    return (
-      <div className="userstats-modal-screen" role="dialog" aria-modal="true" aria-labelledby="userstatsModalTitle">
-        <div className="userstats-modal-backdrop" onClick={onClose} />
-        <div className="userstats-modal-wrapper">
-          <div className="userstats-modal-card">
-            <div className="userstats-modal-header">
-              <h5 className="userstats-modal-title" id="userstatsModalTitle">Create new record</h5>
-              <button type="button" className="userstats-modal-close" aria-label="Close" onClick={onClose}>
-                &times;
-              </button>
-            </div>
-            <div className="userstats-modal-body">
-              <div className="userstats-modal-field">
-                <label htmlFor="recordWeight">Weight</label>
-                <input id="recordWeight" type="number" placeholder="75.5 kg" />
-              </div>
-              <div className="userstats-modal-field">
-                <label htmlFor="recordHeight">Height</label>
-                <input id="recordHeight" type="number" placeholder="178 cm" />
-              </div>
-              <div className="userstats-modal-field">
-                <label htmlFor="recordStrength">Strength</label>
-                <input id="recordStrength" type="number" placeholder="185 lbs" />
-              </div>
-              <div className="userstats-modal-field">
-                <label htmlFor="recordMileRun">Mile run</label>
-                <input id="recordMileRun" type="text" placeholder="06:15" />
-              </div>
-            </div>
-            <div className="userstats-modal-footer">
-              <button type="button" className="btn btn-outline-secondary text-white" onClick={onClose}>
-                Close
-              </button>
-              <button type="button" className="btn btn-gq-purple">
-                Save record
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-};
+}

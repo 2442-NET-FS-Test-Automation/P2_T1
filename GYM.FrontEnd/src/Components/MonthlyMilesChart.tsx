@@ -28,7 +28,7 @@ export const MonthlyMilesChart: React.FC<MonthlyMilesProps> = ({ milesData, dayL
       trigger: 'axis',
       formatter: (params: any) => {
         const point = Array.isArray(params) ? params[0] : params;
-        return `${point.axisValueLabel}: ${formatMinutesToTime(point.value)}`;
+        return `${formatMinutesToTime(point.value)}`;
       }
     },
     grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
@@ -61,12 +61,12 @@ export const MonthlyMilesChart: React.FC<MonthlyMilesProps> = ({ milesData, dayL
           },
           borderRadius: [6, 6, 0, 0]
         },
-        label: {
-          show: true,
-          position: 'top',
-          color: '#ffffff',
-          formatter: ({ value }: any) => formatMinutesToTime(value)
-        }
+        // label: {
+        //   show: true,
+        //   position: 'top',
+        //   color: '#ffffff',
+        //   formatter: ({ value }: any) => formatMinutesToTime(value)
+        // }
       }
     ]
   };
