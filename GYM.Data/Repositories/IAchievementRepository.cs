@@ -12,4 +12,5 @@ public interface IAchievementRepository
     Task<Achievement> UpdateAchievement(Achievement UpdatedAchievement);
     Task<bool> ExistsAsync(int id);
     Task<DateTime> GetCompletedAtByUserArchivementID(int AchivementId ,int UserId);
+    Task<bool> AddUserAchivement(User_Achievement UA);
 }

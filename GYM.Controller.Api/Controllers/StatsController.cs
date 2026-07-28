@@ -14,10 +14,12 @@ public class StatsController : ControllerBase
 {
     private readonly IStatsService _service;
     private readonly IMemoryCache _cache;
-    public StatsController(IStatsService service, IMemoryCache cache)
+    private readonly IAchievementService _achivementService;
+    public StatsController(IStatsService service, IMemoryCache cache, IAchievementService achievementService)
     {
         _service = service;
         _cache = cache;
+        _achivementService = achievementService;
     }
 
 
@@ -58,7 +60,6 @@ public class StatsController : ControllerBase
             : Ok(dtos);
     }
 
-    //-----------------------------------------------------------FALTA
     [HttpPost] // URL: POST api/stats 
     public async Task<ActionResult<StatsDTO>> AddStats([FromBody] StatsDTO newStats)
     { 
@@ -68,6 +69,13 @@ public class StatsController : ControllerBase
         int userId = int.Parse(userIdString);
 
         newStats.UserId = userId;
+
+        //Achivement part
+        var logro = await _service.GetStatsByUserId(userId);
+        Console.WriteLine(logro);
+        if(!logro.Any()){
+            await _achivementService.AddUserAchivement(3, userId);
+        }
 
         StatsDTO createdStatsDto = await _service.AddStatsAsync(newStats);
 
