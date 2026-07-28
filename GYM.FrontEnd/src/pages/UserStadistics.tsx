@@ -163,7 +163,7 @@ export const UserStatistics: React.FC = () => {
             )}
           </div>
           {!hasValidStats && !loading && (
-            <span className="stats-badge-demo py-4">
+            <span className="stats-badge-demo py-4 my-4">
               Demo
             </span>
           )}
