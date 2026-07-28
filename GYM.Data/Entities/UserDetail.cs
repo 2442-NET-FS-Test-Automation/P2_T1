@@ -30,6 +30,4 @@ public class UserDetail
 
     [Column(TypeName = "datetime2")]
     public DateTime JoinAt { get; set; } = DateTime.UtcNow;
-
-    public int Age { get; set; }
 }

@@ -1,196 +1,186 @@
 import { useState, useEffect } from "react";
-import { getUser } from "../services/auth";
-import type { UserData } from "../types/user";
+import { toast } from "react-toastify";
+import { getUserDetails, updateUserDetails } from "../services/userDetails";
+import { getUserStatistics } from "../api/stadistics";
+import type { UserDetailData } from "../types/user";
+import type { StatsDTO } from "../types/StatsDTO";
 import "../css/ProfileSettings.css";
 
-type SettingSection = "account" | "password" | "language";
+interface AccountForm {
+  firstName: string;
+  lastName: string;
+}
 
 export default function ProfileSettings() {
-    const [user, setUser] = useState<UserData | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
-    const [activeSection, setActiveSection] = useState<SettingSection>("account");
+  const [details, setDetails] = useState<UserDetailData | null>(null);
+  const [latestStats, setLatestStats] = useState<StatsDTO | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
-    const [newPassword, setNewPassword] = useState("");
-    const [language, setLanguage] = useState<"es" | "en">("es");
+  const [accountForm, setAccountForm] = useState<AccountForm>({
+    firstName: "",
+    lastName: ""
+  });
 
-    useEffect(() => {
-        loadUserData();
-    }, [])
+  useEffect(() => {
+    loadUserDetails();
+    loadLatestStats();
+  }, []);
 
-    const loadUserData = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            // we get the information from the user Service
-            const userData = await getUser();
-            setUser(userData);
-        } catch (err: any) { // if an error gets catched
-            setError(err?.message || "Error connecting to the server");
-        } finally {
-            setLoading(false);
-        }
-    };
+  const loadUserDetails = async () => {
+    setLoading(true);
+    setError(null);
 
-    const handleUpdatePassword = () => {
-        // call service to update password?
-        console.log("Updating password to:", newPassword);
-        setNewPassword("");
-    };
+    const data = await getUserDetails();
 
-    const handleLanguageChange = (lang: "es" | "en") => {
-        setLanguage(lang);
-        // aquí podrías persistir la preferencia, ej: updateLanguage(lang)
-        console.log("Language set to:", lang);
-    };
+    if (!data) {
+      setError("Could not load your profile details.");
+      setLoading(false);
+      return;
+    }
 
-    return (
-        <div className="profilesettings-page">
+    setDetails(data);
+    setAccountForm({
+      firstName: data.name || "",
+      lastName: data.surname || ""
+    });
+    setLoading(false);
+  };
 
-            <div className="settings-container">
-                {/* --- LEFT SECTION: Avatar, options --- */}
-                <aside className="sidebar">
-                    <div className="avatar-wrapper">
-                        {/* default avatar*/}
-                        <div className="avatar-placeholder">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                            </svg>
-                        </div>
-                    </div>
+  const loadLatestStats = async () => {
+    try {
+      const stats = await getUserStatistics();
+      if (Array.isArray(stats) && stats.length > 0) {
+        const sorted = [...stats].sort(
+          (a, b) => new Date(b.measureAt).getTime() - new Date(a.measureAt).getTime()
+        );
+        setLatestStats(sorted[0]);
+      } else {
+        setLatestStats(null);
+      }
+    } catch (err) {
+      setLatestStats(null);
+    }
+  };
 
-                    <nav className="sidebar-menu">
-                        <button
-                            className={`menu-btn ${activeSection === "account" ? "active" : ""}`}
-                            onClick={() => setActiveSection("account")}
-                        >
-                            Account Details
-                        </button>
-                        <button
-                            className={`menu-btn ${activeSection === "password" ? "active" : ""}`}
-                            onClick={() => setActiveSection("password")}
-                        >
-                            Change Password
-                        </button>
-                        <button
-                            className={`menu-btn ${activeSection === "language" ? "active" : ""}`}
-                            onClick={() => setActiveSection("language")}
-                        >
-                            Choose Language
-                        </button>
-                    </nav>
-                </aside>
+  const handleAccountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setAccountForm((prev) => ({ ...prev, [id]: value }));
+  };
 
-                {/* --- RIGHT SECTION: DETAILS FORM --- */}
-                <main className="content">
-                    {activeSection === "account" && (
-                        <>
-                            <h1 className="content-title">Account settings</h1>
-                            <form className="settings-form" onSubmit={(e) => e.preventDefault()}>
-                                <div className="form-group">
-                                    <label htmlFor="email">Email address</label>
-                                    <input
-                                        type="email"
-                                        id="email"
-                                        placeholder="Enter email address"
-                                        value={user?.email || ''}
-                                        readOnly
-                                    />
-                                </div>
+  const handleUpdateAccount = async () => {
+    if (!accountForm.firstName.trim() || !accountForm.lastName.trim()) {
+      toast.error("Enter valid values for all fields.");
+      return;
+    }
 
-                                <div className="form-group">
-                                    <label htmlFor="firstName">First name</label>
-                                    <input
-                                        type="text"
-                                        id="firstName"
-                                        placeholder="Enter first name"
-                                        value={user?.detail?.name || ''}
-                                    />
-                                </div>
+    setSaving(true);
 
-                                <div className="form-group">
-                                    <label htmlFor="lastName">Last name</label>
-                                    <input
-                                        type="text"
-                                        id="lastName"
-                                        placeholder="Enter last name"
-                                        value={user?.detail?.surname || ''}
-                                    />
-                                </div>
+    const body: UserDetailData = {
+      ...details,
+      name: accountForm.firstName,
+      surname: accountForm.lastName,
+    } as UserDetailData;
 
-                                <div className="form-group">
-                                    <label htmlFor="phone">Phone number</label>
-                                    <input
-                                        type="tel"
-                                        id="phone"
-                                        placeholder="Enter phone number"
-                                        value={user?.phone || ''}
-                                    />
-                                </div>
+    const result = await updateUserDetails(body);
 
-                                <div className="form-group">
-                                    <label htmlFor="weight">Weight</label>
-                                    <input
-                                        type="text"
-                                        id="weight"
-                                        placeholder="Enter weight (e.g. 70kg)"
-                                        value={user?.stadistic?.weight || ''}
-                                    />
-                                </div>
+    if (result) {
+      toast.success("Profile updated successfully!");
+      setDetails(result);
+    } else {
+      toast.error("Could not update your profile. Try again.");
+    }
 
-                                <div className="form-group">
-                                    <label htmlFor="height">Height</label>
-                                    <input
-                                        type="text"
-                                        id="height"
-                                        placeholder="Enter height (e.g. 175cm)"
-                                        value={user?.stadistic?.height || ''}
-                                    />
-                                </div>
-                            </form>
-                        </>
-                    )}
+    setSaving(false);
+  };
 
-                    {activeSection === "password" && (
-                        <>
-                            <h1 className="content-title">Change Password</h1>
-                            <form className="settings-form" onSubmit={(e) => { e.preventDefault(); handleUpdatePassword(); }}>
-                                <div className="form-group">
-                                    <label htmlFor="newPassword">New password</label>
-                                    <input
-                                        type="password"
-                                        id="newPassword"
-                                        placeholder="Enter new password"
-                                        value={newPassword}
-                                        onChange={(e) => setNewPassword(e.target.value)}
-                                    />
-                                </div>
-                                <button type="submit" className="update-btn">Update</button>
-                            </form>
-                        </>
-                    )}
-
-                    {activeSection === "language" && (
-                        <>
-                            <h1 className="content-title">Choose Language</h1>
-                            <div className="language-options">
-                                <button
-                                    className={`lang-btn ${language === "es" ? "active" : ""}`}
-                                    onClick={() => handleLanguageChange("es")}
-                                >
-                                    Español
-                                </button>
-                                <button
-                                    className={`lang-btn ${language === "en" ? "active" : ""}`}
-                                    onClick={() => handleLanguageChange("en")}
-                                >
-                                    English
-                                </button>
-                            </div>
-                        </>
-                    )}
-                </main>
+  return (
+    <div className="profilesettings-page">
+      <div className="settings-container">
+        <aside className="sidebar">
+          <div className="avatar-wrapper">
+            <div className="avatar-placeholder">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+              </svg>
             </div>
-        </div>
-    );
+            {details && (
+              <p className="avatar-name">
+                {details.name} {details.surname}
+              </p>
+            )}
+          </div>
+        </aside>
+
+        <main className="content">
+          <h1 className="content-title">Your account</h1>
+
+          {latestStats && (
+            <div className="profile-stats-summary">
+              <h2 className="profile-stats-title">Latest stats</h2>
+              <div className="profile-stats-grid">
+                <div>
+                  <p className="stats-label">Weight</p>
+                  <p className="stats-value">{latestStats.weight} kg</p>
+                </div>
+                <div>
+                  <p className="stats-label">Height</p>
+                  <p className="stats-value">{latestStats.height} cm</p>
+                </div>
+                <div>
+                  <p className="stats-label">Strength</p>
+                  <p className="stats-value">{latestStats.strength} lbs</p>
+                </div>
+                <div>
+                  <p className="stats-label">Age</p>
+                  <p className="stats-value">{latestStats.age}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {loading ? (
+            <p className="content-status">Loading your profile...</p>
+          ) : error ? (
+            <p className="content-status content-status-error">{error}</p>
+          ) : (
+            <form
+              className="settings-form"
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleUpdateAccount();
+              }}
+            >
+              <div className="form-group">
+                <label htmlFor="firstName">First name</label>
+                <input
+                  type="text"
+                  id="firstName"
+                  placeholder="Enter first name"
+                  value={accountForm.firstName}
+                  onChange={handleAccountChange}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="lastName">Last name</label>
+                <input
+                  type="text"
+                  id="lastName"
+                  placeholder="Enter last name"
+                  value={accountForm.lastName}
+                  onChange={handleAccountChange}
+                />
+              </div>
+
+              <button type="submit" className="update-btn" disabled={saving}>
+                {saving ? "Saving..." : "Update"}
+              </button>
+            </form>
+          )}
+        </main>
+      </div>
+    </div>
+  );
 }
