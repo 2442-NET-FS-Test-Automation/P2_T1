@@ -10,11 +10,12 @@ interface MonthlyMilesProps {
 export const MonthlyMilesChart: React.FC<MonthlyMilesProps> = ({ milesData, dayLabels, monthLabel }) => {
   const formatMinutesToTime = (value: number | string) => {
     const totalMinutes = Number(value);
-    if (Number.isNaN(totalMinutes) || totalMinutes <= 0) return '00:00';
+    if (Number.isNaN(totalMinutes) || totalMinutes <= 0) return '00:00:00';
     const totalSeconds = Math.round(totalMinutes * 60);
-    const minutes = Math.floor(totalSeconds / 60);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
-    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
   };
 
   const option = {

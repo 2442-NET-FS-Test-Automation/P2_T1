@@ -71,28 +71,17 @@ export const UserStatistics: React.FC = () => {
   };
 
   const formatMileRun = (mileRun: string): string => {
-    if (!mileRun) return "00:00:00.00";
+    if (!mileRun) return "00:00:00";
 
-    const [timePart, fractionPart = ""] = mileRun.split(".");
-    const parts = timePart.split(":");
-    const fraction = fractionPart.padEnd(2, "0").slice(0, 2);
-    const hasFraction = fractionPart.length > 0;
+    const cleaned = mileRun.trim();
+    const [timePart, fraction = ""] = cleaned.split(".");
+    const timeParts = timePart.split(":").map((part) => part.padStart(2, "0"));
+    const normalizedTime = timeParts.join(":");
 
-    if (parts.length === 3) {
-      const [hours, minutes, seconds] = parts.map((v) => v.padStart(2, "0"));
-      return hasFraction
-        ? `${hours}:${minutes}:${seconds}.${fraction}`
-        : `${hours}:${minutes}:${seconds}`;
-    }
+    if (!fraction) return normalizedTime;
 
-    if (parts.length === 2) {
-      const [minutes, seconds] = parts.map((v) => v.padStart(2, "0"));
-      return hasFraction
-        ? `${minutes}:${seconds}.${fraction}`
-        : `${minutes}:${seconds}`;
-    }
-
-    return hasFraction ? `${timePart}.${fraction}` : timePart;
+    const normalizedFraction = fraction.replace(/[^0-9]/g, "").slice(0, 2).padEnd(2, "0");
+    return `${normalizedTime}.${normalizedFraction}`;
   };
 
   const strengthValues = hasValidStats
@@ -104,6 +93,13 @@ export const UserStatistics: React.FC = () => {
     const now = new Date();
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
   });
+
+  useEffect(() => {
+    if (!hasValidStats) return;
+    const latestDate = new Date(latestStat?.measureAt ?? stats[0].measureAt);
+    const monthValue = `${latestDate.getFullYear()}-${String(latestDate.getMonth() + 1).padStart(2, '0')}`;
+    setSelectedMonth(monthValue);
+  }, [stats, hasValidStats, latestStat]);
 
   const milesData = React.useMemo(() => {
     const [yearStr, monthStr] = selectedMonth.split('-');
@@ -161,7 +157,7 @@ export const UserStatistics: React.FC = () => {
             )}
           </div>
           {!hasValidStats && !loading && (
-            <span className="stats-badge-demo">
+            <span className="stats-badge-demo py-4">
               Demo
             </span>
           )}
@@ -213,7 +209,7 @@ export const UserStatistics: React.FC = () => {
           {/* chart 1: miles per month */}
           <div className="stats-card">
             <h3 className="text-lg font-semibold text-white mb-4 d-flex align-items-center">
-              <span>Miles runned</span>
+              <span>Mile run performance</span>
               <span className="text-xs stats-text-purple font-normal ms-3">This month</span>
             </h3>
             <div className="pt-2">
