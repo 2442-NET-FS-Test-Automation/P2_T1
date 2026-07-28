@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { TrainingService } from '../../services/adminServices'; // O donde tengas tu servicio
 import { ExerciseService } from '../../services/adminServices';
-import {TrainingModal} from '../../Components/admin/modals/TrainingModal';
-import { ViewExercisesModal } from '../../Components/admin/modals/ViewExercisesModal';
+import {TrainingModal} from '../../components/admin/modals/TrainingModal';
+import { ViewExercisesModal } from '../../components/admin/modals/ViewExercisesModal';
 import type { TrainingDTO, TrainingCreateDTO } from '../../types/trainingDTO';
 import type { exerciseDTO } from '../../types/exerciseDTO';
 
