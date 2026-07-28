@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import type { SubmitEvent } from "react";
 import type { UserAdminDTO, UserCreateAdminDTO } from '../../../types/user';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 interface UserModalProps {
     isOpen: boolean;
@@ -24,6 +26,9 @@ export const UserModal: React.FC<UserModalProps> = ({ isOpen, onClose, onSaveSta
     const [selectedRole, setSelectedRole] = useState<string>('User');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    // Estado para conmutar visibilidad de contraseña (Ojo)
+    const [showPassword, setShowPassword] = useState(false);
+
     useEffect(() => {
         if (initialData) {
             setSelectedRole(initialData.role);
@@ -36,12 +41,13 @@ export const UserModal: React.FC<UserModalProps> = ({ isOpen, onClose, onSaveSta
                 password: '',
                 role: 'Trainer'
             });
+            setShowPassword(false); // Resetear visibilidad al abrir modal
         }
     }, [initialData, isOpen]);
 
     if (!isOpen) return null;
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsSubmitting(true);
 
@@ -149,6 +155,7 @@ export const UserModal: React.FC<UserModalProps> = ({ isOpen, onClose, onSaveSta
                                             required
                                         />
                                     </div>
+
                                     <div>
                                         <label className="form-label small fw-semibold text-aqua">
                                             Phone Number (10 digits)
@@ -171,21 +178,35 @@ export const UserModal: React.FC<UserModalProps> = ({ isOpen, onClose, onSaveSta
                                             </span>
                                         )}
                                     </div>
+
+                                    {/* Campo Password con Toggle de Visibilidad */}
                                     <div>
                                         <label className="form-label small fw-semibold text-aqua">Password</label>
-                                        <input
-                                            type="password"
-                                            className="form-control gq-input text-white"
-                                            placeholder="••••••••"
-                                            value={formData.password}
-                                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                            minLength={8}
-                                            required
-                                        />
+                                        <div className="input-group">
+                                            <input
+                                                type={showPassword ? 'text' : 'password'}
+                                                className="form-control gq-input text-white border-end-0"
+                                                placeholder="••••••••"
+                                                value={formData.password}
+                                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                                minLength={8}
+                                                required
+                                            />
+                                            <button
+                                                type="button"
+                                                className="btn gq-input border-start-0 text-muted px-3"
+                                                style={{ backgroundColor: '#161729', borderColor: 'var(--gq-surface-border)' }}
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                tabIndex={-1}
+                                            >
+                                                {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                                            </button>
+                                        </div>
                                         <span className="text-muted small mt-1 d-block" style={{ fontSize: '0.75rem' }}>
                                             🔒 Min. 8 characters (include numbers/special chars if required by security policy).
                                         </span>
                                     </div>
+
                                     <div>
                                         <label className="form-label small fw-semibold text-aqua">Staff Role</label>
                                         <select

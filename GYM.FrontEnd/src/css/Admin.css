@@ -47,6 +47,9 @@
 .text-gray{
   color: #a0a6b5
 }
+.text-gold {
+  color: #ffd700 !important;
+}
 
 /* Botones Personalizados con Efecto Glow */
 .btn-gq-purple {

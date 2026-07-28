@@ -1,4 +1,4 @@
-import { ExerciseCard } from "../Components/ExerciseCard";
+import { ExerciseCard } from "../components/ExerciseCard";
 import "../css/Training.css";
 export function TrainingDetail() {
   return (

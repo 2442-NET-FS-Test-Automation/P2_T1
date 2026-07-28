@@ -4,6 +4,7 @@ import type { SubmitEvent } from "react";
 import { registerUser } from '../services/RegisterUserService';
 import '../css/Register.css';
 import {useAuth} from '../auth/useAuth';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 export function Register() {
   const navigate = useNavigate();
@@ -19,6 +20,9 @@ export function Register() {
   const [loading, setLoading] = useState<boolean>(false);
 
   const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Submit Handler
   async function onSubmit(e: SubmitEvent<HTMLFormElement>) { 
@@ -137,13 +141,22 @@ export function Register() {
               <div className="input-group">
                 <span className="input-group-text bg-dark border-secondary text-white">🔒</span>
                 <input
-                  type="password"
-                  className="form-control quest-input"
+                  type={showPassword ? 'text' : 'password'}
+                  className="form-control quest-input border-end-0 rounded-0"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                   required
                 />
+                <button
+                  type="button"
+                  className="btn gq-input border-start-0 text-aqua px-3 d-flex align-items-center rounded-end"
+                  style={{ backgroundColor: '#161729', borderColor: 'var(--gq-surface-border)' }}
+                  onClick={() => setShowPassword(!showPassword)}
+                  tabIndex={-1}
+                >
+                  {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                </button>
               </div>
             </div>
 
@@ -153,13 +166,22 @@ export function Register() {
               <div className="input-group">
                 <span className="input-group-text bg-dark border-secondary text-white">🛡️</span>
                 <input
-                  type="password"
-                  className="form-control quest-input"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  className="form-control quest-input border-end-0 rounded-0"
                   placeholder="••••••••"
                   value={confirmPassword}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value)}
                   required
                 />
+                <button
+                  type="button"
+                  className="btn gq-input border-start-0 text-aqua px-3 d-flex align-items-center rounded-end"
+                  style={{ backgroundColor: '#161729', borderColor: 'var(--gq-surface-border)' }}
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  tabIndex={-1}
+                >
+                  {showConfirmPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                </button>  
               </div>
             </div>
 
