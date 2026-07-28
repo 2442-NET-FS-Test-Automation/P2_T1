@@ -23,7 +23,7 @@ export function Footer() {
         </ul>
       </nav>
       <p className="footer-centered__copyright">
-        &copy; 2024 Creative Co. All Rights Reserved.
+        &copy; 2026 GymQuest. All Rights Reserved.
       </p>
     </footer>
   );
