@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 
-//[Authorize]
+[Authorize]
 [ApiController] //ASP.NET knows to map this controller during app.MapControllers()
 [Route("api/[Controller]")] //route base
 
@@ -163,7 +163,7 @@ public class BookingController : ControllerBase
             return BadRequest();
 
         // FIX: Standardize exact cache key removal hooks matching your retrieval keys
-        string? userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
         _cache.Remove(AllBookingsCacheKey);
         _cache.Remove($"Bookings:{id}");
         if (userIdString != null)
