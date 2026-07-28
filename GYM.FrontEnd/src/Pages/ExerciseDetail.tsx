@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import type { ExerciseDTO } from "../types/exerciseDTO";
+import type { exerciseDTO } from "../types/exerciseDTO";
 import "../css/ExerciseDetail.css";
 
 export function ExerciseDetail() {
@@ -8,8 +8,8 @@ export function ExerciseDetail() {
   const location = useLocation();
 
   // Explicitly binds the exact signature of your updated type definition contract
-  const [exercise, setExercise] = useState<ExerciseDTO | null>(
-    (location.state as { exercise?: ExerciseDTO })?.exercise || null,
+  const [exercise, setExercise] = useState<exerciseDTO | null>(
+    (location.state as { exercise?: exerciseDTO })?.exercise || null,
   );
   const [loading, setLoading] = useState<boolean>(!exercise);
 

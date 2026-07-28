@@ -7,7 +7,7 @@ import {
   UpdateBookingStatus,
 } from "../services/BookingService";
 import type { BookingDTO } from "../types/BookingDTO";
-import { BookingCard } from "../components/BookingCard";
+import { BookingCard } from "../Components/BookingCard";
 import { getTrainingImage } from "../utils/trainingImages";
 import { toast } from "react-toastify";
 

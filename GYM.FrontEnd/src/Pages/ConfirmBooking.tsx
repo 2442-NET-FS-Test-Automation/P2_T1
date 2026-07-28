@@ -5,7 +5,7 @@ import { createBooking } from "../services/BookingService";
 import { getUser } from "../services/auth";
 import type { TrainingDTO } from "../types/trainingDTO";
 import "../css/ConfirmBooking.css";
-import { ExerciseList } from "../components/exerciseList";
+import { ExerciseList } from "../Components/ExerciseList";
 import { IoArrowBack } from "react-icons/io5";
 import { toast } from "react-toastify";
 

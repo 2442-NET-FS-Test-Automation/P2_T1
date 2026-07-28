@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { ExerciseModal } from '../../components/Admin/modals/ExerciseModal';
+import { ExerciseModal } from '../../Components/admin/modals/ExerciseModal';
 import { ExerciseService } from '../../services/adminServices';
 import type { exerciseDTO } from '../../types/exerciseDTO';
-import { Pagination } from '../../components/Pagination';
+import { Pagination } from '../../Components/Pagination';
 
 export interface ExerciseItem {
     id: number;

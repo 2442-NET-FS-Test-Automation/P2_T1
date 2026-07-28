@@ -1,9 +1,9 @@
-import type { ExerciseDTO } from "../types/exerciseDTO";
+import type { exerciseDTO } from "../types/exerciseDTO";
 import { ExerciseCard } from "./ExerciseCard";
 
 interface ExerciseListProps {
-  exercises: ExerciseDTO[];
-  onExerciseClick: (exercise: ExerciseDTO) => void;
+  exercises: exerciseDTO[];
+  onExerciseClick: (exercise: exerciseDTO) => void;
 }
 
 export function ExerciseList({

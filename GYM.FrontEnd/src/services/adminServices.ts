@@ -1,5 +1,5 @@
 import { api } from "../api/client";
-import type { ExerciseDTO } from "../types/exerciseDTO";
+import type { exerciseDTO } from "../types/exerciseDTO";
 import type { TrainingDTO, TrainingCreateDTO } from "../types/trainingDTO";
 import type { UserAdminDTO, UserCreateAdminDTO, UserUpdateRoleDTO } from "../types/user";
 
@@ -49,9 +49,9 @@ export const UserService = {
 
 export const ExerciseService = {
     // GET: Obtener librería de ejercicios
-    getAllExercises: async (): Promise<ExerciseDTO[]> => {
+    getAllExercises: async (): Promise<exerciseDTO[]> => {
         try {
-            const response = await api.get<ExerciseDTO[]>('/Training/exercises');
+            const response = await api.get<exerciseDTO[]>('/Training/exercises');
             return response.data;
         } catch (error) {
             console.error('Error getting exercises:', error);
@@ -60,11 +60,11 @@ export const ExerciseService = {
     },
 
     // POST: Crear nuevo ejercicio
-    createExercise: async (exerciseData: ExerciseDTO): Promise<ExerciseDTO> => {
+    createExercise: async (exerciseData: exerciseDTO): Promise<exerciseDTO> => {
         try {
             const { id, ...dataToSend } = exerciseData;
 
-            const response = await api.post<ExerciseDTO>('/Training/exercises', dataToSend);
+            const response = await api.post<exerciseDTO>('/Training/exercises', dataToSend);
             return response.data;
         } catch (error) {
             console.error('Error creating exercise:', error);
@@ -73,9 +73,9 @@ export const ExerciseService = {
     },
 
     // PUT: Editar ejercicio
-    updateExercise: async (exerciseData: ExerciseDTO): Promise<ExerciseDTO> => {
+    updateExercise: async (exerciseData: exerciseDTO): Promise<exerciseDTO> => {
         try {
-            const response = await api.put<ExerciseDTO>(`/Training/exercises`, exerciseData);
+            const response = await api.put<exerciseDTO>(`/Training/exercises`, exerciseData);
             return response.data;
         } catch (error) {
             console.error('Error updating exercise:', error);

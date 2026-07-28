@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { UserModal } from '../../Components/Admin/modals/UserModal';
+import { UserModal } from '../../Components/admin/modals/UserModal';
 import { UserService } from '../../services/adminServices';
 import type { UserAdminDTO } from '../../types/user';
 import { useAuth } from '../../auth/useAuth';

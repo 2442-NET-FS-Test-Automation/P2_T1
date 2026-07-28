@@ -1,8 +1,6 @@
 import './css/App.css';
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { About } from './pages/About'
-import { Routines } from './pages/Routines'
-import { MyRoutines } from './pages/MyRoutines'
 import Home from './pages/UserHome';
 import Achievements from './pages/UserAchievements';
 import ProfileSettings from './pages/UserProfileSettings';
@@ -10,15 +8,15 @@ import { Login } from './pages/Login';
 import { LandingPage } from './pages/LandingPage';
 import { UserStatistics } from './pages/UserStadistics';
 import { useAuth } from './auth/useAuth';
-import { RequireAuth } from './components/RequireAuth';
+import { RequireAuth } from './Components/RequireAuth';
 import { Register } from './pages/Register';
 import { UserBooking } from './pages/UserBooking';
 import { NotFound } from './pages/NotFound';
-import Navbar from './components/Navbar';
+import Navbar from './Components/Navbar';
 import { UserDetailsStep } from './pages/Onboarding/UserDetailsStep';
 import { UserStatsStep } from './pages/Onboarding/UserStatsStep';
 import { UserMyBookings } from './pages/UserMyBookings';
-import { AdminLayout } from './components/admin/AdminLayout';
+import { AdminLayout } from './Components/admin/AdminLayout';
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { AdminUsersPage } from './pages/admin/AdminUsersPage';
 import { AdminExercisesPage } from './pages/admin/AdminExercisesPage';
@@ -29,7 +27,7 @@ import { ExerciseDetail } from './pages/ExerciseDetail';
 import { Report } from './pages/Report';
 import { ToastContainer } from "react-toastify"; // library for notifications (success messages/error messages) like an alert in js
 import { TrainingDetail } from './pages/TrainingDetail';
-import { Footer } from './components/Footer';
+import { Footer } from './Components/Footer';
 
 function App() {
   const { status, user } = useAuth();
@@ -175,22 +173,6 @@ function App() {
               element={
                 <RequireAuth allowedRoles={["User", "Trainer", "Admin"]}>
                   <UserMyBookings />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/routines"
-              element={
-                <RequireAuth allowedRoles={["User", "Trainer", "Admin"]}>
-                  <Routines />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/routines/myroutines"
-              element={
-                <RequireAuth allowedRoles={["User", "Trainer", "Admin"]}>
-                  <MyRoutines />
                 </RequireAuth>
               }
             />

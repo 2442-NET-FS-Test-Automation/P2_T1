@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { ExerciseCard } from "../components/ExerciseCard";
+import { ExerciseCard } from "../Components/ExerciseCard";
 import type { TrainingDTO } from "../types/trainingDTO";
 import "../css/Training.css";
 
