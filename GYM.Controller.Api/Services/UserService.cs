@@ -123,7 +123,6 @@ public class UserService : IUserService
             Gender = userDetails.Gender,
             Name = userDetails.Name,
             Surname = userDetails.Surname,
-            Age = userDetails.Age,
             JoinAt = userDetails.JoinAt
         };
 
@@ -152,8 +151,7 @@ public class UserService : IUserService
             Gender = userDetailsDto.Gender,
             Name = userDetailsDto.Name,
             Surname = userDetailsDto.Surname,
-            Age = userDetailsDto.Age ?? 0,
-            JoinAt = userDetailsDto.JoinAt.Value
+            JoinAt = userDetailsDto.JoinAt ?? DateTime.UtcNow
         };
 
         UserDetail? NewUserDetails = await _UserRepository.AddUserDetails(userDetails);
@@ -166,7 +164,6 @@ public class UserService : IUserService
             UserId = NewUserDetails.UserId,
             Name = NewUserDetails.Name,
             Surname = NewUserDetails.Surname,
-            Age = NewUserDetails.Age,
             JoinAt = NewUserDetails.JoinAt
         };
         return NewUserDetailsDTO;
@@ -185,7 +182,6 @@ public class UserService : IUserService
         userDetail.Name = userDetailsDTO.Name;
         userDetail.Surname = userDetailsDTO.Surname;
         userDetail.Gender = userDetailsDTO.Gender;
-        userDetail.Age = userDetailsDTO.Age ?? userDetail.Age;
 
         UserDetail? UpdatedUserDetail = await _UserRepository.UpdateUserDetails(userDetail);
         if(UpdatedUserDetail is null)
@@ -197,7 +193,6 @@ public class UserService : IUserService
             UserId = UpdatedUserDetail.UserId,
             Name = UpdatedUserDetail.Name,
             Surname = UpdatedUserDetail.Surname,
-            Age = UpdatedUserDetail.Age,
             Gender = UpdatedUserDetail.Gender,
             JoinAt = UpdatedUserDetail.JoinAt
         };

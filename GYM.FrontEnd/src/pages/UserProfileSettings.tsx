@@ -1,29 +1,31 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { getUserDetails, updateUserDetails } from "../services/userDetails";
+import { getUserStatistics } from "../api/stadistics";
 import type { UserDetailData } from "../types/user";
+import type { StatsDTO } from "../types/StatsDTO";
 import "../css/ProfileSettings.css";
 
 interface AccountForm {
   firstName: string;
   lastName: string;
-  age: string;
 }
 
 export default function ProfileSettings() {
   const [details, setDetails] = useState<UserDetailData | null>(null);
+  const [latestStats, setLatestStats] = useState<StatsDTO | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
   const [accountForm, setAccountForm] = useState<AccountForm>({
     firstName: "",
-    lastName: "",
-    age: ""
+    lastName: ""
   });
 
   useEffect(() => {
     loadUserDetails();
+    loadLatestStats();
   }, []);
 
   const loadUserDetails = async () => {
@@ -41,10 +43,25 @@ export default function ProfileSettings() {
     setDetails(data);
     setAccountForm({
       firstName: data.name || "",
-      lastName: data.surname || "",
-      age: data.age !== undefined && data.age !== null ? String(data.age) : "",
+      lastName: data.surname || ""
     });
     setLoading(false);
+  };
+
+  const loadLatestStats = async () => {
+    try {
+      const stats = await getUserStatistics();
+      if (Array.isArray(stats) && stats.length > 0) {
+        const sorted = [...stats].sort(
+          (a, b) => new Date(b.measureAt).getTime() - new Date(a.measureAt).getTime()
+        );
+        setLatestStats(sorted[0]);
+      } else {
+        setLatestStats(null);
+      }
+    } catch (err) {
+      setLatestStats(null);
+    }
   };
 
   const handleAccountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,40 +70,30 @@ export default function ProfileSettings() {
   };
 
   const handleUpdateAccount = async () => {
-  const ageNumber = Number(accountForm.age);
+    if (!accountForm.firstName.trim() || !accountForm.lastName.trim()) {
+      toast.error("Enter valid values for all fields.");
+      return;
+    }
 
-  if (
-    !accountForm.firstName.trim() ||
-    !accountForm.lastName.trim() ||
-    accountForm.age.trim() === "" ||
-    Number.isNaN(ageNumber) ||
-    ageNumber <= 0
-  ) {
-    toast.error("Enter valid values for all fields.");
-    return;
-  }
+    setSaving(true);
 
-  setSaving(true);
+    const body: UserDetailData = {
+      ...details,
+      name: accountForm.firstName,
+      surname: accountForm.lastName,
+    } as UserDetailData;
 
-  const body: UserDetailData = {
-    ...details,
-    name: accountForm.firstName,
-    surname: accountForm.lastName,
-    age: ageNumber,
-  } as UserDetailData;
+    const result = await updateUserDetails(body);
 
-  const result = await updateUserDetails(body);
+    if (result) {
+      toast.success("Profile updated successfully!");
+      setDetails(result);
+    } else {
+      toast.error("Could not update your profile. Try again.");
+    }
 
-  if (result) {
-    toast.success("Profile updated successfully!");
-    setDetails(result);
-    setAccountForm((prev) => ({ ...prev, age: String(result.age ?? "") }));
-  } else {
-    toast.error("Could not update your profile. Try again.");
-  }
-
-  setSaving(false);
-};
+    setSaving(false);
+  };
 
   return (
     <div className="profilesettings-page">
@@ -107,7 +114,31 @@ export default function ProfileSettings() {
         </aside>
 
         <main className="content">
-          <h1 className="content-title">Account settings</h1>
+          <h1 className="content-title">Your account</h1>
+
+          {latestStats && (
+            <div className="profile-stats-summary">
+              <h2 className="profile-stats-title">Latest stats</h2>
+              <div className="profile-stats-grid">
+                <div>
+                  <p className="stats-label">Weight</p>
+                  <p className="stats-value">{latestStats.weight} kg</p>
+                </div>
+                <div>
+                  <p className="stats-label">Height</p>
+                  <p className="stats-value">{latestStats.height} cm</p>
+                </div>
+                <div>
+                  <p className="stats-label">Strength</p>
+                  <p className="stats-value">{latestStats.strength} lbs</p>
+                </div>
+                <div>
+                  <p className="stats-label">Age</p>
+                  <p className="stats-value">{latestStats.age}</p>
+                </div>
+              </div>
+            </div>
+          )}
 
           {loading ? (
             <p className="content-status">Loading your profile...</p>
@@ -139,17 +170,6 @@ export default function ProfileSettings() {
                   id="lastName"
                   placeholder="Enter last name"
                   value={accountForm.lastName}
-                  onChange={handleAccountChange}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="age">Age</label>
-                <input
-                  type="number"
-                  id="age"
-                  placeholder="Enter age"
-                  value={accountForm.age}
                   onChange={handleAccountChange}
                 />
               </div>

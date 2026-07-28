@@ -85,6 +85,39 @@
     gap: 20px;
 }
 
+.profile-stats-summary {
+    background: rgba(14, 116, 144, 0.12);
+    border: 1px solid rgba(0, 230, 195, 0.2);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.profile-stats-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #00e6c3;
+    margin-bottom: 16px;
+}
+
+.profile-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.stats-label {
+    font-size: 0.85rem;
+    color: #a5adba;
+    margin-bottom: 4px;
+}
+
+.stats-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
 .form-group {
     display: flex;
     flex-direction: column;

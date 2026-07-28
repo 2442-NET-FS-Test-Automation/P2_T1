@@ -9,7 +9,6 @@ public record UserDetailsDTO
     public Gender Gender{get;set;}
     public string Name{get;set;} = default!;
     public string Surname{get;set;} = default!;
-    public int? Age { get; set; }
     public DateTime? JoinAt { get; set; } = DateTime.UtcNow;
     
 }
