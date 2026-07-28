@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getPublicStats } from "../services/UserStatService";
-import { ReportCard } from "../components/ReportCard";
+import { ReportCard } from "../Components/ReportCard";
 import "../css/Report.css";
 import type { StatsDTO } from "../types/StatsDTO";
 

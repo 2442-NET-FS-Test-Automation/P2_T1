@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import type { TrainingDTO } from "../types/trainingDTO";
 //import { useAuth } from '../auth/useAuth';
 import "../css/LandingPage.css";
-import { Carousel } from "../components/Carousel";
+import { Carousel } from "../Components/Carousel";
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -20,45 +20,45 @@ export const LandingPage: React.FC = () => {
         setWorkouts([
           {
             id: 1,
-            trainingName: "Fuerza Inicial",
+            trainingName: "Initial Strength",
             difficulty: "Beginner",
             place: "Gym",
             calories: 300,
             description:
-              "Aprende los patrones de movimiento básicos y construye una base sólida.",
+              "Learn basic movement patterns and build a solid foundation.",
             estimatedTime: "00:45:00",
             exercises: [],
           },
           {
             id: 2,
-            trainingName: "Resistencia Urbana",
+            trainingName: "Urban Endurance",
             difficulty: "Intermediate",
             place: "Outdoor",
             calories: 450,
             description:
-              "Circuito de alta intensidad diseñado para quemar calorías al aire libre.",
+              "High-intensity circuit designed to burn calories outdoors.",
             estimatedTime: "01:00:00",
             exercises: [],
           },
           {
             id: 3,
-            trainingName: "Poder de Titán",
+            trainingName: "Titan's Power",
             difficulty: "Advanced",
             place: "Gym",
             calories: 600,
             description:
-              "Enfocado en hipertrofia y levantamientos pesados para atletas con experiencia.",
+              "Focused on hypertrophy and heavy lifting for experienced athletes.",
             estimatedTime: "01:15:00",
             exercises: [],
           },
           {
             id: 4,
-            trainingName: "Desafío Legendario",
+            trainingName: "Legendary Challenge",
             difficulty: "Heroic",
             place: "Home",
             calories: 750,
             description:
-              "Rutina calisténica sin equipo para probar tu resistencia mental y física.",
+              "No-equipment calisthenics routine to test your mental and physical endurance.",
             estimatedTime: "01:30:00",
             exercises: [],
           },
@@ -83,10 +83,10 @@ export const LandingPage: React.FC = () => {
           <div className="hero-overlay"></div>
           <div className="position-relative z-1">
             <span className="badge bg-dark text-neon mb-2 px-3 py-2 rounded-pill fs-6 border border-neon">
-              ⚔️ ¡Comienza tu Aventura Fitness!
+              ⚔️ Start your Fitness Quest!
             </span>
             <h2 className="display-5 fw-extrabold text-white m-0">
-              Transforma tu Entrenamiento en una Quest
+              Transform your Workout into a Quest
             </h2>
           </div>
         </div>
@@ -96,10 +96,10 @@ export const LandingPage: React.FC = () => {
       <section className="container text-center my-5">
         <h2 className="fw-semibold fs-3 mb-1 text-gold">Welcome to</h2>
         <h1 className="display-3 fw-bold mb-0">
-          Gym<span className="text-neon">Quest</span> ⚔️
+          Gym<span className="text-neon text-capitalize">Quest</span> ⚔️
         </h1>
         <p className="text-white mt-2 fs-5">
-          Elige tu entrenamiento, gana XP y sube de nivel cada día.
+          Choose your workout, earn XP, and level up every day.
         </p>
       </section>
 
@@ -107,7 +107,7 @@ export const LandingPage: React.FC = () => {
       <section className="container my-5 text-center">
         {loading ? (
           <div className="spinner-border text-neon" role="status">
-            <span className="visually-hidden">Cargando entrenamientos...</span>
+            <span className="visually-hidden">Loading workouts...</span>
           </div>
         ) : (
           <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4 text-start">
@@ -147,10 +147,10 @@ export const LandingPage: React.FC = () => {
                     </div>
 
                     <div className="mt-3 pt-2 border-top border-secondary-subtle d-flex align-items-center justify-content-between">
-                      <span className="text-neon small fw-semibold">
-                        Ver Quest
+                      {/* <span className="text-neon small fw-semibold">
+                        View Quest
                       </span>
-                      <span className="text-neon">➔</span>
+                      <span className="text-neon">➔</span> */}
                     </div>
                   </div>
                 </div>
@@ -177,29 +177,29 @@ export const LandingPage: React.FC = () => {
           <div className="col-md-4">
             <div className="feature-card p-4 rounded-4 text-center h-100">
               <div className="feature-icon-wrapper mb-3">🏆</div>
-              <h3 className="fs-5 text-neon fw-bold mb-2">Desbloquea Logros</h3>
+              <h3 className="fs-5 text-neon fw-bold mb-2">Unlock Achievements</h3>
               <p className="text-gold small m-0">
-                Gana experiencia y sube de nivel completando tus rutinas
-                diarias.
+                Earn experience and level up by completing your daily
+                routines.
               </p>
             </div>
           </div>
           <div className="col-md-4">
             <div className="feature-card p-4 rounded-4 text-center h-100">
               <div className="feature-icon-wrapper mb-3">📊</div>
-              <h3 className="fs-5 text-neon fw-bold mb-2">Sigue tu Progreso</h3>
+              <h3 className="fs-5 text-neon fw-bold mb-2">Track your Progress</h3>
               <p className="text-gold small m-0">
-                Visualiza tus estadísticas de fuerza y consistencia semana a
-                semana.
+                Visualize your strength and consistency statistics week by
+                week.
               </p>
             </div>
           </div>
           <div className="col-md-4">
             <div className="feature-card p-4 rounded-4 text-center h-100">
               <div className="feature-icon-wrapper mb-3">📜</div>
-              <h3 className="fs-5 text-neon fw-bold mb-2">Misiones Diarias</h3>
+              <h3 className="fs-5 text-neon fw-bold mb-2">Daily Quests</h3>
               <p className="text-gold small m-0">
-                Supera desafíos personalizados creados por tu entrenador.
+                Overcome personalized challenges created by your coach.
               </p>
             </div>
           </div>

@@ -1,8 +1,6 @@
 import './css/App.css';
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { About } from './pages/About'
-import { Routines } from './pages/Routines'
-import { MyRoutines } from './pages/MyRoutines'
 import Home from './pages/UserHome';
 import Achievements from './pages/UserAchievements';
 import ProfileSettings from './pages/UserProfileSettings';
@@ -18,7 +16,7 @@ import Navbar from './Components/Navbar';
 import { UserDetailsStep } from './pages/Onboarding/UserDetailsStep';
 import { UserStatsStep } from './pages/Onboarding/UserStatsStep';
 import { UserMyBookings } from './pages/UserMyBookings';
-import { AdminLayout } from './Components/Admin/AdminLayout';
+import { AdminLayout } from './Components/admin/AdminLayout';
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { AdminUsersPage } from './pages/admin/AdminUsersPage';
 import { AdminExercisesPage } from './pages/admin/AdminExercisesPage';
@@ -32,19 +30,16 @@ import { TrainingDetail } from './pages/TrainingDetail';
 import { Footer } from './Components/Footer';
 
 function App() {
-
-
   const { status, user } = useAuth();
   const isAuthenticated = status === "authenticated";
 
-
   // Paths where we want to hide the navBar
-  const HIDDEN_NAVBAR_PREFIXES = ['/user/booking/confirm'];
+  const HIDDEN_NAVBAR_PREFIXES = ["/user/booking/confirm"];
 
   const location = useLocation();
 
-  const hideNavbar = HIDDEN_NAVBAR_PREFIXES.some((prefix) => 
-    location.pathname.startsWith(prefix)
+  const hideNavbar = HIDDEN_NAVBAR_PREFIXES.some((prefix) =>
+    location.pathname.startsWith(prefix),
   );
 
   //Vamos a utilizar const {status, user, logout} = useAuth(); cada vez que queramos poner
@@ -53,7 +48,7 @@ function App() {
   //por la linea 18 a 40
 
   function checkUserRole() {
-    console.log("User role: " + user?.role)
+    console.log("User role: " + user?.role);
   }
   checkUserRole();
 
@@ -61,7 +56,7 @@ function App() {
     <>
       <div className="app">
         {/* we add the notification container at the top */}
-        <ToastContainer position="top-right" autoClose={3000} /> 
+        <ToastContainer position="top-right" autoClose={3000} />
         {!hideNavbar && <Navbar />}
           <main className="page-container">
           <Routes>
@@ -74,78 +69,136 @@ function App() {
                 2. RUTAS SOLO PARA NO AUTENTICADOS (Invitados)
                 Si el usuario YA está autenticado, lo manda directo a /home-user
               ========================================================= */}
-            <Route 
-              path="/" 
-              element={isAuthenticated ? <Navigate to="/home-user" replace /> : <LandingPage />} 
+            <Route
+              path="/"
+              element={
+                isAuthenticated ? (
+                  <Navigate to="/home-user" replace />
+                ) : (
+                  <LandingPage />
+                )
+              }
             />
-            <Route 
-              path="/login" 
-              element={isAuthenticated ? <Navigate to="/home-user" replace /> : <Login />} 
+            <Route
+              path="/login"
+              element={
+                isAuthenticated ? (
+                  <Navigate to="/home-user" replace />
+                ) : (
+                  <Login />
+                )
+              }
             />
-            <Route 
-              path="/register" 
-              element={isAuthenticated ? <Navigate to="/home-user" replace /> : <Register />} 
+            <Route
+              path="/register"
+              element={
+                isAuthenticated ? (
+                  <Navigate to="/home-user" replace />
+                ) : (
+                  <Register />
+                )
+              }
             />
 
             {/* =========================================================
                 3. RUTAS PROTEGIDAS PARA USUARIOS AUTENTICADOS
                 Si NO están autenticados, RequireAuth los expulsará a /login
               ========================================================= */}
-            <Route 
+            <Route
               path="/home-user"
-              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><Home /></RequireAuth>} 
+              element={
+                <RequireAuth allowedRoles={["User", "Trainer", "Admin"]}>
+                  <Home />
+                </RequireAuth>
+              }
             />
-            <Route 
-              path="/user/achievements" 
-              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><Achievements /></RequireAuth>} 
+            <Route
+              path="/user/achievements"
+              element={
+                <RequireAuth allowedRoles={["User", "Trainer", "Admin"]}>
+                  <Achievements />
+                </RequireAuth>
+              }
             />
-            <Route 
+            <Route
               path="/user/booking"
-              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><UserBooking /></RequireAuth>} 
+              element={
+                <RequireAuth allowedRoles={["User", "Trainer", "Admin"]}>
+                  <UserBooking />
+                </RequireAuth>
+              }
             />
-             <Route 
+            <Route
               path="/user/report"
-              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><Report /></RequireAuth>} 
+              element={
+                <RequireAuth allowedRoles={["User", "Trainer", "Admin"]}>
+                  <Report />
+                </RequireAuth>
+              }
             />
-            <Route 
-              path="/exercise-details"
-              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><ExerciseDetail /></RequireAuth>} 
+            <Route
+              path="/exercise/:id"
+              element={
+                <RequireAuth allowedRoles={["User", "Trainer", "Admin"]}>
+                  <ExerciseDetail />
+                </RequireAuth>
+              }
             />
-            <Route 
-              path="/user/booking/confirm/:trainingid" 
-              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><ConfirmBooking /></RequireAuth>} 
+            <Route
+              path="/user/booking/confirm/:trainingid"
+              element={
+                <RequireAuth allowedRoles={["User", "Trainer", "Admin"]}>
+                  <ConfirmBooking />
+                </RequireAuth>
+              }
             />
-            <Route 
-              path="/user/profileSettings" 
-              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><ProfileSettings /></RequireAuth>} 
+            <Route
+              path="/user/profileSettings"
+              element={
+                <RequireAuth allowedRoles={["User", "Trainer", "Admin"]}>
+                  <ProfileSettings />
+                </RequireAuth>
+              }
             />
-            <Route 
-              path="/user/stadistics" 
-              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><UserStatistics /></RequireAuth>} 
+            <Route
+              path="/user/stadistics"
+              element={
+                <RequireAuth allowedRoles={["User", "Trainer", "Admin"]}>
+                  <UserStatistics />
+                </RequireAuth>
+              }
             />
-            <Route 
-              path="/user/mybookings" 
-              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><UserMyBookings /></RequireAuth>} 
+            <Route
+              path="/user/mybookings"
+              element={
+                <RequireAuth allowedRoles={["User", "Trainer", "Admin"]}>
+                  <UserMyBookings />
+                </RequireAuth>
+              }
             />
-            <Route 
-              path="/routines" 
-              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><Routines /></RequireAuth>} 
+            <Route
+              path="/training"
+              element={
+                <RequireAuth allowedRoles={["User", "Trainer", "Admin"]}>
+                  <TrainingDetail />
+                </RequireAuth>
+              }
             />
-            <Route 
-              path="/routines/myroutines" 
-              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><MyRoutines /></RequireAuth>} 
+            <Route
+              path="/onboarding/details"
+              element={
+                <RequireAuth allowedRoles={["User", "Trainer", "Admin"]}>
+                  <UserDetailsStep />
+                </RequireAuth>
+              }
             />
-            <Route 
-              path="/training" 
-              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><TrainingDetail /></RequireAuth>} 
-            />
-            <Route 
-              path="/onboarding/details" 
-              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><UserDetailsStep /></RequireAuth>} 
-            />
-            <Route 
-              path="/onboarding/stats" 
-              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><UserStatsStep /></RequireAuth>} 
+            <Route
+              path="/onboarding/stats"
+              element={
+                <RequireAuth allowedRoles={["User", "Trainer", "Admin"]}>
+                  <UserStatsStep />
+                </RequireAuth>
+              }
             />
 
             {/* =========================================================
@@ -155,6 +208,14 @@ function App() {
               path="/admin" 
               element={
                 <RequireAuth allowedRoles={["Trainer", "Admin"]}>
+                  <p className="text-white p-4">En desarollo... Iniciar sesión como Admin para ver como se veria Trainer</p>
+                </RequireAuth>
+              }
+            />
+            <Route 
+              path="/admin" 
+              element={
+                <RequireAuth role="Admin">
                   <AdminLayout />
                 </RequireAuth>
               }
@@ -170,11 +231,11 @@ function App() {
               ========================================================= */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-          <Footer/>
+          <Footer />
         </main>
       </div>
     </>
   );
 }
 
-export default App
+export default App;
