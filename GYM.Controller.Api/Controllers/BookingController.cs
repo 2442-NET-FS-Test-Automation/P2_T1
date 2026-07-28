@@ -112,7 +112,7 @@ public class BookingController : ControllerBase
     }
 
     //To delete by exercise by their id
-    [Authorize(Roles = "Trainer,Admin")]
+    [Authorize(Roles = "Trainer,Admin,User")]
     [HttpDelete("bookings/{id:int}")]
     public async Task<ActionResult> DeleteBookingById(int id)
     {

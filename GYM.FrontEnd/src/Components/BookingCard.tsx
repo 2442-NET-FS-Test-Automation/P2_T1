@@ -127,14 +127,15 @@ export function BookingCard({
                     Track Exercises ➔
                   </button>
 
+                  {/* FIXED: Removed strict status integer checks to prevent string-parsing evaluation failures */}
                   {onDelete && (
                     <button
                       className="btn-delete"
                       onClick={(e) => {
-                        e.stopPropagation();
+                        e.stopPropagation(); // Stops card from expanding when clicking cancel
                         if (
                           window.confirm(
-                            "Are you sure you want to cancel this booking?",
+                            `Are you sure you want to cancel your session booking?`,
                           )
                         ) {
                           onDelete();

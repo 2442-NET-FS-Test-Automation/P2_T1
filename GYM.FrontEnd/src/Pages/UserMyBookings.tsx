@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 // IMPORT SERVICES: Pulls both your collection getter and status patcher endpoints
 import {
+  deleteBooking,
   getBookingByUserId,
   UpdateBookingStatus,
 } from "../services/BookingService";
@@ -65,6 +66,18 @@ export function UserMyBookings() {
     }
   };
 
+  const handleCancelWorkout = async (bookingId: number) => {
+    const isDeleted = await deleteBooking(bookingId);
+    if (isDeleted) {
+      toast.success("Reservation removed from your calendar.");
+      // Force a fresh fetch invocation to update your states layout dynamically
+      const updatedData = await getBookingByUserId();
+      setBookings(updatedData || []);
+    } else {
+      toast.error("Failed to cancel this session profile. Try again.");
+    }
+  };
+
   return (
     <>
       <section className="trainingDetail">
@@ -120,12 +133,7 @@ export function UserMyBookings() {
                     description={training?.description}
                     difficulty={training?.difficulty as any}
                     isMyBookingFeed={true}
-                    // NEW PARAMETERS INTERFACES BINDING:
-                    status={
-                      typeof booking.status === "string"
-                        ? parseInt(booking.status)
-                        : booking.status
-                    }
+                    status={Number(booking.status ?? 0)} // Ensures numerical stability
                     onStatusChange={(targetNextStateCode) => {
                       if (booking.id) {
                         handleStatusMutation(booking.id, targetNextStateCode);
@@ -134,6 +142,12 @@ export function UserMyBookings() {
                     onViewExercises={() => {
                       if (training) {
                         navigate("/training", { state: { training } });
+                      }
+                    }}
+                    // FIXED PROPERTY NAME: Must be labeled 'onDelete' to match the component contract definitions
+                    onDelete={() => {
+                      if (booking.id) {
+                        handleCancelWorkout(booking.id);
                       }
                     }}
                   />
