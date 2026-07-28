@@ -18,7 +18,7 @@ import Navbar from './components/Navbar';
 import { UserDetailsStep } from './pages/Onboarding/UserDetailsStep';
 import { UserStatsStep } from './pages/Onboarding/UserStatsStep';
 import { UserMyBookings } from './pages/UserMyBookings';
-import { AdminLayout } from './components/admin/AdminLayout';
+import { AdminLayout } from './components/Admin/AdminLayout';
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { AdminUsersPage } from './pages/admin/AdminUsersPage';
 import { AdminExercisesPage } from './pages/admin/AdminExercisesPage';
@@ -152,23 +152,15 @@ function App() {
                 4. RUTAS PROTEGIDAS POR ROL ESPECÍFICO (Trainer / Admin)
               ========================================================= */}
             <Route 
-              path="/trainer-panel" 
-              element={
-                <RequireAuth allowedRoles={["Trainer", "Admin"]}>
-                  <p className="text-white p-4">En desarollo... Iniciar sesión como Admin para ver como se veria Trainer</p>
-                </RequireAuth>
-              }
-            />
-            <Route 
               path="/admin" 
               element={
-                <RequireAuth role="Admin">
+                <RequireAuth allowedRoles={["Trainer", "Admin"]}>
                   <AdminLayout />
                 </RequireAuth>
-              } 
+              }
             >
               <Route index element={<AdminDashboardPage />} />
-              <Route path="users" element={<AdminUsersPage />} />
+              <Route path="users" element={<AdminUsersPage />} /> {/*Las restricciones para admin se aplican en AdminUserPage.tsx*/}
               <Route path="trainings" element={<AdminTrainingsPage />} />
               <Route path="exercises" element={<AdminExercisesPage />} />
             </Route>

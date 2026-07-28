@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { StatCard } from '../../Components/Admin/StatCard';
+import { StatCard } from '../../components/Admin/StatCard';
 import { UserService } from '../../services/adminServices';
 import { ExerciseService } from '../../services/adminServices';
 import type { UserAdminDTO } from '../../types/user';
+import { useAuth } from '../../auth/useAuth';
 
 export function AdminDashboardPage() {
     const navigate = useNavigate();
@@ -12,6 +13,9 @@ export function AdminDashboardPage() {
     const [users, setUsers] = useState<UserAdminDTO[]>([]);
     const [exerciseCount, setExerciseCount] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(true);
+    
+    const {user} = useAuth();
+    const isAdmin = user?.role === 'Admin';
 
     useEffect(() => {
         const fetchDashboardData = async () => {
@@ -46,9 +50,15 @@ export function AdminDashboardPage() {
             {/* Header de bienvenida */}
             <div className="d-flex justify-content-between align-items-center">
                 <div>
+                    {isAdmin ? (
                     <h1 className="h3 fw-bold text-white mb-1">
                         Welcome back, <span className="text-aqua">Admin Master</span> 👋
+                    </h1>    
+                    ) : (
+                    <h1 className="h3 fw-bold text-white mb-1">
+                        Welcome back, <span className="text-gold">Trainer</span> 👋
                     </h1>
+                    )}
                     <p className="small mb-0" style={{ color: '#B0B5C0' }}>
                         Here's real-time system performance across the TrainerSync platform.
                     </p>
