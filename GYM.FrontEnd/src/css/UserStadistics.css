@@ -108,3 +108,9 @@
 .stats-table tr:hover td {
   background-color: rgba(40, 42, 66, 0.3);
 }
+
+.stats-filter-input::-webkit-calendar-picker-indicator {
+  /* Inverts the black icon to white */
+  filter: invert(1); 
+  cursor: pointer;
+}

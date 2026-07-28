@@ -151,7 +151,7 @@ public class UserService : IUserService
             Gender = userDetailsDto.Gender,
             Name = userDetailsDto.Name,
             Surname = userDetailsDto.Surname,
-            JoinAt = userDetailsDto.JoinAt.Value
+            JoinAt = userDetailsDto.JoinAt ?? DateTime.UtcNow
         };
 
         UserDetail? NewUserDetails = await _UserRepository.AddUserDetails(userDetails);
