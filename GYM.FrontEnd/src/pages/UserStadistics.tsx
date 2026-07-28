@@ -6,26 +6,16 @@ import { getUserStatistics } from "../api/stadistics";
 import { MonthlyMilesChart } from "../components/MonthlyMilesChart";
 import { StrengthProgressChart } from "../components/StrengthProgressChart";
 import "../css/UserStadistics.css";
+import "../css/UserStatsModal.css";
 
 // Datos de prueba (Fallback)
-const FALLBACK_WEEKLY_MILES = [1.2, 0, 3.5, 2.0, 0, 4.1, 1.5];
 const FALLBACK_STRENGTH_DATES = ["01 Jul", "05 Jul", "10 Jul", "15 Jul", "20 Jul"];
 const FALLBACK_STRENGTH_VALUES = [100, 115, 135, 155, 185];
-
-// Helper: devuelve el lunes de la semana actual a las 00:00
-const getMondayOfCurrentWeek = (): Date => {
-  const now = new Date();
-  const day = now.getDay(); // 0 = domingo, 1 = lunes, ..., 6 = sábado
-  const diff = day === 0 ? -6 : 1 - day; // si es domingo, retrocede 6 días
-  const monday = new Date(now);
-  monday.setDate(now.getDate() + diff);
-  monday.setHours(0, 0, 0, 0);
-  return monday;
-};
 
 export const UserStatistics: React.FC = () => {
   const [stats, setStats] = useState<StatsDTO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -60,34 +50,78 @@ export const UserStatistics: React.FC = () => {
     ? stats.map((s) => new Date(s.measureAt).toLocaleDateString("es-ES", { day: "2-digit", month: "short" })).reverse()
     : FALLBACK_STRENGTH_DATES;
 
+  const parseMileRunToMinutes = (mileRun: string): number => {
+    if (!mileRun) return 0;
+
+    const [timePart, fractionPart = ""] = mileRun.split(".");
+    const parts = timePart.split(":").map(Number);
+    const fractionSeconds = Number(`0.${fractionPart}`) || 0;
+
+    if (parts.length === 3) {
+      const [h, m, seconds] = parts;
+      return h * 60 + m + (seconds + fractionSeconds) / 60;
+    }
+
+    if (parts.length === 2) {
+      const [m, seconds] = parts;
+      return m + (seconds + fractionSeconds) / 60;
+    }
+
+    return Number(timePart) || 0;
+  };
+
+  const formatMileRun = (mileRun: string): string => {
+    if (!mileRun) return "00:00:00.00";
+
+    const [timePart, fractionPart = ""] = mileRun.split(".");
+    const parts = timePart.split(":");
+    const fraction = fractionPart.padEnd(2, "0").slice(0, 2);
+    const hasFraction = fractionPart.length > 0;
+
+    if (parts.length === 3) {
+      const [hours, minutes, seconds] = parts.map((v) => v.padStart(2, "0"));
+      return hasFraction
+        ? `${hours}:${minutes}:${seconds}.${fraction}`
+        : `${hours}:${minutes}:${seconds}`;
+    }
+
+    if (parts.length === 2) {
+      const [minutes, seconds] = parts.map((v) => v.padStart(2, "0"));
+      return hasFraction
+        ? `${minutes}:${seconds}.${fraction}`
+        : `${minutes}:${seconds}`;
+    }
+
+    return hasFraction ? `${timePart}.${fraction}` : timePart;
+  };
+
   const strengthValues = hasValidStats
     ? stats.map((s) => s.strength).reverse()
     : FALLBACK_STRENGTH_VALUES;
 
   // Estado del mes seleccionado (por default, el mes actual)
-const [selectedMonth, setSelectedMonth] = React.useState(() => {
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-});
-
-const milesData = React.useMemo(() => {
-  const [yearStr, monthStr] = selectedMonth.split('-');
-  const year = Number(yearStr);
-  const month = Number(monthStr) - 1; // JS Date usa 0-11
-
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const result = new Array(daysInMonth).fill(0);
-
-  if (!hasValidStats) return result;
-
-  stats.forEach((s) => {
-    const measureDate = new Date(s.measureAt);
-    if (measureDate.getFullYear() === year && measureDate.getMonth() === month) {
-      const dayIndex = measureDate.getDate() - 1; // día 1 -> índice 0
-      const [h, m, sec] = s.mileRun.split(":").map(Number);
-      result[dayIndex] += h * 60 + m + sec / 60;
-    }
+  const [selectedMonth, setSelectedMonth] = React.useState(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
   });
+
+  const milesData = React.useMemo(() => {
+    const [yearStr, monthStr] = selectedMonth.split('-');
+    const year = Number(yearStr);
+    const month = Number(monthStr) - 1; // JS Date usa 0-11
+
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const result = new Array(daysInMonth).fill(0);
+
+    if (!hasValidStats) return result;
+
+    stats.forEach((s) => {
+      const measureDate = new Date(s.measureAt);
+      if (measureDate.getFullYear() === year && measureDate.getMonth() === month) {
+        const dayIndex = measureDate.getDate() - 1; // día 1 -> índice 0
+        result[dayIndex] += parseMileRunToMinutes(s.mileRun);
+      }
+    });
 
     return result;
   }, [stats, hasValidStats, selectedMonth]);
@@ -114,6 +148,17 @@ const milesData = React.useMemo(() => {
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-white">Your stats 💪</h1>
             <p className="text-sm stats-text-purple mt-1">Progression of strength, distance, and body metrics</p>
+            <button
+              type="button"
+              className="btn btn-info"
+              style={{ borderRadius: "20px" }}
+              onClick={() => setIsModalOpen(true)}>
+              Create new record
+            </button>
+
+            {isModalOpen && (
+              <Modal onClose={() => setIsModalOpen(false)} />
+            )}
           </div>
           {!hasValidStats && !loading && (
             <span className="stats-badge-demo">
@@ -148,22 +193,23 @@ const milesData = React.useMemo(() => {
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider stats-text-purple">Mile run record</p>
             <p className="text-2xl font-bold stats-text-cyan mt-1">
-              {latestStat ? latestStat.mileRun : "06:15"}
+              {latestStat ? formatMileRun(latestStat.mileRun) : "06:15"}
             </p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 py-4">
           {/* Date filter */}
-          <div className="d-flex justify-content-start mb-2">
-            <input 
+          <div className="stats-filter-row">
+          <label htmlFor="stats-month-selector" className="stats-filter-label">Select month</label>
+          <input
+            id="stats-month-selector"
             type="month"
-            className="form-control bg-dark text-white border-secondary"
-            style={{width: 'auto'}}
+            className="stats-filter-input"
             value={selectedMonth}
-            onChange={(e) => setSelectedMonth(e.target.value)} 
-            />
-          </div>
+            onChange={(e) => setSelectedMonth(e.target.value)}
+          />
+        </div>
           {/* chart 1: miles per month */}
           <div className="stats-card">
             <h3 className="text-lg font-semibold text-white mb-4 d-flex align-items-center">
@@ -171,10 +217,10 @@ const milesData = React.useMemo(() => {
               <span className="text-xs stats-text-purple font-normal ms-3">This month</span>
             </h3>
             <div className="pt-2">
-              <MonthlyMilesChart 
-              milesData={milesData} 
-              dayLabels={dayLabels} 
-              monthLabel={monthLabel}
+              <MonthlyMilesChart
+                milesData={milesData}
+                dayLabels={dayLabels}
+                monthLabel={monthLabel}
               />
             </div>
           </div>
@@ -224,7 +270,7 @@ const milesData = React.useMemo(() => {
                       <td>{item.weight} kg</td>
                       <td>{item.height} cm</td>
                       <td className="stats-text-cyan font-semibold">{item.strength} lbs</td>
-                      <td className="stats-text-purple font-mono">{item.mileRun}</td>
+                      <td className="stats-text-purple font-mono">{formatMileRun(item.mileRun)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -235,4 +281,48 @@ const milesData = React.useMemo(() => {
       </div>
     </div>
   );
+
+  function Modal({ onClose }: { onClose: () => void }) {
+    return (
+      <div className="userstats-modal-screen" role="dialog" aria-modal="true" aria-labelledby="userstatsModalTitle">
+        <div className="userstats-modal-backdrop" onClick={onClose} />
+        <div className="userstats-modal-wrapper">
+          <div className="userstats-modal-card">
+            <div className="userstats-modal-header">
+              <h5 className="userstats-modal-title" id="userstatsModalTitle">Create new record</h5>
+              <button type="button" className="userstats-modal-close" aria-label="Close" onClick={onClose}>
+                &times;
+              </button>
+            </div>
+            <div className="userstats-modal-body">
+              <div className="userstats-modal-field">
+                <label htmlFor="recordWeight">Weight</label>
+                <input id="recordWeight" type="number" placeholder="75.5 kg" />
+              </div>
+              <div className="userstats-modal-field">
+                <label htmlFor="recordHeight">Height</label>
+                <input id="recordHeight" type="number" placeholder="178 cm" />
+              </div>
+              <div className="userstats-modal-field">
+                <label htmlFor="recordStrength">Strength</label>
+                <input id="recordStrength" type="number" placeholder="185 lbs" />
+              </div>
+              <div className="userstats-modal-field">
+                <label htmlFor="recordMileRun">Mile run</label>
+                <input id="recordMileRun" type="text" placeholder="06:15" />
+              </div>
+            </div>
+            <div className="userstats-modal-footer">
+              <button type="button" className="btn btn-outline-secondary text-white" onClick={onClose}>
+                Close
+              </button>
+              <button type="button" className="btn btn-gq-purple">
+                Save record
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 };

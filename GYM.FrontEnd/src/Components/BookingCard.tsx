@@ -4,8 +4,8 @@ import { useState } from "react";
 interface BookingCardProps {
   trainingName?: string;
   trainer?: string;
-  location?: string;          // New property
-  exerciseCount?: number;     // New property
+  location?: string;          
+  exerciseCount?: number;     
   difficulty?: 'Beginner' | 'Intermediate' | 'Advanced' | 'Heroic';
   description?: string;
   duration?: string;
@@ -71,6 +71,8 @@ export function BookingCard({
               </button>
             </div>
           </div>
+
+
         </div>
       </div>
 

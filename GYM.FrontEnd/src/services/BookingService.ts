@@ -36,7 +36,7 @@ export const getPublicBookings = async (): Promise<BookingDTO[]> => {
 
 // user creates bookings
 export const createBooking = async (
-booking: CreateBookingDTO
+  booking: CreateBookingDTO
 ): Promise<BookingDTO | null> => {
   try {
     const payload = {
@@ -53,25 +53,52 @@ booking: CreateBookingDTO
   }
 };
 
-export const updateBooking = async (): Promise<BookingDTO[]> => {
+export const UpdateBookingStatus = async (id: number, newStatus: string): Promise<BookingDTO[]> => {
   try {
-    const response = await api.put<BookingDTO[]>('/Booking/updateBooking');
+    const response = await api.patch<BookingDTO[]>(`/Booking/bookings-status/${id}/${newStatus}`)
     return response.data;
   } catch (error) {
-    console.error('Error updating booking:', error);
-    return [];
+    return []
   }
-};
+}
 
-export const deleteBooking = async (): Promise<BookingDTO[]> => {
-  try {
-    const response = await api.put<BookingDTO[]>('/Booking/updateBooking');
-    return response.data;
-  } catch (error) {
-    console.error('Error updating booking:', error);
-    return [];
-  }
-};
+
+// [HttpPatch("bookings-status/{id}/{newStatus}")]
+// public async Task<ActionResult<BookingDTO>> UpdateBookingStatus(int id, int newStatus)
+// {
+//     //Checar que exista el booking, enviarlo a ser modificado (modificarlo, guardarlo en db)
+//     //regresar el dto
+
+//     BookingDTO? updatedDTO = await _service.UpdateStatus(id, newStatus);
+
+//     if(updatedDTO is null)
+//         return BadRequest();
+
+//     _cache.Remove("Bookings:all");
+//     _cache.Remove($"Bookids:{id}");
+
+//     return Ok(updatedDTO);
+// }
+
+// export const updateBooking = async (): Promise<BookingDTO[]> => {
+//   try {
+//     const response = await api.put<BookingDTO[]>('/Booking/updateBooking');
+//     return response.data;
+//   } catch (error) {
+//     console.error('Error updating booking:', error);
+//     return [];
+//   }
+// };
+
+// export const deleteBooking = async (): Promise<BookingDTO[]> => {
+//   try {
+//     const response = await api.put<BookingDTO[]>('/Booking/updateBooking');
+//     return response.data;
+//   } catch (error) {
+//     console.error('Error updating booking:', error);
+//     return [];
+//   }
+// };
 
 export const getBookingById = async (id: number): Promise<BookingDTO[]> => {
   try {

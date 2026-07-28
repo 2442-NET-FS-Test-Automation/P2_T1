@@ -8,15 +8,27 @@ interface MonthlyMilesProps {
 }
 
 export const MonthlyMilesChart: React.FC<MonthlyMilesProps> = ({ milesData, dayLabels, monthLabel }) => {
+  const formatMinutesToTime = (value: number | string) => {
+    const totalMinutes = Number(value);
+    if (Number.isNaN(totalMinutes) || totalMinutes <= 0) return '00:00';
+    const totalSeconds = Math.round(totalMinutes * 60);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  };
+
   const option = {
     title: {
-      text: `Miles runned (${monthLabel})`,
+      text: `Mile run time (${monthLabel})`,
       left: 'center',
       textStyle: { color: '#ffffff', fontSize: 16 }
     },
     tooltip: {
       trigger: 'axis',
-      formatter: '{b}: {c} mi'
+      formatter: (params: any) => {
+        const point = Array.isArray(params) ? params[0] : params;
+        return `${point.axisValueLabel}: ${formatMinutesToTime(point.value)}`;
+      }
     },
     grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
     xAxis: {
@@ -26,13 +38,14 @@ export const MonthlyMilesChart: React.FC<MonthlyMilesProps> = ({ milesData, dayL
     },
     yAxis: {
       type: 'value',
-      name: 'Miles',
+      name: 'Time',
+      axisLabel: { formatter: (value: number) => formatMinutesToTime(value) },
       splitLine: { lineStyle: { color: '#333' } },
       axisLine: { lineStyle: { color: '#888' } }
     },
     series: [
       {
-        name: 'Miles',
+        name: 'Time',
         type: 'bar',
         data: milesData,
         barWidth: '60%',
@@ -46,6 +59,12 @@ export const MonthlyMilesChart: React.FC<MonthlyMilesProps> = ({ milesData, dayL
             ]
           },
           borderRadius: [6, 6, 0, 0]
+        },
+        label: {
+          show: true,
+          position: 'top',
+          color: '#ffffff',
+          formatter: ({ value }: any) => formatMinutesToTime(value)
         }
       }
     ]

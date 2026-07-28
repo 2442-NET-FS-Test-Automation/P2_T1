@@ -18,6 +18,7 @@ import { NotFound } from './pages/NotFound';
 import Navbar from './components/Navbar';
 import { UserDetailsStep } from './pages/Onboarding/UserDetailsStep';
 import { UserStatsStep } from './pages/Onboarding/UserStatsStep';
+import { UserMyBookings } from './pages/UserMyBookings';
 import { AdminLayout } from './components/admin/AdminLayout';
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { AdminUsersPage } from './pages/admin/AdminUsersPage';
@@ -120,6 +121,10 @@ function App() {
             <Route 
               path="/user/stadistics" 
               element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><UserStatistics /></RequireAuth>} 
+            />
+            <Route 
+              path="/user/mybookings" 
+              element={<RequireAuth allowedRoles={["User", "Trainer", "Admin"]}><UserMyBookings /></RequireAuth>} 
             />
             <Route 
               path="/routines" 
