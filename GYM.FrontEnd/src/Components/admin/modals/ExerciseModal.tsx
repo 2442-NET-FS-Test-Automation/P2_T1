@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { SubmitEvent } from "react";
 import type { ExerciseItem } from '../../../pages/admin/AdminExercisesPage';
-import type { exerciseDTO } from '../../../types/exerciseDTO';
+import type { exerciseDTO } from '../../../types/ExerciseDTO';
 
 interface ExerciseModalProps {
   isOpen: boolean;

@@ -1,4 +1,4 @@
-import type { exerciseDTO } from "./exerciseDTO";
+import type { exerciseDTO } from "./ExerciseDTO";
 
 export type Place = 'Home' | 'Gym' | 'Outdoor';
 

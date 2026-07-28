@@ -4,11 +4,11 @@ import { ExerciseService } from '../../services/adminServices';
 import {TrainingModal} from '../../components/admin/modals/TrainingModal';
 import { ViewExercisesModal } from '../../components/admin/modals/ViewExercisesModal';
 import type { TrainingDTO, TrainingCreateDTO } from '../../types/trainingDTO';
-import type { exerciseDTO } from '../../types/exerciseDTO';
+import type { ExerciseDTO } from '../../types/ExerciseDTO';
 
 export const AdminTrainingsPage: React.FC = () => {
     const [trainings, setTrainings] = useState<TrainingDTO[]>([]);
-    const [availableExercises, setAvailableExercises] = useState<exerciseDTO[]>([]);
+    const [availableExercises, setAvailableExercises] = useState<ExerciseDTO[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [searchTerm, setSearchTerm] = useState<string>('');
 
@@ -19,7 +19,7 @@ export const AdminTrainingsPage: React.FC = () => {
     // Estados para Modal de Visualización de Ejercicios
     const [isViewModalOpen, setIsViewModalOpen] = useState<boolean>(false);
     const [viewingTrainingName, setViewingTrainingName] = useState<string>('');
-    const [viewingExercises, setViewingExercises] = useState<exerciseDTO[]>([]);
+    const [viewingExercises, setViewingExercises] = useState<ExerciseDTO[]>([]);
 
     // 1. Cargar datos iniciales
     useEffect(() => {

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserService } from '../../services/adminServices';
 import { ExerciseService } from '../../services/adminServices';
 import type { UserAdminDTO } from '../../types/user';
-import type { exerciseDTO } from '../../types/exerciseDTO';
+import type { exerciseDTO } from '../../types/ExerciseDTO';
 import { useAuth } from '../../auth/useAuth';
 
 export function AdminTopbar() {

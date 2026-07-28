@@ -1,5 +1,5 @@
 import React from 'react';
-import type { exerciseDTO } from '../../../types/exerciseDTO';
+import type { exerciseDTO } from '../../../types/ExerciseDTO';
 
 interface ViewExercisesModalProps {
     isOpen: boolean;
