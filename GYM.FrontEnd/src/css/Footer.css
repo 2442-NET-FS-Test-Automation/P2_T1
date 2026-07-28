@@ -38,8 +38,7 @@
   fill: #333;
 }
 
-.footer-centered__nav ul,
-.footer-centered__social ul {
+.footer-centered__nav ul{
   margin: 0;
   padding: 0;
   list-style: none;
@@ -49,29 +48,17 @@
   gap: 1.5rem;
 }
 
-.footer-centered__nav a,
-.footer-centered__social a {
+.link-footer{
   color: var(--footer-link-color);
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s ease-in-out;
 }
 
-.footer-centered__nav a:hover,
-.footer-centered__social a:hover {
+.footer-centered__nav a:hover{
   color: white;
 }
 
-.footer-centered__social svg {
-  width: 22px;
-  height: 22px;
-  fill: white;
-  transition: fill 0.2s ease-in-out;
-}
-
-.footer-centered__social a:hover svg {
-  fill: white;
-}
 
 .footer-centered__copyright {
   font-size: 0.875rem;

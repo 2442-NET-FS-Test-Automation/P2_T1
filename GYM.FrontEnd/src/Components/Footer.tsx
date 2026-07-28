@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "../css/Footer.css";
 export function Footer() {
   return (
@@ -10,10 +11,14 @@ export function Footer() {
       <nav className="footer-centered__nav" aria-label="Main Footer Navigation">
         <ul>
           <li>
-            <a href="#">Home</a>
+            <Link to="/" className="link-footer">
+              Home
+            </Link>
           </li>
           <li>
-            <a href="#">About</a>
+            <Link to="/about" className="link-footer">
+              About
+            </Link>
           </li>
         </ul>
       </nav>

@@ -43,7 +43,7 @@ export const mockCarouselImages: CarouselImage[] = [
     id: "img-4",
     src: img3,
     description: "Get quality feedback and see your fitness journey.",
-    caption: "Team makes the dream workout!",
+    caption: "Team work makes the dream work out!",
   },
 ];
 
