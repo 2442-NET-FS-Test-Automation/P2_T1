@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { StatCard } from '../../components/Admin/StatCard';
+import { StatCard } from '../../Components/Admin/StatCard';
 import { UserService } from '../../services/adminServices';
 import { ExerciseService } from '../../services/adminServices';
 import type { UserAdminDTO } from '../../types/user';

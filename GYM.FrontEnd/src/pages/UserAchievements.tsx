@@ -46,7 +46,7 @@ export default function Achievements() {
       let userAchievementsList: any[] = [];
       if (userData?.id) {
         try {
-          userAchievementsList = await getUserAchievement(userData.id);
+          userAchievementsList = await getUserAchievement();
         } catch (err) {
           // Si el backend regresa 404 por no tener logros aún, lo manejamos como lista vacía
           userAchievementsList = [];

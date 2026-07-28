@@ -2,25 +2,10 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "../auth/useAuth";
-import { Carousel } from "../components/Carousel";
+import { Carousel } from "../Components/Carousel";
 import type { TrainingDTO } from "../types/trainingDTO";
+import { getPublicTrainings } from "../services/TrainingService";
 import "../css/HomeUser.css";
-import { 
-  Flame, 
-  Trophy, 
-  Calendar, 
-  Zap, 
-  PlusCircle, 
-  Dumbbell, 
-  LayoutDashboard, 
-  Users, 
-  Swords, 
-  MapPin, 
-  Clock, 
-  ArrowRight,
-  ShieldAlert,
-  Award
-} from "lucide-react";
 
 // Variantes de animación para apariciones escalonadas (stagger)
 const containerVariants = {
@@ -46,7 +31,6 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(true);
 
   const userName = user?.name || "Player";
-  const userRole = user?.role?.toLowerCase() || "athlete";
 
   const userStats = {
     streakDays: 5,
@@ -61,57 +45,25 @@ export default function Home() {
 
   useEffect(() => {
     const fetchTrainings = async () => {
-      setLoading(true);
-      setWorkouts([
-        {
-          id: 1,
-          trainingName: "Starter Strength",
-          difficulty: "Beginner",
-          place: "Gym",
-          calories: 300,
-          description: "Learn foundational movement patterns and build solid strength.",
-          estimatedTime: "00:45:00",
-          exercises: [],
-        },
-        {
-          id: 2,
-          trainingName: "Urban Endurance",
-          difficulty: "Intermediate",
-          place: "Outdoor",
-          calories: 450,
-          description: "High-intensity outdoor circuit designed for maximum calorie burn.",
-          estimatedTime: "01:00:00",
-          exercises: [],
-        },
-        {
-          id: 3,
-          trainingName: "Titan Power",
-          difficulty: "Advanced",
-          place: "Gym",
-          calories: 600,
-          description: "Hypertrophy & heavy lifting routine built for experienced lifters.",
-          estimatedTime: "01:15:00",
-          exercises: [],
-        },
-        {
-          id: 4,
-          trainingName: "Legendary Quest",
-          difficulty: "Heroic",
-          place: "Home",
-          calories: 750,
-          description: "Extreme bodyweight calisthenics routine to test endurance.",
-          estimatedTime: "01:30:00",
-          exercises: [],
-        },
-      ]);
-      setLoading(false);
+      try {
+        setLoading(true);
+        // Consumo de la API real
+        const data = await getPublicTrainings();
+        
+        // Muestra los primeros 4 entrenamientos en la landing page
+        setWorkouts(data.slice(0, 4)); 
+      } catch (error) {
+        console.error("Error fetching trainings:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchTrainings();
   }, []);
 
-  const getDifficultyBadge = (difficulty: string) => {
-    const diff = difficulty.toLowerCase();
+  const getDifficultyBadge = (difficulty?: string) => {
+    const diff = difficulty?.toLowerCase() || "";
     if (diff.includes("beginner")) return "badge-diff-beginner";
     if (diff.includes("intermediate")) return "badge-diff-intermediate";
     if (diff.includes("advanced")) return "badge-diff-advanced";
@@ -139,7 +91,7 @@ export default function Home() {
                   whileHover={{ scale: 1.05, rotate: 2 }}
                 >
                   <div
-                    className="rounded-circle d-flex align-items-center justify-content-center fw-bold fs-2 shadow"
+                    className="rounded-circle d-flex align-items-center justify-content-center fw-bold fs-2 shadow cursor-pointer"
                     style={{
                       width: "70px",
                       height: "70px",
@@ -147,6 +99,7 @@ export default function Home() {
                       border: "2px solid var(--gq-aqua)",
                       color: "var(--gq-aqua)",
                     }}
+                    onClick={() => navigate('/user/profileSettings')}
                   >
                     {userName.charAt(0).toUpperCase()}
                   </div>
@@ -171,7 +124,7 @@ export default function Home() {
                 {[
                   { label: `🏆 Badges (${userStats.unlockedBadges}/${userStats.totalBadges})`, route: '/user/achievements', color: 'var(--gq-purple)' },
                   { label: '📅 My Bookings', route: '/user/mybookings', color: 'var(--gq-blue)' },
-                  { label: '⚡ Routines', route: '/routines', color: 'var(--gq-aqua)' }
+                  { label: '⚡ Routines', route: '/user/booking', color: 'var(--gq-aqua)' }
                 ].map((btn, idx) => (
                   <motion.button
                     key={idx}
@@ -254,7 +207,7 @@ export default function Home() {
         </section>
 
         {/* ==========================================
-            4. TRAINING QUESTS (Interactive Stagger Cards)
+            4. TRAINING QUESTS (Datos Reales del Backend)
            ========================================== */}
         <section className="mb-5 text-center">
           <div className="mb-4">
@@ -269,6 +222,10 @@ export default function Home() {
           {loading ? (
             <div className="spinner-border my-5" role="status" style={{ color: "var(--gq-aqua)" }}>
               <span className="visually-hidden">Loading Quests...</span>
+            </div>
+          ) : workouts.length === 0 ? (
+            <div className="p-4 rounded-3 text-center" style={{ background: "var(--gq-surface)", border: "1px solid var(--gq-surface-border)" }}>
+              <p className="m-0" style={{ color: "var(--gq-text-muted)" }}>No training quests available at the moment.</p>
             </div>
           ) : (
             <motion.div 
@@ -310,7 +267,7 @@ export default function Home() {
                           className="badge rounded-2 px-2 py-1 small fw-semibold" 
                           style={{ background: "rgba(0,0,0,0.4)", color: "var(--gq-blue)" }}
                         >
-                          ⏱️ {workout.estimatedTime.substring(0, 5)} hrs
+                          ⏱️ {workout.estimatedTime ? workout.estimatedTime.substring(0, 5) : "--:--"} hrs
                         </span>
                       </div>
                     </div>
@@ -329,7 +286,7 @@ export default function Home() {
                       <div 
                         className="mt-4 pt-2 d-flex align-items-center justify-content-between cursor-pointer"
                         style={{ borderTop: "1px solid var(--gq-surface-border)" }}
-                        onClick={() => navigate('/trainings')}
+                        onClick={() => navigate('/user/booking')}
                       >
                         <span className="small fw-bold" style={{ color: "var(--gq-aqua)" }}>
                           View Quest
@@ -351,7 +308,7 @@ export default function Home() {
           >
             <button
               className="btn btn-gq-neon rounded-pill px-5 py-3 text-uppercase fs-6 shadow"
-              onClick={() => navigate("/trainings")}
+              onClick={() => navigate("/user/booking")}
             >
               MORE TRAININGS ⚔️
             </button>

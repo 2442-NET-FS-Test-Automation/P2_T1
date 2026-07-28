@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { TrainingService } from '../../services/adminServices'; // O donde tengas tu servicio
 import { ExerciseService } from '../../services/adminServices';
-import {TrainingModal} from '../../components/Admin/modals/TrainingModal';
-import { ViewExercisesModal } from '../../components/Admin/modals/ViewExercisesModal';
+import {TrainingModal} from '../../Components/Admin/modals/TrainingModal';
+import { ViewExercisesModal } from '../../Components/Admin/modals/ViewExercisesModal';
 import type { TrainingDTO, TrainingCreateDTO } from '../../types/trainingDTO';
 import type { exerciseDTO } from '../../types/exerciseDTO';
-import {Pagination} from '../../components/Pagination';
+import {Pagination} from '../../Components/Pagination';
 
 export const AdminTrainingsPage: React.FC = () => {
     const [trainings, setTrainings] = useState<TrainingDTO[]>([]);
