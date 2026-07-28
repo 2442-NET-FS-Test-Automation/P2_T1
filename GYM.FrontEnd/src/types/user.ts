@@ -45,6 +45,29 @@ export interface StatsDTO {
     age: number;
 }
 
+export interface UserAdminDTO {
+    id: number;
+    email: string;
+    phone: string;
+    role: string; // 'User' | 'Trainer' | 'Admin'
+    name: string;
+    surname: string;
+    joinAt?: string | null;
+}
+
+export interface UserCreateAdminDTO {
+    email: string;
+    phone: string;
+    password: string;
+    role: 'Admin' | 'Trainer';
+    name: string;
+    surname: string;
+}
+
+export interface UserUpdateRoleDTO {
+    newRole: string; // O 'User' | 'Trainer' | 'Admin'
+}
+
 export interface AuthMeResponse {
     id: number;
     name: string;

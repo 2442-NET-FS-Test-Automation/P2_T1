@@ -193,4 +193,20 @@ public class UserRepository : IUserRepository
 
         return UserDetail;
     }
+
+    // Obtener la lista completa de usuarios
+    public async Task<List<User>> GetAllUsers()
+    {
+        await using var db = await _factory.CreateDbContextAsync();
+        return await db.Users.ToListAsync();
+    }
+
+    // Actualizar una entidad User (por ejemplo, para cambiar su Role)
+    public async Task<User?> UpdateUser(User user)
+    {
+        await using var db = await _factory.CreateDbContextAsync();
+        db.Users.Update(user);
+        await db.SaveChangesAsync();
+        return user;
+    }
 }

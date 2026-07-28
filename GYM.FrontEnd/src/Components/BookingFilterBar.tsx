@@ -3,7 +3,7 @@ import { useState } from "react";
 
 export interface FilterOptions {
   location: string;
-  trainer: string;
+  trainingName: string;
   minExercises: string;
   difficulty: "all" | "Beginner" | "Intermediate" | "Advanced" | "Heroic";
 }
@@ -15,7 +15,7 @@ interface BookingFilterBarProps {
 export function BookingFilterBar({ onFilterChange }: BookingFilterBarProps) {
   const [filters, setFilters] = useState<FilterOptions>({
     location: "",
-    trainer: "",
+    trainingName: "",
     minExercises: "",
     difficulty: "all",
   });
@@ -32,7 +32,7 @@ export function BookingFilterBar({ onFilterChange }: BookingFilterBarProps) {
   const handleClear = () => {
     const reset = {
       location: "",
-      trainer: "",
+      trainingName: "",
       minExercises: "",
       difficulty: "all" as const,
     };
@@ -45,15 +45,15 @@ export function BookingFilterBar({ onFilterChange }: BookingFilterBarProps) {
       <form className="filter-form" onSubmit={(e) => e.preventDefault()}>
         <div>
           <label className="form-label text-neon small fw-semibold mb-2 d-block">
-            Trainer
+            Training Name
           </label>
           <input
             type="text"
-            name="trainer"
-            value={filters.trainer}
+            name="trainingName"
+            value={filters.trainingName}
             onChange={handleChange}
             className="filter-input"
-            placeholder="Search trainer..."
+            placeholder="Search Training Name..."
           />
         </div>
         <div>

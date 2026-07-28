@@ -4,8 +4,15 @@
 
 /* --- Header Principal --- */
 .gq-navbar {
-  background-color: #0b0c10 !important;
+  background-color: rgba(11, 12, 16, 0.85) !important; /* Semi-transparent background */
+  backdrop-filter: blur(10px); /* Modern frosted-glass effect */
   border-bottom: 1px solid #1f2229;
+  position: fixed !important; /* Forces the element to follow after scroll */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1040; /* Placed cleanly right below the drawer overlay */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 .gq-brand {

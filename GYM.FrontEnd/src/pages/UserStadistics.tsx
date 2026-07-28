@@ -1,42 +1,47 @@
 import React, { useEffect, useState } from "react";
 import type { StatsDTO } from "../types/StatsDTO";
 import { getUserStatistics } from "../api/stadistics";
+import { UserStatsModal } from "../components/UserStatsModal";
 
 // Tus componentes de gráficas ya conectados
-import { WeeklyMilesChart } from "../components/WeeklyMilesChart";
+import { MonthlyMilesChart } from "../components/MonthlyMilesChart";
 import { StrengthProgressChart } from "../components/StrengthProgressChart";
 import "../css/UserStadistics.css";
+import "../css/UserStatsModal.css";
 
 // Datos de prueba (Fallback)
-const FALLBACK_WEEKLY_MILES = [1.2, 0, 3.5, 2.0, 0, 4.1, 1.5];
 const FALLBACK_STRENGTH_DATES = ["01 Jul", "05 Jul", "10 Jul", "15 Jul", "20 Jul"];
 const FALLBACK_STRENGTH_VALUES = [100, 115, 135, 155, 185];
 
 export const UserStatistics: React.FC = () => {
   const [stats, setStats] = useState<StatsDTO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const fetchStats = async () => {
+    try {
+      setLoading(true);
+      const data = await getUserStatistics();
+
+      // VALIDACIÓN ANTI-ERROR: Nos aseguramos de que realmente sea un Array
+      if (Array.isArray(data)) {
+        const sorted = [...data].sort(
+          (a, b) => new Date(b.measureAt).getTime() - new Date(a.measureAt).getTime()
+        );
+        setStats(sorted);
+      } else {
+        console.warn("La respuesta de la API no es un arreglo válido:", data);
+        setStats([]);
+      }
+    } catch (error) {
+      console.warn("Servicio no disponible, usando datos de prueba.", error);
+      setStats([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        setLoading(true);
-        const data = await getUserStatistics();
-
-        // VALIDACIÓN ANTI-ERROR: Nos aseguramos de que realmente sea un Array
-        if (Array.isArray(data)) {
-          setStats(data);
-        } else {
-          console.warn("La respuesta de la API no es un arreglo válido:", data);
-          setStats([]);
-        }
-      } catch (error) {
-        console.warn("Servicio no disponible, usando datos de prueba.", error);
-        setStats([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchStats();
   }, []);
 
@@ -49,12 +54,93 @@ export const UserStatistics: React.FC = () => {
     ? stats.map((s) => new Date(s.measureAt).toLocaleDateString("es-ES", { day: "2-digit", month: "short" })).reverse()
     : FALLBACK_STRENGTH_DATES;
 
+  const parseMileRunToMinutes = (mileRun: string): number => {
+    if (!mileRun) return 0;
+
+    const [timePart, fractionPart = ""] = mileRun.split(".");
+    const parts = timePart.split(":").map(Number);
+    const fractionSeconds = Number(`0.${fractionPart}`) || 0;
+
+    if (parts.length === 3) {
+      const [h, m, seconds] = parts;
+      return h * 60 + m + (seconds + fractionSeconds) / 60;
+    }
+
+    if (parts.length === 2) {
+      const [m, seconds] = parts;
+      return m + (seconds + fractionSeconds) / 60;
+    }
+
+    return Number(timePart) || 0;
+  };
+
+  const formatMileRun = (mileRun: string): string => {
+    if (!mileRun) return "00:00:00";
+
+    const cleaned = mileRun.trim();
+    const [timePart, fraction = ""] = cleaned.split(".");
+    const timeParts = timePart.split(":").map((part) => part.padStart(2, "0"));
+    const normalizedTime = timeParts.join(":");
+
+    if (!fraction) return normalizedTime;
+
+    const normalizedFraction = fraction.replace(/[^0-9]/g, "").slice(0, 2).padEnd(2, "0");
+    return `${normalizedTime}.${normalizedFraction}`;
+  };
+
   const strengthValues = hasValidStats
     ? stats.map((s) => s.strength).reverse()
     : FALLBACK_STRENGTH_VALUES;
 
-  // Datos para millas semanales
-  const milesData = FALLBACK_WEEKLY_MILES;
+  // Estado del mes seleccionado (por default, el mes actual)
+  const [selectedMonth, setSelectedMonth] = React.useState(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  });
+
+  useEffect(() => {
+    if (!hasValidStats) return;
+    const latestDate = new Date(latestStat?.measureAt ?? stats[0].measureAt);
+    const monthValue = `${latestDate.getFullYear()}-${String(latestDate.getMonth() + 1).padStart(2, '0')}`;
+    setSelectedMonth(monthValue);
+  }, [stats, hasValidStats, latestStat]);
+
+  const milesData = React.useMemo(() => {
+    const [yearStr, monthStr] = selectedMonth.split('-');
+    const year = Number(yearStr);
+    const month = Number(monthStr) - 1; // JS Date usa 0-11
+
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const result = new Array(daysInMonth).fill(0);
+
+    if (!hasValidStats) return result;
+
+    stats.forEach((s) => {
+      const measureDate = new Date(s.measureAt);
+      if (measureDate.getFullYear() === year && measureDate.getMonth() === month) {
+        const dayIndex = measureDate.getDate() - 1; // día 1 -> índice 0
+        result[dayIndex] += parseMileRunToMinutes(s.mileRun);
+      }
+    });
+
+    return result;
+  }, [stats, hasValidStats, selectedMonth]);
+
+  const hasChartData = milesData.some((value) => value > 0);
+
+  const dayLabels = React.useMemo(() => {
+    const [yearStr, monthStr] = selectedMonth.split('-');
+    const year = Number(yearStr);
+    const month = Number(monthStr) - 1;
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    return Array.from({ length: daysInMonth }, (_, i) => String(i + 1));
+  }, [selectedMonth]);
+
+  const monthLabel = React.useMemo(() => {
+    const [yearStr, monthStr] = selectedMonth.split('-');
+    const date = new Date(Number(yearStr), Number(monthStr) - 1);
+    return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  }, [selectedMonth]);
 
   return (
     <div>
@@ -64,9 +150,20 @@ export const UserStatistics: React.FC = () => {
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-white">Your stats 💪</h1>
             <p className="text-sm stats-text-purple mt-1">Progression of strength, distance, and body metrics</p>
+            <button
+              type="button"
+              className="btn btn-info"
+              style={{ borderRadius: "20px" }}
+              onClick={() => setIsModalOpen(true)}>
+              Create new record
+            </button>
+
+            {isModalOpen && (
+              <UserStatsModal onClose={() => setIsModalOpen(false)} onCreated={fetchStats} />
+            )}
           </div>
           {!hasValidStats && !loading && (
-            <span className="stats-badge-demo">
+            <span className="stats-badge-demo py-4">
               Demo
             </span>
           )}
@@ -98,25 +195,42 @@ export const UserStatistics: React.FC = () => {
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider stats-text-purple">Mile run record</p>
             <p className="text-2xl font-bold stats-text-cyan mt-1">
-              {latestStat ? latestStat.mileRun : "06:15"}
+              {latestStat ? formatMileRun(latestStat.mileRun) : "06:15"}
             </p>
           </div>
         </div>
 
-        {/* Gráficas activas */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 py-4">
-          {/* Gráfica 1: Millas Semanales */}
+          {/* Date filter */}
+          <div className="stats-filter-row">
+            <label htmlFor="stats-month-selector" className="stats-filter-label">Select month</label>
+            <input
+              id="stats-month-selector"
+              type="month"
+              className="stats-filter-input"
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+            />
+          </div>
+          {/* chart 1: miles per month */}
           <div className="stats-card">
             <h3 className="text-lg font-semibold text-white mb-4 d-flex align-items-center">
-              <span>Miles runned</span>
-              <span className="text-xs stats-text-purple font-normal ms-3">This week</span>
+              <span>Mile run performance</span>
+              <span className="text-xs stats-text-purple font-normal ms-3">This month</span>
             </h3>
             <div className="pt-2">
-              <WeeklyMilesChart milesData={milesData} />
+              <MonthlyMilesChart
+                milesData={milesData}
+                dayLabels={dayLabels}
+                monthLabel={monthLabel}
+              />
+              {!hasChartData && (
+                <p className="text-sm stats-text-muted mt-3">No mile run data for this month.</p>
+              )}
             </div>
           </div>
 
-          {/* Gráfica 2: Progresión de Fuerza */}
+          {/* Chart 2: Strength progress */}
           <div className="stats-card mt-4">
             <h3 className="text-lg font-semibold text-white mb-4 flex align-items-center">
               <span>Strength Progress</span>
@@ -161,7 +275,7 @@ export const UserStatistics: React.FC = () => {
                       <td>{item.weight} kg</td>
                       <td>{item.height} cm</td>
                       <td className="stats-text-cyan font-semibold">{item.strength} lbs</td>
-                      <td className="stats-text-purple font-mono">{item.mileRun}</td>
+                      <td className="stats-text-purple font-mono">{formatMileRun(item.mileRun)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -172,4 +286,4 @@ export const UserStatistics: React.FC = () => {
       </div>
     </div>
   );
-};
+}

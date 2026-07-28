@@ -1,43 +1,47 @@
 import { api } from "../api/client";
 import type { exerciseDTO } from "../types/exerciseDTO";
 import type { TrainingDTO, TrainingCreateDTO } from "../types/trainingDTO";
+import type { UserAdminDTO, UserCreateAdminDTO, UserUpdateRoleDTO } from "../types/user";
 
 // ==========================================
 // USERS SERVICES
 // ==========================================
-/*
+
 export const UserService = {
-    // GET: Obtener todos los usuarios
-    getAllUsers: async (): Promise<any[]> => {
-        const response = await fetch(`${API_BASE_URL}/users`, {
-        headers: getAuthHeaders(),
-        });
-        if (!response.ok) throw new Error('Error fetching users');
-        return await response.json();
+    // Obtener todos los usuarios
+    getAllUsers: async (): Promise<UserAdminDTO[]> => {
+        try {
+            const response = await api.get<UserAdminDTO[]>('/User/all-users');
+            return response.data;
+        } catch (error) {
+            console.error('Error getting users:', error);
+            return Promise.reject(error);            
+        }
     },
 
-    // PUT: Actualizar rol o datos de un usuario
-    updateUserRole: async (userId: number, role: string) => {
-        const response = await fetch(`${API_BASE_URL}/users/${userId}/role`, {
-        method: 'PUT',
-        headers: getAuthHeaders(),
-        body: JSON.stringify({ role }),
-        });
-        if (!response.ok) throw new Error('Error updating user role');
-        return await response.json();
+    // Crear nuevo Staff (Admin o Trainer)
+    createStaffUser: async (data: UserCreateAdminDTO): Promise<void> => {
+        try {
+            const response = await api.post('/User/create-staff', data);
+            return response.data;
+        } catch (error) {
+            console.error('Error creating user:', error);
+            return Promise.reject(error);            
+        }
     },
 
-    // DELETE: Eliminar un usuario
-    deleteUser: async (userId: number) => {
-        const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
-        method: 'DELETE',
-        headers: getAuthHeaders(),
-        });
-        if (!response.ok) throw new Error('Error deleting user');
-        return await response.json();
-    },
+    // Cambiar rol de un usuario (PATCH enviando DTO)
+    updateUserRole: async (userId: number, data: UserUpdateRoleDTO): Promise<void> => {
+        try {
+            const response = await api.patch(`/User/${userId}/role`, data);
+            return response.data;
+        } catch (error) {
+            console.error('Error updating user role:', error);
+            return Promise.reject(error);            
+        }
+    }
 };
-*/
+
 
 // ==========================================
 // EXERCISES SERVICES (Catálogo Global)

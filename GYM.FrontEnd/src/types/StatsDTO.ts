@@ -11,4 +11,4 @@ export interface StatsDTO {
 }
 
 // create stadistics
-export type CreateStatisticBody = Omit<StatsDTO, "id" | "measureAt">; // omitting id and measureAt
+export type CreateStatisticBody = Omit<StatsDTO, "id" | "measureAt" | "userId">; // omitting id, measureAt, and userId because backend sets it from auth

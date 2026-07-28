@@ -2,23 +2,27 @@ import { DifficultyCircles } from "./DifficultyCircles";
 import { useState } from "react";
 
 interface BookingCardProps {
-  title?: string;
+  trainingName?: string;
   trainer?: string;
-  location?: string;          // New property
-  exerciseCount?: number;     // New property
+  location?: string;          
+  exerciseCount?: number;     
   difficulty?: 'Beginner' | 'Intermediate' | 'Advanced' | 'Heroic';
   description?: string;
   duration?: string;
+  imageUrl?: string;
+  onBook?: () => void;
 }
 
 export function BookingCard({ 
-  title = "Full Body HIIT", 
+  trainingName = "Full Body HIIT", 
   trainer = "Coach Alex", 
   location = "Main Studio - Room A",
   exerciseCount = 8,
   difficulty = "Intermediate",
   description = "A high-intensity circuit training session focused on core stability, aerobic threshold endurance, and explosive full-body movement patterns.",
-  duration = "45 mins"
+  duration = "45 mins",
+  imageUrl = "https://i0.wp.com/css-tricks.com/wp-content/uploads/2012/10/threelines.png",
+  onBook
 }: BookingCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -29,11 +33,11 @@ export function BookingCard({
       
       {/* Main Visible Row */}
       <div className="booking-card">
-        <img src="https://i0.wp.com/css-tricks.com/wp-content/uploads/2012/10/threelines.png" alt={title} />
+        <img src={imageUrl} alt={trainingName} />
 
         <div className="booking-card-details">
           <div className="detail-a">
-            <h3>{title}</h3>
+            <h3>{trainingName}</h3>
             <h4>{trainer}</h4>
             
             <div className="card-metadata small mt-1" style={{ color: '#bfbfbf' }}>
@@ -55,7 +59,7 @@ export function BookingCard({
 
           <div className="detail-b">
             <div className="card-button-wrapper">
-              <button className="primary" onClick={() => console.log("Booking Confirmed!")}>
+              <button className="primary" onClick={(onBook)}>
                 Book Now
               </button>
               {/* Added toggle handler here */}
@@ -67,6 +71,8 @@ export function BookingCard({
               </button>
             </div>
           </div>
+
+
         </div>
       </div>
 

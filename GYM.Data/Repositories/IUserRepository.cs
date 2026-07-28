@@ -14,4 +14,6 @@ public interface IUserRepository
     Task<UserDetail?> AddUserDetails(UserDetail userDetail);
     Task<UserDetail?> UpdateUserDetails(UserDetail UserDetail);
     Task<bool> SeedInfo(List<int> UsersId);
+    Task<List<User>> GetAllUsers();
+    Task<User?> UpdateUser(User user);
 }
