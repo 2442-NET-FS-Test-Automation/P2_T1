@@ -40,7 +40,7 @@ export function Login () {
         className="btn btn-outline-neon rounded-pill px-3 py-1 position-absolute top-0 start-0 m-4 small fw-semibold"
         onClick={() => navigate('/')}
       >
-        ← Volver al inicio
+        ← Back to start
       </button>
 
       <div className="login-card-container w-100" style={{ maxWidth: '420px' }}>
@@ -49,11 +49,11 @@ export function Login () {
           {/* Encabezado con estética GymQuest */}
           <div className="text-center mb-4">
             <h1 className="fw-bold display-6 mb-1 cursor-pointer text-white" onClick={() => navigate('/')}>
-              Gym<span className="text-neon">Quest</span>
+              Gym<span className="text-neon text-capitalize">Quest</span>
             </h1>
             <div className="fs-2 my-2">⚔️</div>
             <h2 className="fs-6 text-white   fw-normal text-uppercase letter-spacing-1 m-0">
-              Inicia sesión en tu cuenta
+              Log in with account
             </h2>
           </div>
 
@@ -62,14 +62,14 @@ export function Login () {
             
             {/* Input Email */}
             <div className="mb-3">
-              <label className="form-label text-neon small fw-semibold">Correo Electrónico</label>
+              <label className="form-label text-neon small fw-semibold">Email</label>
 
               <div className="input-group">
                 <span className="input-group-text bg-dark border-secondary text-muted">✉️</span>
                 <input
                   type="email"
                   className="form-control quest-input"
-                  placeholder="tu@email.com"
+                  placeholder="your@email.com"
                   value={email}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                   required
@@ -80,7 +80,7 @@ export function Login () {
 
             {/* Input Password */}
             <div className="mb-3">
-              <label className="form-label text-neon small fw-semibold">Contraseña</label>
+              <label className="form-label text-neon small fw-semibold">Password</label>
 
               <div className="input-group">
                 <span className="input-group-text bg-dark border-secondary text-muted">🔒</span>
@@ -107,7 +107,7 @@ export function Login () {
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRememberMe(e.target.checked)}
                 />
                 <label className="form-check-label small text-gray cursor-pointer" htmlFor="rememberMe">
-                  Recordarme
+                  Remember me
                 </label>
               </div>
             </div>
@@ -128,10 +128,10 @@ export function Login () {
               {status === "authenticating" ? (
                 <span>
                   <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                  Iniciando sesión...
+                  Logging in...
                 </span>
               ) : (
-                'Iniciar Sesión ⚔️'
+                'Log In ⚔️'
               )}
             </button>
           </form>
@@ -140,12 +140,12 @@ export function Login () {
 
           {/* Registro */}
           <p className="text-center text-white small m-0">
-            ¿Aún no tienes una cuenta?{' '}
+            Don't have an account?{' '}
             <span 
               className="text-neon fw-bold cursor-pointer hover-underline ms-1"
               onClick={() => navigate('/register')}
             >
-              Regístrate aquí
+              Register here
             </span>
           </p>
 

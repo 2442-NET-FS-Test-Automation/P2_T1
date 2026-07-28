@@ -31,8 +31,8 @@ interface BookingCardProps {
 
 export function BookingCard({
   trainingName = "Full Body HIIT",
-  trainer = "Coach Alex",
-  location = "Main Studio - Room A",
+  //trainer = "Coach Alex",
+  //location = "Main Studio - Room A",
   exerciseCount = 8,
   difficulty = "Beginner",
   description = "A high-intensity circuit training session focused on core stability, aerobic threshold endurance, and explosive full-body movement patterns.",
@@ -50,10 +50,13 @@ export function BookingCard({
 
   return (
     <div className={`booking-card-wrapper ${isExpanded ? "expanded" : ""}`}>
-      {/* Main Card Grid Frame Row */}
       <div
         className="booking-card"
-        style={{ borderLeft: `5px solid ${currentStatusMeta.color}` }}
+        style={{
+          borderLeft: isMyBookingFeed
+            ? `5px solid ${currentStatusMeta.color}`
+            : "none",
+        }}
       >
         <img src={imageUrl} alt={trainingName} />
 
@@ -61,19 +64,23 @@ export function BookingCard({
           <div className="detail-a">
             <div className="d-flex align-items-center gap-2 mb-1">
               <h3>{trainingName}</h3>
-              <span
-                className="badge font-monospace text-uppercase"
-                style={{
-                  backgroundColor: `${currentStatusMeta.color}22`,
-                  color: currentStatusMeta.color,
-                  border: `1px solid ${currentStatusMeta.color}`,
-                  fontSize: "0.65rem",
-                  padding: "2px 6px",
-                  borderRadius: "4px",
-                }}
-              >
-                {currentStatusMeta.label}
-              </span>
+
+              {/* FIX: Only show the badge bubble indicator if we are explicitly on the personal My Bookings feed panel */}
+              {isMyBookingFeed && (
+                <span
+                  className="badge font-monospace text-uppercase"
+                  style={{
+                    backgroundColor: `${currentStatusMeta.color}22`,
+                    color: currentStatusMeta.color,
+                    border: `1px solid ${currentStatusMeta.color}`,
+                    fontSize: "0.65rem",
+                    padding: "2px 6px",
+                    borderRadius: "4px",
+                  }}
+                >
+                  {currentStatusMeta.label}
+                </span>
+              )}
             </div>
 
             {/* <h4>{trainer}</h4> */}
