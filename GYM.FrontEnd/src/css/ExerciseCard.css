@@ -1,0 +1,11 @@
+.exercise-card-icon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 242, 254, 0.1); /* o el color de acento que uses */
+  border-radius: 8px;
+  color: #00F2FE;
+  flex-shrink: 0;
+}

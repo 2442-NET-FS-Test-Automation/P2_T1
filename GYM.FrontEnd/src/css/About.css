@@ -1,0 +1,130 @@
+/* Core Document Flow and Layout Reset */
+.about-text-layout {
+  padding: 3rem 4rem;
+  font-family:
+    "Segoe UI",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  background-color: #0f172a;
+  color: #cbd5e1;
+  line-height: 1.75;
+}
+
+.header-wrapper {
+  display: flex;
+  gap: 4rem;
+  margin-top: 4rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid #1e293b;
+  padding-bottom: 2rem;
+  align-items: center;
+}
+
+/* Nav Context Layout */
+.about-navigation {
+  margin-bottom: 2.5rem;
+}
+
+.back-link-btn {
+  background: none;
+  border: none;
+  color: #38bdf8; /* Neon Sky Highlight */
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.back-link-btn:hover {
+  color: #7dd3fc;
+  text-decoration: underline;
+}
+
+/* Header Text Formatting */
+.about-header-section {
+  margin-bottom: 2rem;
+  margin-top: 5rem;
+}
+
+.about-header-section .title-text {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #f8fafc;
+  margin: 0 0 1rem 0;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.lead-text {
+  font-size: 1.5rem;
+  color: #cbd5e1;
+}
+
+.about-hero-image {
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #1e293b;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  display: block;
+}
+
+.image-caption {
+  display: block;
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-top: 0.75rem;
+  font-style: italic;
+}
+
+/* Document Body Content Formatting using Sub-Headers */
+.about-body-content h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #38bdf8; /* Section title branding color */
+  margin: 2.5rem 0 1rem 0;
+  letter-spacing: -0.02em;
+}
+
+.about-body-content p {
+  margin: 0 0 1.25rem 0;
+}
+
+/* Unordered Lists and Subitem Layout Node Formats */
+.about-body-content ul {
+  margin: 0 0 2rem 0;
+  padding-left: 1.5rem;
+  list-style-type: square;
+}
+
+.about-body-content li {
+  margin-bottom: 1.25rem;
+  color: #cbd5e1;
+}
+
+/* List inline sub-header tags configuration overrides */
+.about-body-content li h3 {
+  display: inline;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f1f5f9;
+  margin: 0 0.35rem 0 0;
+}
+
+/* Responsive Scaling Breakpoints */
+@media (max-width: 640px) {
+  .about-text-layout {
+    margin: 2rem auto;
+    padding: 0 1.25rem;
+  }
+
+  .about-header-section .title-text {
+    font-size: 2rem;
+  }
+
+  .about-hero-image {
+    max-height: 250px;
+  }
+}

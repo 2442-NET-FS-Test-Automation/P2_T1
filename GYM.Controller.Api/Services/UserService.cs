@@ -199,4 +199,83 @@ public class UserService : IUserService
 
         return UpdatedUserDetailDTO;
     }
+
+    public async Task<List<UserAdminDTO>> GetAllUsersForAdmin()
+    {
+        List<User> users = await _UserRepository.GetAllUsers();
+        List<UserAdminDTO> userAdminList = new List<UserAdminDTO>();
+
+        foreach (var user in users)
+        {
+            // Buscamos los detalles asociados a este usuario
+            UserDetail? details = await _UserRepository.GetUserDetailsByUserId(user.Id);
+
+            userAdminList.Add(new UserAdminDTO
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Phone = user.Phone,
+                Role = user.Role.ToString(), // Convierte el Enum Role a string
+                Name = details?.Name ?? "Sin nombre",
+                Surname = details?.Surname ?? "",
+                JoinAt = details?.JoinAt
+            });
+        }
+
+        return userAdminList;
+    }
+
+    public async Task<string?> CreateStaffUserService(UserCreateAdminDTO dto)
+    {
+        RegisterUserDTOs registerDTO = new RegisterUserDTOs
+        {
+            Email = dto.Email,
+            Phone = dto.Phone,
+            Password = dto.Password
+        };
+
+        string? registrationError = null;
+        if (dto.Role.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+        {
+            registrationError = await RegisterAdminAsync(registerDTO);
+        }
+        else
+        {
+            registrationError = await RegisterTrainerAsync(registerDTO);
+        }
+
+        if (registrationError is not null)
+            return registrationError; // Retorna "Email already in use" o "Phone already in use"
+
+        User? createdUser = await _UserRepository.GetUserByEmail(dto.Email.Trim());
+        if (createdUser is not null)
+        {
+            UserDetailsDTO detailsDTO = new UserDetailsDTO
+            {
+                UserId = createdUser.Id,
+                Name = dto.Name,
+                Surname = dto.Surname,
+                JoinAt = DateTime.UtcNow
+            };
+            await AddUserDetails(detailsDTO);
+        }
+
+        return null;
+    }
+
+    public async Task<bool> UpdateUserRole(int userId, string newRole)
+    {
+        User? user = await _UserRepository.GetUserById(userId);
+        if (user is null)
+            return false;
+
+        if (Enum.TryParse<Role>(newRole, true, out Role parsedRole))
+        {
+            user.Role = parsedRole;
+            await _UserRepository.UpdateUser(user);
+            return true;
+        }
+
+        return false; // Rol inválido
+    }
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ExerciseModal } from '../../Components/admin/modals/ExerciseModal';
+import { ExerciseModal } from '../../Components/Admin/modals/ExerciseModal';
 import { ExerciseService } from '../../services/adminServices';
 import type {exerciseDTO} from '../../types/exerciseDTO';
 
