@@ -219,7 +219,7 @@ export default function Navbar() {
                 className="drawer-link"
                 onClick={toggleMenu}
               >
-                <FiSettings /> Configuration
+                <FiSettings /> User Configuration
               </Link>
 
               <button
