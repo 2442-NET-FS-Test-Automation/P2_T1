@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { ExerciseModal } from '../../Components/admin/modals/ExerciseModal';
+import { ExerciseModal } from '../../components/Admin/modals/ExerciseModal';
 import { ExerciseService } from '../../services/adminServices';
 import type { exerciseDTO } from '../../types/exerciseDTO';
-import { Pagination } from '../../Components/Pagination';
+import { Pagination } from '../../components/Pagination';
+import { StatCard } from '../../components/Admin/StatCard';
 
 export interface ExerciseItem {
     id: number;
@@ -18,6 +19,9 @@ export function AdminExercisesPage() {
     const [loading, setLoading] = useState<boolean>(true);
     const [searchTerm, setSearchTerm] = useState('');
 
+    // Filtro de Categoría/Tipo
+    const [selectedFilter, setSelectedFilter] = useState<'All' | 'With Media' | 'High Volume' | 'Low Volume'>('All');
+
     // Modales
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedExercise, setSelectedExercise] = useState<exerciseDTO | null>(null);
@@ -29,7 +33,7 @@ export function AdminExercisesPage() {
     // Resetear a la página 1 cuando el usuario busca un ejercicio
     useEffect(() => {
         setCurrentPage(1);
-    }, [searchTerm]);
+    }, [searchTerm, selectedFilter]);
 
     // Cargar ejercicios al montar el componente
     useEffect(() => {
@@ -48,6 +52,12 @@ export function AdminExercisesPage() {
             setLoading(false);
         }
     };
+
+    // Métricas calculadas para las StatCards
+    const countTotal = exercises.length;
+    const countWithMedia = exercises.filter(e => e.visualReferenceUrl && e.visualReferenceUrl.trim() !== '').length;
+    const countHighVolume = exercises.filter(e => e.sets >= 4).length;
+    const countLowVolume = exercises.filter(e => e.sets < 4).length;
 
     // Modal Handlers
     const handleOpenCreateModal = () => {
@@ -87,11 +97,33 @@ export function AdminExercisesPage() {
         }
     };
 
-    // Filtro de búsqueda general
-    const filteredExercises = exercises.filter(ex => 
-        ex.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        ex.description.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    // Helper para alternar filtros al hacer click en las StatCards
+    const handleStatCardClick = (filter: 'With Media' | 'High Volume' | 'Low Volume') => {
+        if (selectedFilter === filter) {
+        setSelectedFilter('All');
+        } else {
+        setSelectedFilter(filter);
+        }
+    };
+
+    // Filtro compuesto (Búsqueda por texto + Filtro de StatCards/Pestañas)
+    const filteredExercises = exercises.filter(ex => {
+        const search = searchTerm.toLowerCase();
+        const matchesSearch = 
+        ex.name.toLowerCase().includes(search) ||
+        ex.description.toLowerCase().includes(search);
+
+        let matchesFilter = true;
+        if (selectedFilter === 'With Media') {
+        matchesFilter = Boolean(ex.visualReferenceUrl && ex.visualReferenceUrl.trim() !== '');
+        } else if (selectedFilter === 'High Volume') {
+        matchesFilter = ex.sets >= 4;
+        } else if (selectedFilter === 'Low Volume') {
+        matchesFilter = ex.sets < 4;
+        }
+
+        return matchesSearch && matchesFilter;
+    });
 
     // Paginación derivada
     const totalPages = Math.ceil(filteredExercises.length / itemsPerPage);
@@ -117,21 +149,104 @@ export function AdminExercisesPage() {
                 </button>
             </div>
 
+            {/* Grid de Tarjetas KPI / Métricas Rápidas */}
+                <div className="row g-3">
+                    <div className="col-12 col-sm-6 col-xl-3">
+                        <div 
+                            onClick={() => setSelectedFilter('All')} 
+                            style={{ cursor: 'pointer' }}
+                            className={`rounded-3 transition-all ${selectedFilter === 'All' ? 'ring-active' : ''}`}
+                        >
+                        <StatCard 
+                        title="Total Library" 
+                        value={loading ? "..." : countTotal.toString()} 
+                        change="Active Database" 
+                        icon="📚" 
+                        accentColor="aqua" 
+                        />
+                    </div>
+                </div>
+
+                    <div className="col-12 col-sm-6 col-xl-3">
+                        <div 
+                            onClick={() => handleStatCardClick('With Media')} 
+                            style={{ cursor: 'pointer' }}
+                            className={`rounded-3 transition-all ${selectedFilter === 'With Media' ? 'ring-active' : ''}`}
+                        >
+                        <StatCard 
+                        title="Visual Guides" 
+                        value={loading ? "..." : countWithMedia.toString()} 
+                        change="Media Attached" 
+                        icon="🔗" 
+                        accentColor="purple" 
+                        />
+                    </div>
+                </div>
+
+                    <div className="col-12 col-sm-6 col-xl-3">
+                        <div 
+                            onClick={() => handleStatCardClick('High Volume')} 
+                            style={{ cursor: 'pointer' }}
+                            className={`rounded-3 transition-all ${selectedFilter === 'High Volume' ? 'ring-active' : ''}`}
+                        >
+                        <StatCard 
+                            title="High Volume" 
+                            value={loading ? "..." : countHighVolume.toString()} 
+                            change="4+ Sets Routine" 
+                            icon="🔥" 
+                            accentColor="blue" 
+                        />
+                    </div>
+                </div>
+
+                <div className="col-12 col-sm-6 col-xl-3">
+                    <div 
+                        onClick={() => handleStatCardClick('Low Volume')} 
+                        style={{ cursor: 'pointer' }}
+                        className={`rounded-3 transition-all ${selectedFilter === 'Low Volume' ? 'ring-active' : ''}`}
+                    >
+                    <StatCard 
+                        title="Light / Accessory" 
+                        value={loading ? "..." : countLowVolume.toString()} 
+                        change="1-3 Sets Routine" 
+                        icon="⚡" 
+                        accentColor="magenta" 
+                    />
+                    </div>
+                </div>
+            </div>
+
             {/* Main Card */}
             <div className="card gq-card p-4">
-                {/* Search */}
-                <div className="mb-4">
-                    <div className="input-group style-search" style={{ maxWidth: '400px' }}>
-                        <span className="input-group-text border-end-0 text-aqua" style={{ backgroundColor: '#161729', borderColor: 'var(--gq-surface-border)' }}>
-                            🔍
-                        </span>
-                        <input 
-                            type="text" 
-                            className="form-control gq-input border-start-0 text-white" 
-                            placeholder="Search exercise..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
+                {/* Barra de Búsqueda + Filtros Alineados */}
+                <div className="row g-3 mb-4">
+                    <div className="col-12 col-md-5">
+                        <div className="input-group">
+                            <span className="input-group-text border-end-0 text-aqua" style={{ backgroundColor: '#161729', borderColor: 'var(--gq-surface-border)' }}>
+                                🔍
+                            </span>
+                            <input 
+                                type="text" 
+                                className="form-control gq-input border-start-0 text-white" 
+                                placeholder="Search exercise by name or description..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="col-12 col-md-7 d-flex justify-content-md-end gap-2 flex-wrap align-items-center">
+                        {(['All', 'With Media', 'High Volume', 'Low Volume'] as const).map((filter) => (
+                        <button
+                            key={filter}
+                            className={`btn btn-sm px-3 fw-semibold transition-all ${
+                            selectedFilter === filter ? 'btn-gq-aqua' : 'btn-outline-secondary text-white'
+                            }`}
+                            onClick={() => setSelectedFilter(filter)}
+                        >
+                            {filter === 'All' ? 'All Exercises' : filter}
+                        </button>
+                        ))}
                     </div>
                 </div>
 

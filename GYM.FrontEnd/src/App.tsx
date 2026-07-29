@@ -8,15 +8,15 @@ import { Login } from './pages/Login';
 import { LandingPage } from './pages/LandingPage';
 import { UserStatistics } from './pages/UserStadistics';
 import { useAuth } from './auth/useAuth';
-import { RequireAuth } from './Components/RequireAuth';
+import { RequireAuth } from './components/RequireAuth';
 import { Register } from './pages/Register';
 import { UserBooking } from './pages/UserBooking';
 import { NotFound } from './pages/NotFound';
-import Navbar from './Components/Navbar';
+import Navbar from './components/Navbar';
 import { UserDetailsStep } from './pages/Onboarding/UserDetailsStep';
 import { UserStatsStep } from './pages/Onboarding/UserStatsStep';
 import { UserMyBookings } from './pages/UserMyBookings';
-import { AdminLayout } from './Components/admin/AdminLayout';
+import { AdminLayout } from './components/Admin/AdminLayout';
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { AdminUsersPage } from './pages/admin/AdminUsersPage';
 import { AdminExercisesPage } from './pages/admin/AdminExercisesPage';
@@ -27,7 +27,8 @@ import { ExerciseDetail } from './pages/ExerciseDetail';
 import { Report } from './pages/Report';
 import { ToastContainer } from "react-toastify"; // library for notifications (success messages/error messages) like an alert in js
 import { TrainingDetail } from './pages/TrainingDetail';
-import { Footer } from './Components/Footer';
+import { Footer } from './components/Footer';
+import { AdminBookingsPage } from './pages/admin/AdminBookingsPage';
 
 function App() {
   const { status, user } = useAuth();
@@ -224,6 +225,7 @@ function App() {
               <Route path="users" element={<AdminUsersPage />} /> {/*Las restricciones para admin se aplican en AdminUserPage.tsx*/}
               <Route path="trainings" element={<AdminTrainingsPage />} />
               <Route path="exercises" element={<AdminExercisesPage />} />
+              <Route path="bookings" element={<AdminBookingsPage />} />
             </Route>
 
             {/* =========================================================
