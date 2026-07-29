@@ -130,7 +130,7 @@ export default function ProfileSettings() {
                 </div>
                 <div>
                   <p className="stats-label">Strength</p>
-                  <p className="stats-value">{latestStats.strength} lbs</p>
+                  <p className="stats-value">{latestStats.strength} kg</p>
                 </div>
                 <div>
                   <p className="stats-label">Age</p>
