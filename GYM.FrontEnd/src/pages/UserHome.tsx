@@ -122,9 +122,9 @@ export default function Home() {
 
               <div className="col-lg-5 d-flex justify-content-lg-end gap-2 flex-wrap">
                 {[
-                  { label: `🏆 Badges (${userStats.unlockedBadges}/${userStats.totalBadges})`, route: '/user/achievements', color: 'var(--gq-purple)' },
+                  { label: `🏆 Achivements (${userStats.unlockedBadges}/${userStats.totalBadges})`, route: '/user/achievements', color: 'var(--gq-purple)' },
                   { label: '📅 My Bookings', route: '/user/mybookings', color: 'var(--gq-blue)' },
-                  { label: '⚡ Routines', route: '/user/booking', color: 'var(--gq-aqua)' }
+                  { label: '⚡ Trainings', route: '/user/booking', color: 'var(--gq-aqua)' }
                 ].map((btn, idx) => (
                   <motion.button
                     key={idx}
@@ -172,7 +172,7 @@ export default function Home() {
               style={{ color: "var(--gq-aqua)" }}
               onClick={() => navigate('/user/achievements')}
             >
-              View All Badges ➔
+              View All Achivements ➔
             </button>
           </div>
 

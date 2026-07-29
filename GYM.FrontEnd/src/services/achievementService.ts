@@ -28,6 +28,9 @@ export const getUserAchievement = async(): Promise<Achievement[]> => {
     const url = `/api/Achievement/AchievementByUserId`; 
 
     const response = await apiClient.get<Achievement[]>(url);
+    if (response.status === 204) {
+      return [];
+    }
     return response.data;
   } catch (error){
     console.error('Error fetching user achievements:', error);

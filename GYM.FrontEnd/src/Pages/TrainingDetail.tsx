@@ -37,7 +37,7 @@ export function TrainingDetail() {
           <button 
             className="btn btn-sm btn-dark text-muted mb-3" 
             onClick={() => navigate("/user/mybookings")}
-            style={{ border: "1px solid #232545", borderRadius: "15px" }}
+            style={{ border: "3px solid #46f0d2", borderRadius: "15px", backgroundColor:"whitesmoke" }}
           >
             ← Back to My Bookings
           </button>
