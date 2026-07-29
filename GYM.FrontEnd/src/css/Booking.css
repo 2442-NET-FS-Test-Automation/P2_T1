@@ -1,3 +1,7 @@
+/* ==========================================================================
+   GymQuest - Updated Booking System Layout & Collapsible Drawer Stylesheet
+   ========================================================================== */
+
 .bookings {
   background-color: #121321 !important;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -6,6 +10,7 @@
   justify-content: center;
   gap: 5rem;
 }
+
 .bookingsContainer {
   display: flex;
   flex-direction: column;
@@ -65,111 +70,141 @@
 
 .booking-list-container {
   margin-top: 2rem;
-}
-
-.booking-card {
-  border-bottom: solid #46f0d2 4px;
-  display: flex;
-  padding: 1rem;
-  justify-content: space-between;
-  align-items: center;
-  height: 12rem;
-  background-color: #1a1b2f; /* Added a dark card color to make shadows visible */
-  border-radius: 8px; /* Optional: rounds the corners for a modern feel */
-  cursor: pointer;
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease,
-    border-color 0.3s ease;
-}
-
-/* 2. Fixed space bug and enhanced the "pop" effects */
-.booking-card:hover {
-  transform: translateY(-5px) scale(1.02); /* Lifts up slightly and grows */
-  box-shadow: 0 10px 20px rgba(70, 240, 210, 0.2); /* Neon glow effect using your accent color */
-  border-bottom-color: #ffffff; /* Optional: switches border color on hover */
-}
-
-/* 3. Fixed comma bug and missing comma in font family fallback */
-.booking-card-details {
-  width: calc(100% - 90px);
-  display: flex;
-  margin-left: 10px;
-  color: white;
-  text-align: left;
-  justify-content: space-between;
-  font-family: "Poppins", sans-serif; /* Fixed: Added missing comma */
-}
-.booking-card img {
-  height: 100%;
-  object-fit: cover;
-  border-radius: 7%;
-}
-
-.detail-a h3 {
-  font-size: 1.5rem;
-  color: white;
-}
-.detail-a h4 {
-  color: #bfbfbf;
-}
-
-.booking-list-container {
   align-items: center;
   width: 50rem;
   justify-content: center;
 }
 
-.card-button-wrapper {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
+/* Container Wrapper to group the card and the hidden drawer together safely */
+.booking-card-wrapper {
+  background-color: #1a1b2f;
+  border-radius: 8px;
+  border-bottom: solid #46f0d2 4px;
+  margin-bottom: 1.5rem;
+  width: 50rem;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
-.card-button-wrapper button {
-  height: 35px;
-  border-radius: 10px;
-  border: none;
+/* Hover effect transferred to the combined wrapper */
+.booking-card-wrapper:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 10px 20px rgba(70, 240, 210, 0.15);
+}
+
+.booking-card {
+  display: flex;
+  padding: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  height: 13.5rem; /* MODIFIED: Increased slightly to allow clean vertical stacking of 3 buttons */
+  background-color: #1a1b2f; 
+  border-radius: 8px 8px 0 0;
   cursor: pointer;
-  font-weight: 600;
 }
-.primary {
-  background-color: rgb(98, 230, 212);
+
+.booking-card-details {
+  width: calc(100% - 150px); /* MODIFIED: Accounts for extra button area scaling */
+  display: flex;
+  margin-left: 15px;
   color: white;
+  text-align: left;
+  justify-content: space-between;
+  font-family: "Poppins", sans-serif; 
 }
-.primary:hover {
-  background-color: rgb(47, 199, 174);
+
+.booking-card img {
+  height: 100%;
+  width: 130px;
+  object-fit: cover;
+  border-radius: 8px;
 }
-.secondary {
-  background-color: #ddd;
+
+.detail-a h3 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 0.25rem 0;
 }
-.secondary:hover {
-  background-color: rgb(197, 197, 197);
+
+.detail-a h4 {
+  font-size: 1rem;
+  color: #bfbfbf;
+  margin: 0 0 0.5rem 0;
 }
 
 .detail-b {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  width: 180px; /* Fixed side boundary keeps uniform control distribution */
+}
+
+/* MODIFIED: Stack actions vertically for the workout status flows */
+.card-button-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column; 
+  align-items: stretch; 
+  justify-content: center;
+  gap: 8px; 
+}
+
+.card-button-wrapper button {
+  height: 35px;
+  width: 100%;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.primary {
+  background-color: rgb(98, 230, 212);
+  color: #121321;
+}
+
+.primary:hover {
+  background-color: rgb(47, 199, 174);
+}
+
+.secondary {
+  background-color: #232545;
+  color: #bfbfbf;
+  border: 1px solid #333652 !important;
+}
+
+.secondary:hover {
+  background-color: #333652;
+  color: #ffffff;
+}
+
+/* Active visual response color for the details button when opened */
+.secondary.active-btn {
+  background-color: #46f0d2;
+  color: #121321;
+  border-color: #46f0d2 !important;
 }
 
 .book-element-section {
   display: flex;
 }
+
 .detail-b-content-1 {
   height: 100%;
 }
 
+/* --- Cyberpunk Filtration Sidebar Panel --- */
 .filter-bar {
   background-color: #1a1b2f;
   border: 1px solid #232545;
   border-bottom: solid #46f0d2 4px;
   border-radius: 8px;
   padding: 2rem;
-  width: 22rem; /* Keeps it proportionate next to the 50rem card list */
+  width: 22rem; 
   height: fit-content;
-  margin-top: 5.5rem; /* Aligns vertically with the top of the booking cards */
+  margin-top: 5.5rem; 
 }
 
 .filter-form {
@@ -232,23 +267,7 @@
   box-shadow: 0 5px 15px rgba(70, 240, 210, 0.4);
 }
 
-/* Container Wrapper to group the card and the hidden drawer together safely */
-.booking-card-wrapper {
-  background-color: #1a1b2f;
-  border-radius: 8px;
-  border-bottom: solid #46f0d2 4px;
-  margin-bottom: 1.5rem;
-  width: 50rem;
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
-
-/* Hover effect transferred to the combined wrapper */
-.booking-card-wrapper:hover {
-  transform: translateY(-4px) scale(1.01);
-  box-shadow: 0 10px 20px rgba(70, 240, 210, 0.15);
-}
-
-/* Deployable Drawer using the CSS Grid template height transition method */
+/* --- Deployable Drawer Grid Animation Framework --- */
 .booking-card-drawer {
   display: grid;
   grid-template-rows: 0fr; /* Collapsed state */
@@ -321,8 +340,26 @@
   text-align: center;
 }
 
-/* Active visual response color for the details button when opened */
-.secondary.active-btn {
-  background-color: #333652;
+.btn-delete {
+  background-color: #ef444415;
+  color: #ef4444;
+  border: 1px solid #ef4444 !important;
+  height: 35px;
+  width: 100%;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.btn-delete:hover {
+  background-color: #ef4444;
   color: #ffffff;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+}
+
+/* Update main visible container boundary spacing to handle 4 buttons neatly */
+.booking-card {
+  height: 16rem !important; /* Forces uniform size scaling across all rendering modules */
 }

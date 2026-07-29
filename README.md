@@ -1,9 +1,9 @@
-# QuestFitt
+# GymQuest
 
 **Project 2 — Full-Stack Web Application**
 **Team Project (4 Members)**
 
-QuestFitt is a full-stack web application designed to help users create, manage, and follow workout routines while tracking their fitness progress over time. The platform supports multiple user roles, each with different permissions and features.
+GymQuest is a full-stack web application designed to help users create, manage, and follow workout routines while tracking their fitness progress over time. The platform supports multiple user roles, each with different permissions and features.
 
 ---
 

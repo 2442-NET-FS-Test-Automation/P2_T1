@@ -1,7 +1,7 @@
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
-using  GYM.Controller.Api.DTOs;
+using GYM.Controller.Api.DTOs;
 using GYM.Controller.Api.Services;
 using GYM.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -47,8 +47,8 @@ public class BookingController : ControllerBase
     public async Task<ActionResult<BookingDTO>> GetBookingById(int id)
     {
         var dto = await _cache.GetOrCreateAsync(
-            $"Bookings:{id}", 
-            async entry => 
+            $"Bookings:{id}",
+            async entry =>
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1);
                 return await _service.GetBookingById(id);
@@ -57,20 +57,26 @@ public class BookingController : ControllerBase
         return dto is null ? NotFound() : Ok(dto);
     }
 
-    [HttpGet("BookingByUserId")]
+    [HttpGet("bookings/BookingByUserId")]
     public async Task<ActionResult<IEnumerable<BookingDTO>>> GetBookingsByUserId()
     {
         string? userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        if(userIdString is null)
+        if (userIdString is null)
             return Unauthorized();
-        int userId = int.Parse(userIdString);
 
+        int userId = int.Parse(userIdString);
         var dtos = await _service.GetBookingsByUserId(userId);
 
-        return !dtos.Any() ? NotFound("No bookings found for this user.") : Ok(dtos);
+        // FIX: Return an empty list instead of a 404 error when there are no bookings
+        if (dtos is null || !dtos.Any())
+        {
+            return Ok(Enumerable.Empty<BookingDTO>());
+        }
+
+        return Ok(dtos);
     }
-    
+
     //Add a new exercise
     [HttpPost("bookings")]
     public async Task<ActionResult<BookingDTO>> AddBooking(BookingDTO newBooking)
@@ -79,17 +85,20 @@ public class BookingController : ControllerBase
 
         if(userIdString is null)
             return Unauthorized();
+            
         int userId = int.Parse(userIdString);
         newBooking.UserId = userId;
 
         BookingDTO newBookingDto = await _service.AddBookingAsync(newBooking);
+        
+        // --- FIX: Evict all active cache contexts to guarantee a clean data reload ---
         _cache.Remove(AllBookingsCacheKey);
+        _cache.Remove($"Bookings:BookingByUserId:{userId}"); // Clears the individual user schedule cache key
 
         return CreatedAtAction(
             nameof(GetBookingById),
             new { id = newBookingDto.Id },
             newBookingDto);
-
     }
 
 
@@ -105,7 +114,7 @@ public class BookingController : ControllerBase
     }
 
     //To delete by exercise by their id
-    [Authorize(Roles = "Trainer,Admin")]
+    [Authorize(Roles = "Trainer,Admin,User")]
     [HttpDelete("bookings/{id:int}")]
     public async Task<ActionResult> DeleteBookingById(int id)
     {
@@ -121,7 +130,7 @@ public class BookingController : ControllerBase
         return NoContent();
     }
 
-    [HttpPatch("bookings-status/{id}/{newStatus}")]
+     [HttpPatch("bookings-status/{id}/{newStatus}")]
     public async Task<ActionResult<BookingDTO>> UpdateBookingStatus(int id, int newStatus)
     {
         //Checar que exista el booking, enviarlo a ser modificado (modificarlo, guardarlo en db)
@@ -153,8 +162,14 @@ public class BookingController : ControllerBase
         if(updatedDTO is null)
             return BadRequest();
 
-        _cache.Remove("Bookings:all");
-        _cache.Remove($"Bookids:{id}");
+        // FIX: Standardize exact cache key removal hooks matching your retrieval keys
+        userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        _cache.Remove(AllBookingsCacheKey);
+        _cache.Remove($"Bookings:{id}");
+        if (userIdString != null)
+        {
+            _cache.Remove($"Bookings:BookingByUserId:{userIdString}");
+        }
 
         return Ok(updatedDTO);
     }

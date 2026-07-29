@@ -56,19 +56,6 @@ export function BookingFilterBar({ onFilterChange }: BookingFilterBarProps) {
             placeholder="Search Training Name..."
           />
         </div>
-        <div>
-          <label className="form-label text-neon small fw-semibold mb-2 d-block">
-            Location
-          </label>
-          <input
-            type="text"
-            name="location"
-            value={filters.location}
-            onChange={handleChange}
-            className="filter-input"
-            placeholder="Search location..."
-          />
-        </div>
 
         <div>
           <label className="form-label text-neon small fw-semibold mb-2 d-block">

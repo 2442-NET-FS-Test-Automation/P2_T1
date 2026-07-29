@@ -20,7 +20,7 @@ public class BookingRepository : IBookingRepository
     {
         await using var db = await _factory.CreateDbContextAsync();
 
-        return await db.Bookings.ToListAsync(); 
+        return await db.Bookings.ToListAsync();
     }
 
     public async Task<Booking?> GetBookingById(int id)
@@ -34,18 +34,34 @@ public class BookingRepository : IBookingRepository
     {
         await using var db = await _factory.CreateDbContextAsync();
 
+        // FIXED: Removed the incomplete Coach syntax error line entirely
         return await db.Bookings
+            .Include(b => b.Training)
+                .ThenInclude(t => t.TrainingExercises)
+                    .ThenInclude(te => te.Exercise)
+            .Include(b => b.User)
+                .ThenInclude(u => u.UserDetail) // Synchronized with your specific property name
             .Where(b => b.UserId == userid)
             .ToListAsync();
     }
 
-    public async Task<Booking> AddBooking(Booking booking) 
+    public async Task<Booking> AddBooking(Booking booking)
     {
         await using var db = await _factory.CreateDbContextAsync();
 
         await db.Bookings.AddAsync(booking);
-        await db.SaveChangesAsync(); 
-        return booking;
+        await db.SaveChangesAsync();
+
+        // Synchronized deep-loading right after row entry insertion
+        var fullyLoadedBooking = await db.Bookings
+            .Include(b => b.Training)
+                .ThenInclude(t => t.TrainingExercises)
+                    .ThenInclude(te => te.Exercise)
+            .Include(b => b.User)
+                .ThenInclude(u => u.UserDetail)
+            .FirstOrDefaultAsync(b => b.Id == booking.Id);
+
+        return fullyLoadedBooking ?? booking;
     }
 
     public async Task<bool> RemoveBooking(int n)
@@ -54,15 +70,15 @@ public class BookingRepository : IBookingRepository
 
         Booking? BookingRemoved = await db.Bookings.FirstOrDefaultAsync(i => i.Id == n);
 
-        if(BookingRemoved is null)
+        if (BookingRemoved is null)
             return false;
-        
+
         db.Bookings.Remove(BookingRemoved);
         await db.SaveChangesAsync();
         return true;
     }
 
-        public async Task<Booking> UpdateBooking(Booking UpdatedBooking)
+    public async Task<Booking> UpdateBooking(Booking UpdatedBooking)
     {
         await using var db = await _factory.CreateDbContextAsync();
         db.Bookings.Update(UpdatedBooking);

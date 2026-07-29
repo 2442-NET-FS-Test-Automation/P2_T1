@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import {
   BookingFilterBar,
   type FilterOptions,
-} from "../components/BookingFilterBar";
+} from "../Components/BookingFilterBar";
 import { getPublicTrainings } from "../services/TrainingService";
 import { getUser } from "../services/auth";
-import { BookingCard } from "../components/BookingCard";
+import { BookingCard } from "../Components/BookingCard";
 import "../css/Booking.css";
 import type { TrainingDTO } from "../types/trainingDTO";
 import { getTrainingImage } from "../utils/trainingImages";

@@ -84,7 +84,7 @@ export function Register() {
           {/* GymQuest Header */}
           <div className="text-center mb-4">
             <h1 className="fw-bold display-6 mb-1 cursor-pointer text-white" onClick={() => navigate('/')}>
-              Gym<span className="text-neon">Quest</span>
+              Gym<span className="text-neon text-capitalize">Quest</span>
             </h1>
             <div className="fs-2 my-1">⚔️</div>
             <h2 className="fs-6 text-white fw-normal text-uppercase letter-spacing-1 m-0">
