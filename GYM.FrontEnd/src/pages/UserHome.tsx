@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "../auth/useAuth";
-import { Carousel } from "../components/Carousel";
+import { Carousel } from "../Components/Carousel";
 import type { TrainingDTO } from "../types/trainingDTO";
 import { getPublicTrainings } from "../services/TrainingService";
 import "../css/HomeUser.css";
