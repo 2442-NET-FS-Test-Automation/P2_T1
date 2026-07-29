@@ -162,11 +162,6 @@ export const UserStatistics: React.FC = () => {
               <UserStatsModal onClose={() => setIsModalOpen(false)} onCreated={fetchStats} />
             )}
           </div>
-          {!hasValidStats && !loading && (
-            <span className="stats-badge-demo py-4 my-4">
-              Demo
-            </span>
-          )}
         </div>
 
         {/* Métricas clave */}
