@@ -103,39 +103,6 @@
   opacity: 0.8;
 }
 
-.react-time-picker.gq-input {
-  background-color: #161729 !important;
-  border: 1px solid var(--gq-surface-border) !important;
-  color: var(--gq-text-white) !important;
-  border-radius: 0.375rem; /* Esquinas redondeadas Bootstrap */
-  padding: 0.375rem 0.75rem !important;
-  display: flex !important;
-  align-items: center !important;
-}
-
-/* Estado Focus cuando se interactúa con el picker */
-.react-time-picker.gq-input:focus-within {
-  border-color: var(--gq-aqua) !important;
-  box-shadow: 0 0 10px var(--gq-aqua-glow) !important;
-}
-
-/* 2. Inputs de horas/minutos/segundos internos */
-.react-time-picker.gq-input .react-time-picker__inputGroup__input {
-  color: var(--gq-text-white) !important;
-  background: transparent !important;
-  outline: none !important;
-}
-
-/* Separadores (los dos puntos ":") */
-.react-time-picker.gq-input .react-time-picker__inputGroup__divider {
-  color: var(--gq-text-white) !important;
-}
-
-/* Ocultar el recuadro blanco que pone la librería por defecto */
-.react-time-picker.gq-input .react-time-picker__wrapper {
-  border: none !important;
-}
-
 .text-muted {
   color: #B0B5C0 !important; /* Gris claro neutro y legible */
 }

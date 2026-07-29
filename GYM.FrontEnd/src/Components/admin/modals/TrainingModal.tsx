@@ -2,10 +2,6 @@ import React, { useState, useEffect, } from 'react';
 import type { SubmitEvent } from "react";
 import type { TrainingDTO, Place, TrainingCreateDTO } from '../../../types/trainingDTO';
 import type { exerciseDTO } from '../../../types/exerciseDTO';
-import TimePicker from 'react-time-picker';
-import 'react-time-picker/dist/TimePicker.css';
-import 'react-clock/dist/Clock.css';
-import { toast } from 'react-toastify';
 
 interface TrainingModalProps {
   isOpen: boolean;
@@ -63,16 +59,6 @@ export const TrainingModal: React.FC<TrainingModalProps> = ({ isOpen, onClose, o
     }, [initialData, isOpen]);
 
     if (!isOpen) return null;
-
-    // Manejador del cambio de hora con react-time-picker
-    const handleTimeChange = (value: string | null) => {
-        const newTime = value || '00:00:00';
-
-        // Validación para no permitir más de 5 horas
-        if (newTime <= '05:00:00') {
-        setFormData((prev) => ({ ...prev, estimatedTime: newTime }));
-        }
-    };
 
     const handleToggleExercise = (id: number) => {
         setSelectedExerciseIds((prev) =>
@@ -204,16 +190,14 @@ export const TrainingModal: React.FC<TrainingModalProps> = ({ isOpen, onClose, o
                     </div>
 
                     <div className="col-md-3">
-                        <label className="form-label small fw-semibold text-aqua">Est. Time (HH:mm:ss)</label>
-                        <TimePicker
-                        onChange={handleTimeChange}
+                    <label className="form-label small fw-semibold text-aqua">Est. Time (HH:mm:ss)</label>
+                    <input
+                        type="text"
+                        className="form-control gq-input text-white"
+                        placeholder="00:45:00"
                         value={formData.estimatedTime}
-                        format="HH:mm:ss"
-                        maxDetail="second"
-                        disableClock={true} // Desactiva el reloj análogo desplegable si solo quieres entrada numérica
-                        clearIcon={null}
-                        className="gq-input w-100"
-                        />
+                        onChange={(e) => setFormData({ ...formData, estimatedTime: e.target.value })}
+                    />
                     </div>
                 </div>
 

@@ -6,7 +6,6 @@ import { ViewExercisesModal } from '../../Components/admin/modals/ViewExercisesM
 import type { TrainingDTO, TrainingCreateDTO } from '../../types/trainingDTO';
 import type { exerciseDTO } from '../../types/exerciseDTO';
 import {Pagination} from '../../Components/Pagination';
-import { toast } from 'react-toastify';
 
 export const AdminTrainingsPage: React.FC = () => {
     const [trainings, setTrainings] = useState<TrainingDTO[]>([]);
@@ -44,7 +43,7 @@ export const AdminTrainingsPage: React.FC = () => {
         setAvailableExercises(exercisesData);
         } catch (error) {
         console.error('Error loading trainings or exercises:', error);
-        toast.error('Error al cargar la información de rutinas desde el servidor.');
+        alert('Error al cargar la información de rutinas desde el servidor.');
         } finally {
         setLoading(false);
         }
@@ -81,7 +80,7 @@ export const AdminTrainingsPage: React.FC = () => {
             loadData(); 
         } catch (error) {
             console.error('Error saving training:', error);
-            toast.error('an error occurred while saving the training. Please try again.');
+            alert('an error occurred while saving the training. Please try again.');
         }
     };
 
@@ -95,7 +94,7 @@ export const AdminTrainingsPage: React.FC = () => {
         loadData();
         } catch (error) {
         console.error('Error deleting training:', error);
-        toast.error("No se pudo eliminar el entrenamiento.");
+        alert('No se pudo eliminar el entrenamiento.');
         }
     };
 
