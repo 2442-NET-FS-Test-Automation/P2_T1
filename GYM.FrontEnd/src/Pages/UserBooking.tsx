@@ -141,7 +141,7 @@ export function UserBooking() {
         <BookingFilterBar onFilterChange={setActiveFilters} />
         <section className="bookingsContainer ">
           <div className="bookings-header-row">
-            <h2>Trainigs</h2>
+            <h2>Trainings</h2>
 
             <div className="sort-wrapper">
               <label htmlFor="sort-select" className="text-neon small fw-semibold">
