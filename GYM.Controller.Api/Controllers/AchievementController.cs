@@ -57,7 +57,7 @@ public class AchievementController : ControllerBase
 
         var dtos = await _service.GetAchievementsByUserId(id);
 
-        return !dtos.Any() ? NotFound("No achievements found for this user.") : Ok(dtos);
+        return !dtos.Any() ? NoContent(): Ok(dtos);
     }
 
     [HttpPost("AddAchievement")]//Add 1 archivements
