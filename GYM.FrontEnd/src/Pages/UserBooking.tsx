@@ -179,6 +179,7 @@ export function UserBooking() {
                     exerciseCount={training.exercises?.length || 0}
                     description={training.description}
                     duration={training.estimatedTime || "01:00:00"}
+                    calories={training.calories || 250}
                     difficulty={
                       (training.difficulty as
                         | "Beginner"
