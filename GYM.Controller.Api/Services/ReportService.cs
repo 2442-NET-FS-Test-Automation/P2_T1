@@ -28,6 +28,29 @@ public class ReportService : IReportService
         var newest = sortedStats.Last();
         var oldest = sortedStats.First();
 
+        // general mapping to DTO entity
+        var mappedHistory = sortedStats.Select(e => new StatsDTO
+        {
+            Id = e.Id,
+            UserId = e.UserId,
+            Weight = e.Weight,
+            Height = e.Height,
+            Strength = e.Strength,
+            MileRun = e.MileRun,
+            MeasureAt = e.MeasureAt,
+            Age = e.age
+        }).ToList();
+
+        var top5Strength = mappedHistory
+            .OrderByDescending(s => s.Strength)
+            .Take(5)
+            .ToList();
+
+        var Top5Mile = mappedHistory
+            .OrderBy(m => m.MileRun)
+            .Take(5)
+            .ToList();
+
         // 3. Compile and map out the data structures safely
         return new UserReportDTO
         {
@@ -37,17 +60,9 @@ public class ReportService : IReportService
             WeightChange = newest.Weight - oldest.Weight,
             BestMileRun = sortedStats.Min(s => s.MileRun).ToString(@"hh\:mm\:ss"),
             
-            History = sortedStats.Select(e => new StatsDTO
-            {
-                Id = e.Id,
-                UserId = e.UserId,
-                Weight = e.Weight,
-                Height = e.Height,
-                Strength = e.Strength,
-                MileRun = e.MileRun,
-                MeasureAt = e.MeasureAt,
-                Age = e.age
-            }).ToList()
+            History = mappedHistory,
+            Top5Strength = top5Strength,
+            Top5BestMileRun = Top5Mile
         };
     }
 }
