@@ -73,7 +73,7 @@ public class StatsController : ControllerBase
         //Achivement part
         var logro = await _service.GetStatsByUserId(userId);
         Console.WriteLine(logro);
-        if(!logro.Any()){
+        if(!logro.Any() || logro is null){
             await _achivementService.AddUserAchivement(3, userId);
         }
 
