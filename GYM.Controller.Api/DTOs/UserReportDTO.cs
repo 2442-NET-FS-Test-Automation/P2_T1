@@ -12,4 +12,6 @@ public class UserReportDTO
 
     // Detailed Historic Trend Data Rows
     public List<StatsDTO> History { get; set; } = new();
+    public List<StatsDTO> Top5BestMileRun {get; set;} = new();
+    public List<StatsDTO> Top5Strength {get; set;} = new();
 }
