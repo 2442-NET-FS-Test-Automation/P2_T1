@@ -47,7 +47,7 @@ public class ReportService : IReportService
             .ToList();
 
         var Top5Mile = mappedHistory
-            .OrderByDescending(m => m.MileRun)
+            .OrderBy(m => m.MileRun)
             .Take(5)
             .ToList();
 
