@@ -21,6 +21,7 @@ interface BookingCardProps {
   description?: string;
   duration?: string;
   imageUrl?: string;
+  calories?: number;
   onBook?: () => void;
   isMyBookingFeed?: boolean;
   onViewExercises?: () => void;
@@ -38,6 +39,8 @@ export function BookingCard({
   description = "A high-intensity circuit training session focused on core stability, aerobic threshold endurance, and explosive full-body movement patterns.",
   duration = "45 mins",
   imageUrl = "https://wp.com",
+  calories = 150,
+  location = "Main Arena 2",
   onBook,
   isMyBookingFeed = false,
   onViewExercises,
@@ -173,8 +176,9 @@ export function BookingCard({
             </div>
             <div className="drawer-specs">
               <div className="spec-badge">⏱️ {duration}</div>
-              <div className="spec-badge">🔥 ~450 kcal</div>
-              <div className="spec-badge">👟 Bring Clean Shoes</div>
+              <div className="spec-badge">🔥 {calories} </div>
+              <div className="spec-badge">📍 {location} </div>
+             
             </div>
           </div>
         </div>

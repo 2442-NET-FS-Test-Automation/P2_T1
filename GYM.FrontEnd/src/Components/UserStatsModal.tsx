@@ -143,7 +143,7 @@ export const UserStatsModal: React.FC<UserStatsModalProps> = ({ onClose, onCreat
               <input id="height" type="number" placeholder="178" value={form.height} onChange={handleChange} />
             </div>
             <div className="userstats-modal-field">
-              <label htmlFor="strength">Strength (lbs)</label>
+              <label htmlFor="strength">Strength (Kg)</label>
               <input id="strength" type="number" placeholder="185" value={form.strength} onChange={handleChange} />
             </div>
             <div className="userstats-modal-field">

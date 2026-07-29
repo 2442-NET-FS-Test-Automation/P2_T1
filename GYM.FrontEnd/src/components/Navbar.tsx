@@ -133,7 +133,7 @@ export default function Navbar() {
                 <FiBookOpen className="gq-text-neon" /> My Bookings
               </Link>
 
-              <Link to="/training" className="drawer-link" onClick={toggleMenu}>
+              <Link to="/user/booking" className="drawer-link" onClick={toggleMenu}>
                 <FiActivity className="gq-text-neon" /> Trainings
               </Link>
 
@@ -219,7 +219,7 @@ export default function Navbar() {
                 className="drawer-link"
                 onClick={toggleMenu}
               >
-                <FiSettings /> Configuration
+                <FiSettings /> User Configuration
               </Link>
 
               <button

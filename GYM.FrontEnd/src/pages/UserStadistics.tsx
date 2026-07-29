@@ -162,11 +162,6 @@ export const UserStatistics: React.FC = () => {
               <UserStatsModal onClose={() => setIsModalOpen(false)} onCreated={fetchStats} />
             )}
           </div>
-          {!hasValidStats && !loading && (
-            <span className="stats-badge-demo py-4">
-              Demo
-            </span>
-          )}
         </div>
 
         {/* Métricas clave */}
@@ -188,7 +183,7 @@ export const UserStatistics: React.FC = () => {
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider stats-text-purple">Max strength</p>
             <p className="text-2xl font-bold stats-text-cyan mt-1">
-              {latestStat ? latestStat.strength : 185} <span className="text-sm font-normal stats-text-muted">lbs</span>
+              {latestStat ? latestStat.strength : 185} <span className="text-sm font-normal stats-text-muted">Kg</span>
             </p>
           </div>
 
@@ -274,7 +269,7 @@ export const UserStatistics: React.FC = () => {
                       </td>
                       <td>{item.weight} kg</td>
                       <td>{item.height} cm</td>
-                      <td className="stats-text-cyan font-semibold">{item.strength} lbs</td>
+                      <td className="stats-text-cyan font-semibold">{item.strength} kg</td>
                       <td className="stats-text-purple font-mono">{formatMileRun(item.mileRun)}</td>
                     </tr>
                   ))}

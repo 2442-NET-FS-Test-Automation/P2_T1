@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getPlaceLabel } from "../utils/placeLabels";
 // IMPORT SERVICES: Pulls both your collection getter and status patcher endpoints
 import {
   deleteBooking,
@@ -141,12 +142,15 @@ export function UserMyBookings() {
                         training?.trainingName || "GymQuest Workout Track"
                       }
                       trainer={trainerFullName}
-                      location={placeString}
+                      location={getPlaceLabel(training.place) || "Main Arena"}
                       exerciseCount={training?.exercises?.length ?? 0}
                       imageUrl={resolvedCardImage}
                       description={training?.description}
                       difficulty={training?.difficulty as any}
                       isMyBookingFeed={true}
+                      duration={training?.estimatedTime}
+                      calories={training?.calories}
+                      
                       // Maps cleanly as a normalized numeric value down to the card interface components
                       status={Number(booking.status)}
                       onStatusChange={(targetNextStateCode) => {

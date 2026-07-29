@@ -141,7 +141,7 @@ export function UserBooking() {
         <BookingFilterBar onFilterChange={setActiveFilters} />
         <section className="bookingsContainer ">
           <div className="bookings-header-row">
-            <h2>Bookings</h2>
+            <h2>Trainings</h2>
 
             <div className="sort-wrapper">
               <label htmlFor="sort-select" className="text-neon small fw-semibold">
@@ -179,6 +179,7 @@ export function UserBooking() {
                     exerciseCount={training.exercises?.length || 0}
                     description={training.description}
                     duration={training.estimatedTime || "01:00:00"}
+                    calories={training.calories || 250}
                     difficulty={
                       (training.difficulty as
                         | "Beginner"
