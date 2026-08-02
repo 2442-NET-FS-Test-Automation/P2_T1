@@ -52,16 +52,6 @@ export function AdminSidebar() {
             </li>
             <li>
             <NavLink 
-                to="/admin/bookings" 
-                className={({ isActive }) => 
-                `nav-link text-white d-flex align-items-center gap-3 py-2 px-3 rounded ${isActive ? 'gq-active' : 'opacity-75 hover-opacity-100'}`
-                }
-            >
-                <span className="fs-5">🗓️</span> <span>Bookings</span>
-            </NavLink>
-            </li>
-            <li>
-            <NavLink 
                 to="/admin/trainings" 
                 className={({ isActive }) => 
                 `nav-link text-white d-flex align-items-center gap-3 py-2 px-3 rounded ${isActive ? 'gq-active' : 'opacity-75 hover-opacity-100'}`
