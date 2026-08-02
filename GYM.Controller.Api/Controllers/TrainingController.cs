@@ -36,7 +36,7 @@ public class TrainingController : ControllerBase
             var items = await _service.GetAllExercises();
 
             return items; 
-        });
+        }); 
         
         return dtos is null ? NotFound() : Ok(dtos); // 404 not found : 200 (list)
     }
