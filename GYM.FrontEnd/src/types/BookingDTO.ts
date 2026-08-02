@@ -13,3 +13,15 @@ export interface BookingDTO {
   trainings: TrainingDTO[];    
   users: UserData[];
 }
+
+export interface AdminBookingDTO {
+    id?: string | number;
+    trainingName: string;
+    status: BookingStatus;
+    doneAt: string; // ISO String o Formato Fecha
+    email: string;
+    name: string;
+    surname?: string;
+}
+
+

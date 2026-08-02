@@ -122,7 +122,7 @@ export default function Home() {
 
               <div className="col-lg-5 d-flex justify-content-lg-end gap-2 flex-wrap">
                 {[
-                  { label: `🏆 Achivements (${userStats.unlockedBadges}/${userStats.totalBadges})`, route: '/user/achievements', color: 'var(--gq-purple)' },
+                  { label: `🏆 Achievements (${userStats.unlockedBadges}/${userStats.totalBadges})`, route: '/user/achievements', color: 'var(--gq-purple)' },
                   { label: '📅 My Bookings', route: '/user/mybookings', color: 'var(--gq-blue)' },
                   { label: '⚡ Trainings', route: '/user/booking', color: 'var(--gq-aqua)' }
                 ].map((btn, idx) => (

@@ -129,9 +129,59 @@ public class TrainingRepository : ITrainingRepository
     public async Task<Training> UpdateTrainingInfo(Training UpdatedTraining)
     {
         await using var db = await _factory.CreateDbContextAsync();
-        db.Trainings.Update(UpdatedTraining);
+
+        // 1. Cargamos el entrenamiento existente en ESTA instancia de DbContext (incluyendo la tabla pivote)
+        var existingTraining = await db.Trainings
+            .Include(t => t.TrainingExercises)
+            .FirstOrDefaultAsync(t => t.Id == UpdatedTraining.Id);
+
+        if (existingTraining is null)
+            throw new InvalidOperationException($"Training with ID {UpdatedTraining.Id} not found.");
+
+        // 2. Actualizamos los campos primarios
+        db.Entry(existingTraining).CurrentValues.SetValues(UpdatedTraining);
+
+        // 3. Sincronizamos la colección de TrainingExercises en el DbContext activo
+        var incomingExerciseIds = UpdatedTraining.TrainingExercises
+            .Select(te => te.ExerciseId)
+            .ToList();
+
+        // Eliminar los que ya no están
+        var toRemove = existingTraining.TrainingExercises
+            .Where(te => !incomingExerciseIds.Contains(te.ExerciseId))
+            .ToList();
+
+        foreach (var item in toRemove)
+        {
+            existingTraining.TrainingExercises.Remove(item);
+        }
+
+        // Agregar los nuevos
+        var currentExerciseIds = existingTraining.TrainingExercises
+            .Select(te => te.ExerciseId)
+            .ToList();
+
+        var toAdd = incomingExerciseIds
+            .Where(id => !currentExerciseIds.Contains(id))
+            .ToList();
+
+        foreach (var exerciseId in toAdd)
+        {
+            existingTraining.TrainingExercises.Add(new TrainingExercises
+            {
+                TrainingId = existingTraining.Id,
+                ExerciseId = exerciseId
+            });
+        }
+
+        // 4. Guardar cambios
         await db.SaveChangesAsync();
-        return UpdatedTraining;
+
+        // 5. Re-consultar la entidad completa cargando la navegación para mapear el DTO sin nulos
+        return await db.Trainings
+            .Include(t => t.TrainingExercises)
+            .ThenInclude(te => te.Exercise)
+            .FirstAsync(t => t.Id == UpdatedTraining.Id);
     }
 
     public async Task<bool> DeleteTraining(Training training)

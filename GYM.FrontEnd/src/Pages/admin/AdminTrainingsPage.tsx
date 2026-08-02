@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { TrainingService } from '../../services/adminServices'; // O donde tengas tu servicio
 import { ExerciseService } from '../../services/adminServices';
-import { TrainingModal } from '../../Components/admin/modals/TrainingModal';
-import { ViewExercisesModal } from '../../Components/admin/modals/ViewExercisesModal';
+import { TrainingModal } from '../../components/Admin/modals/TrainingModal';
+import { ViewExercisesModal } from '../../components/Admin/modals/ViewExercisesModal';
 import type { TrainingDTO, TrainingCreateDTO } from '../../types/trainingDTO';
 import type { exerciseDTO } from '../../types/exerciseDTO';
-import {Pagination} from '../../Components/Pagination';
+import {Pagination} from '../../components/Pagination';
+import { StatCard } from '../../components/Admin/StatCard';
 
 export const AdminTrainingsPage: React.FC = () => {
     const [trainings, setTrainings] = useState<TrainingDTO[]>([]);
     const [availableExercises, setAvailableExercises] = useState<exerciseDTO[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [searchTerm, setSearchTerm] = useState<string>('');
+
+    // Filtro por Dificultad
+    const [selectedFilter, setSelectedFilter] = useState<'All' | 'Easy' | 'Intermediate' | 'Advanced'>('All');
 
     // Estados para Modal de Edición/Creación
     const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
@@ -25,6 +29,11 @@ export const AdminTrainingsPage: React.FC = () => {
     //Paginación
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 6;
+
+    // Resetear página al cambiar filtros o búsqueda
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm, selectedFilter]);
 
     // Cargar datos iniciales
     useEffect(() => {
@@ -46,6 +55,21 @@ export const AdminTrainingsPage: React.FC = () => {
         alert('Error al cargar la información de rutinas desde el servidor.');
         } finally {
         setLoading(false);
+        }
+    };
+
+    // Métricas para las StatCards
+    const countTotal = trainings.length;
+    const countEasy = trainings.filter(t => t.difficulty?.toLowerCase() === 'easy').length;
+    const countIntermediate = trainings.filter(t => t.difficulty?.toLowerCase() === 'intermediate').length;
+    const countAdvanced = trainings.filter(t => t.difficulty?.toLowerCase() === 'advanced').length;
+
+    // Helper para interactuar con las StatCards
+    const handleStatCardClick = (filter: 'Easy' | 'Intermediate' | 'Advanced') => {
+        if (selectedFilter === filter) {
+            setSelectedFilter('All');
+        } else {
+            setSelectedFilter(filter);
         }
     };
 
@@ -98,12 +122,20 @@ export const AdminTrainingsPage: React.FC = () => {
         }
     };
 
-    // Filtro de búsqueda
-    const filteredTrainings = trainings.filter(
-        (tr) =>
-        tr.trainingName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        tr.description?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    // (Búsqueda + Dificultad)
+    const filteredTrainings = trainings.filter((tr) => {
+        const search = searchTerm.toLowerCase();
+        const matchesSearch =
+            tr.trainingName?.toLowerCase().includes(search) ||
+            tr.description?.toLowerCase().includes(search);
+
+        let matchesFilter = true;
+        if (selectedFilter !== 'All') {
+            matchesFilter = tr.difficulty?.toLowerCase() === selectedFilter.toLowerCase();
+        }
+
+        return matchesSearch && matchesFilter;
+    });
 
     //Paginación
     const totalPages = Math.ceil(filteredTrainings.length / itemsPerPage);
@@ -131,27 +163,109 @@ export const AdminTrainingsPage: React.FC = () => {
                 ➕ <span>Create Training</span>
             </button>
         </div>
-
-        {/* Card Principal */}
-        <div className="card gq-card p-4">
-            {/* Search Bar */}
-            <div className="mb-4">
-                <div className="input-group" style={{ maxWidth: '400px' }}>
-                    <span
-                    className="input-group-text border-end-0 text-aqua"
-                    style={{ backgroundColor: '#161729', borderColor: 'var(--gq-surface-border)' }}
-                    >
-                    🔍
-                    </span>
-                    <input
-                    type="text"
-                    className="form-control gq-input border-start-0 text-white"
-                    placeholder="Search training..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+        {/* Grid de StatCards / Métricas por Dificultad */}
+        <div className="row g-3">
+            <div className="col-12 col-sm-6 col-xl-3">
+                <div 
+                    onClick={() => setSelectedFilter('All')} 
+                    style={{ cursor: 'pointer' }}
+                    className={`rounded-3 transition-all ${selectedFilter === 'All' ? 'ring-active' : ''}`}
+                >
+                    <StatCard 
+                        title="Total Routines" 
+                        value={loading ? "..." : countTotal.toString()} 
+                        change="Active Routines" 
+                        icon="📋" 
+                        accentColor="aqua" 
                     />
                 </div>
             </div>
+
+            <div className="col-12 col-sm-6 col-xl-3">
+                <div 
+                    onClick={() => handleStatCardClick('Easy')} 
+                    style={{ cursor: 'pointer' }}
+                    className={`rounded-3 transition-all ${selectedFilter === 'Easy' ? 'ring-active' : ''}`}
+                >
+                    <StatCard 
+                        title="Easy Level" 
+                        value={loading ? "..." : countEasy.toString()} 
+                        change="Beginner Friendly" 
+                        icon="🌱" 
+                        accentColor="purple" 
+                    />
+                </div>
+            </div>
+
+            <div className="col-12 col-sm-6 col-xl-3">
+                <div 
+                    onClick={() => handleStatCardClick('Intermediate')} 
+                    style={{ cursor: 'pointer' }}
+                    className={`rounded-3 transition-all ${selectedFilter === 'Intermediate' ? 'ring-active' : ''}`}
+                >
+                    <StatCard 
+                        title="Intermediate" 
+                        value={loading ? "..." : countIntermediate.toString()} 
+                        change="Moderate Level" 
+                        icon="⚡" 
+                        accentColor="blue" 
+                    />
+                </div>
+            </div>
+
+            <div className="col-12 col-sm-6 col-xl-3">
+                <div 
+                    onClick={() => handleStatCardClick('Advanced')} 
+                    style={{ cursor: 'pointer' }}
+                    className={`rounded-3 transition-all ${selectedFilter === 'Advanced' ? 'ring-active' : ''}`}
+                >
+                    <StatCard 
+                        title="Advanced" 
+                        value={loading ? "..." : countAdvanced.toString()} 
+                        change="High Intensity" 
+                        icon="🔥" 
+                        accentColor="magenta" 
+                    />
+                </div>
+            </div>
+        </div>
+
+        {/* Card Principal */}
+        <div className="card gq-card p-4">
+            {/* Search Bar + Filtros de Dificultad Alineados */}
+                <div className="row g-3 mb-4">
+                    <div className="col-12 col-md-5">
+                        <div className="input-group">
+                            <span
+                                className="input-group-text border-end-0 text-aqua"
+                                style={{ backgroundColor: '#161729', borderColor: 'var(--gq-surface-border)' }}
+                            >
+                                🔍
+                            </span>
+                            <input
+                                type="text"
+                                className="form-control gq-input border-start-0 text-white"
+                                placeholder="Search training..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="col-12 col-md-7 d-flex justify-content-md-end gap-2 flex-wrap align-items-center">
+                        {(['All', 'Easy', 'Intermediate', 'Advanced'] as const).map((filter) => (
+                            <button
+                                key={filter}
+                                className={`btn btn-sm px-3 fw-semibold transition-all ${
+                                    selectedFilter === filter ? 'btn-gq-aqua' : 'btn-outline-secondary text-white'
+                                }`}
+                                onClick={() => setSelectedFilter(filter)}
+                            >
+                                {filter === 'All' ? 'All Difficulties' : filter}
+                            </button>
+                        ))}
+                    </div>
+                </div>
 
             {/* Tabla / Loading State */}
             {loading ? (

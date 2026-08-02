@@ -320,54 +320,58 @@ public class TrainingService : ITrainingService
 
     public async Task<TrainingDTO?> UpdateTrainingInfo(TrainingDTO trainingDTO)
     {
-        //Checar si el id es null
-        if(trainingDTO.Id is null)
-            return null;
-        
-        //Buscar el training
-        Training? tr = await _repository.GetTrainingById(trainingDTO.Id.Value);
-
-        //Checar si training es null
-        if(tr is null)
+        if (trainingDTO.Id is null)
             return null;
 
-        //Actualizar el trainig en base al dto
-        tr.Difficulty = trainingDTO.Difficulty;
-        tr.Calories = trainingDTO.Calories;
-        tr.Place = trainingDTO.Place;
-        tr.Description = trainingDTO.Description;
-        tr.EstimatedTime = trainingDTO.EstimatedTime;
-        tr.CreatedAt = trainingDTO.CreatedAt ?? DateTime.UtcNow;
-        tr.TrainingName = trainingDTO.TrainingName;
+        // 1. Preparamos los IDs entrantes
+        List<int> incomingExerciseIds = trainingDTO.Exercises?
+            .Where(e => e.Id.HasValue)
+            .Select(e => e.Id!.Value)
+            .Distinct()
+            .ToList() ?? new List<int>();
 
-        //Enviar a repo el trainig actualizado
-        Training UpdatedTraining = await _repository.UpdateTrainingInfo(tr);
-
-        //Crear y enviar UpdatedDTO
-        List<ExerciseDTO> exercises = new();
-        TrainingDTO UpdatedTrainingDTO = new TrainingDTO
+        // 2. Armamos la entidad con los datos a actualizar
+        Training trainingToUpdate = new Training
         {
-            Id = UpdatedTraining.Id,
-            Difficulty = UpdatedTraining.Difficulty,
-            Calories = UpdatedTraining.Calories,
-            Place = UpdatedTraining.Place,
-            Description = UpdatedTraining.Description,
-            EstimatedTime = UpdatedTraining.EstimatedTime,
-            CreatedAt = UpdatedTraining.CreatedAt,
-            TrainingName = UpdatedTraining.TrainingName,
-            Exercises = UpdatedTraining.TrainingExercises.Select(te => new ExerciseDTO
-                {
-                    Id = te.Exercise.Id,
-                    Name = te.Exercise.Name,
-                    Description = te.Exercise.Description,
-                    VisualReferenceUrl = te.Exercise.VisualReferenceUrl,
-                    Sets = te.Exercise.Sets,
-                    Reps = te.Exercise.Reps
-                })
-                .ToList()
+            Id = trainingDTO.Id.Value,
+            TrainingName = trainingDTO.TrainingName,
+            Description = trainingDTO.Description,
+            Difficulty = trainingDTO.Difficulty,
+            Place = trainingDTO.Place,
+            Calories = trainingDTO.Calories,
+            EstimatedTime = trainingDTO.EstimatedTime,
+            CreatedAt = trainingDTO.CreatedAt ?? DateTime.UtcNow,
+            TrainingExercises = incomingExerciseIds.Select(exId => new TrainingExercises
+            {
+                TrainingId = trainingDTO.Id.Value,
+                ExerciseId = exId
+            }).ToList()
         };
 
-        return UpdatedTrainingDTO;
+        // 3. El repositorio se encarga del guardado y sincronización en la DB
+        Training updatedTraining = await _repository.UpdateTrainingInfo(trainingToUpdate);
+
+        // 4. Mapeamos y retornamos el DTO
+        return new TrainingDTO
+        {
+            Id = updatedTraining.Id,
+            Difficulty = updatedTraining.Difficulty,
+            Calories = updatedTraining.Calories,
+            Place = updatedTraining.Place,
+            Description = updatedTraining.Description,
+            EstimatedTime = updatedTraining.EstimatedTime,
+            CreatedAt = updatedTraining.CreatedAt,
+            TrainingName = updatedTraining.TrainingName,
+            Exercises = updatedTraining.TrainingExercises?.Select(te => new ExerciseDTO
+            {
+                Id = te.Exercise?.Id ?? te.ExerciseId,
+                Name = te.Exercise?.Name ?? string.Empty,
+                Description = te.Exercise?.Description ?? string.Empty,
+                VisualReferenceUrl = te.Exercise?.VisualReferenceUrl ?? string.Empty,
+                Sets = te.Exercise?.Sets ?? 0,
+                Reps = te.Exercise?.Reps ?? 0
+            }).ToList() ?? new List<ExerciseDTO>()
+        };
     }
 
     public async Task<bool> DeleteTraining(int TrainingID)
