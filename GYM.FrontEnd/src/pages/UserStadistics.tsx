@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import type { StatsDTO } from "../types/StatsDTO";
 import { getUserStatistics } from "../api/stadistics";
-import { UserStatsModal } from "../Components/UserStatsModal";
+import { UserStatsModal } from "../components/UserStatsModal";
 
 // Tus componentes de gráficas ya conectados
-import { MonthlyMilesChart } from "../Components/MonthlyMilesChart";
-import { StrengthProgressChart } from "../Components/StrengthProgressChart";
+import { MonthlyMilesChart } from "../components/MonthlyMilesChart";
+import { StrengthProgressChart } from "../components/StrengthProgressChart";
 import "../css/UserStadistics.css";
 import "../css/UserStatsModal.css";
 
