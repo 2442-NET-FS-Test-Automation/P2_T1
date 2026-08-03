@@ -28,6 +28,7 @@ import { Report } from './pages/Report';
 import { ToastContainer } from "react-toastify"; // library for notifications (success messages/error messages) like an alert in js
 import { TrainingDetail } from './pages/TrainingDetail';
 import { Footer } from './components/Footer';
+import { AdminBookingsPage } from './pages/admin/AdminBookingsPage';
 
 function App() {
   const { status, user } = useAuth();
@@ -224,6 +225,7 @@ function App() {
               <Route path="users" element={<AdminUsersPage />} /> {/*Las restricciones para admin se aplican en AdminUserPage.tsx*/}
               <Route path="trainings" element={<AdminTrainingsPage />} />
               <Route path="exercises" element={<AdminExercisesPage />} />
+              <Route path="bookings" element={<AdminBookingsPage />} />
             </Route>
 
             {/* =========================================================

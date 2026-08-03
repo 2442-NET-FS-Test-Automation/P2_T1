@@ -495,3 +495,8 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Cypress (Testing) Photos, SS, and Videos
+cypress/screenshots/
+cypress/videos/
+cypress/downloads
