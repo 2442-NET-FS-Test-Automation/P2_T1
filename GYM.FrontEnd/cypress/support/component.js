@@ -1,7 +1,7 @@
 //Runs testing support - runs before every componenet spec
 
 import "./commands";
-//import "@cypress/code-coverage/support";
+import "@cypress/code-coverage/support";
 
 import {mount} from "cypress/react";
 
