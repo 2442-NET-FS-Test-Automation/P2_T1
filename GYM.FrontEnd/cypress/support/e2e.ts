@@ -16,6 +16,6 @@
 // Import commands.js using ES2015 syntax:
 import './commands'
 import "@cypress/code-coverage/support"
-import compareSnapshotCommand from 'cypress-image-diff-js'
+import compareSnapshotCommand from 'cypress-image-diff-js';
 
 compareSnapshotCommand();
