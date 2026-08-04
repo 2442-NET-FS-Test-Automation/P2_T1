@@ -1,5 +1,6 @@
 import { defineConfig } from "cypress";
 import registerCodeCoverage from "@cypress/code-coverage/task";
+import getCompareSnapshotsPlugin from "cypress-image-diff-js/plugin";
 
 export default defineConfig({
   e2e: {
@@ -13,6 +14,9 @@ export default defineConfig({
         }
       })
       registerCodeCoverage(on, config);
+
+      //Visual regression plugin
+      getCompareSnapshotsPlugin(on, config);
 
       return config;
     },
