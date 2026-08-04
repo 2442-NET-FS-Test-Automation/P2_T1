@@ -35,7 +35,7 @@ public class SmokeTests : IDisposable
     public void OpeningTheSpa_ShowsTitleAndHeading()
     {
         //Act - a real navigation in a real browser
-        _driver.Navigate().GoToUrl("Http://localhost:5173/");
+        _driver.Navigate().GoToUrl("http://localhost:5173/");
 
         //Assert - the document title and the header react renders
         _driver.Title.Should().Be("GYM-QUEST");
