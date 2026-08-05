@@ -22,7 +22,8 @@ public class TokenService : ITokenService
             SecurityAlgorithms.HmacSha256
         );
         var token = new JwtSecurityToken("GYM-fulfillment","GYM-fulfillment-users",
-        new[] {new Claim(ClaimTypes.NameIdentifier, id.ToString()), new Claim(ClaimTypes.Email, email), new Claim(ClaimTypes.Role, role.ToString())},
+        new[] {new Claim(ClaimTypes.NameIdentifier, id.ToString()), new Claim(ClaimTypes.Email, email), 
+            new Claim(ClaimTypes.Role, role.ToString())},
         expires: DateTime.UtcNow.AddHours(1), signingCredentials:creds);
 
         return new JwtSecurityTokenHandler().WriteToken(token);

@@ -38,16 +38,16 @@
 declare global {
     namespace Cypress {
         interface Chainable{ //aqui añadir los comandos que se requieran en cypress para testing
-            login(username : string, password:string): Chainable<void>
+            login(email : string, password:string): Chainable<void>
         }
     }
 }
 
 export {};
 
-Cypress.Commands.add("login", (username : string, password : string) => {
-    cy.request("POST", "http://localhost:5076/authentication/login", {username, password})
+Cypress.Commands.add("login", (email : string, password : string) => {
+    cy.request("POST", "http://localhost:5076/authentication/login", {email, password})
         .then(({body}) => {
-            window.localStorage.setItem("token", body.token)
+            window.localStorage.setItem("gym.token", body.token)
         });
 })
