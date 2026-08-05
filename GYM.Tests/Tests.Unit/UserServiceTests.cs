@@ -43,7 +43,7 @@ public class UserServiceTests
         result.Should().Be(user);
     }
 
-     [Fact] //Test para verificar si la logica de login funciona con credenciales validas
+     [Fact] //Test para verificar si la logica de login falla con credenciales invalidas
     public async Task ValidateAsync_MockUserRepository_BadCredentials()
     {
         User user = new();
@@ -53,16 +53,16 @@ public class UserServiceTests
         user.Password="1234";
         user.Role= Role.User;
 
-        _service.Setup(r => r.GetUserByEmail("user.test@ut.com")).ReturnsAsync(user);
-        _hasher.Setup(r => r.VerifyHashedPassword(user, "1234", "12345")).Returns(PasswordVerificationResult.Failed);
-
-        var sut = new UserService(_service.Object, _hasher.Object);
-
         LogInDTO dto = new LogInDTO
         {
             Email = user.Email,
-            Password = "12345"
+            Password = "wrong-password"
         };
+
+        _service.Setup(r => r.GetUserByEmail(user.Email)).ReturnsAsync(user);
+        _hasher.Setup(r => r.VerifyHashedPassword(user, user.Password, dto.Password)).Returns(PasswordVerificationResult.Failed);
+
+        var sut = new UserService(_service.Object, _hasher.Object);
 
         var result = await sut.ValidateAsync(dto);
 
