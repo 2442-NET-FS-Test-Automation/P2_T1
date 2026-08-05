@@ -11,7 +11,7 @@ namespace GYM.Tests.Tests.Integration;
 
 public class GymApiFactory : WebApplicationFactory<Program>
 {
-    protected override void ConfigureWebHost(IwebHostBuilder builder)
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         
     }
