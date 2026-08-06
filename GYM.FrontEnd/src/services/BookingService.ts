@@ -23,7 +23,7 @@ const toDateTimeString = (time: string): string => {
 // URL: GET /api/Booking/allBookings
 export const getPublicBookings = async (): Promise<BookingDTO[]> => {
   try {
-    const response = await api.get<BookingDTO[]>("/Booking/allBookings");
+    const response = await api.get<BookingDTO[]>("/Booking/bookings");
     return response.data;
   } catch (error) {
     console.error("Error getting bookings:", error);
