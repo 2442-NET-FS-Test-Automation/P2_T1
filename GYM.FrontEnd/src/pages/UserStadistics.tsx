@@ -258,9 +258,9 @@ export const UserStatistics: React.FC = () => {
                   {(hasValidStats
                     ? stats
                     : [
-                      { id: 1, measureAt: "2026-07-20", weight: 75.5, height: 178, strength: 185, mileRun: "06:15" },
-                      { id: 2, measureAt: "2026-07-15", weight: 76.0, height: 178, strength: 155, mileRun: "06:30" },
-                      { id: 3, measureAt: "2026-07-10", weight: 76.8, height: 178, strength: 135, mileRun: "06:45" },
+                      { id: 1, measureAt: "2026-07-20", weight: 75.5, height: 178, strength: 185, mileRun: "00:06:15" },
+                      { id: 2, measureAt: "2026-07-15", weight: 76.0, height: 178, strength: 155, mileRun: "00:06:30" },
+                      { id: 3, measureAt: "2026-07-10", weight: 76.8, height: 178, strength: 135, mileRun: "00:06:45" },
                     ]
                   ).map((item) => (
                     <tr key={item.id}>
