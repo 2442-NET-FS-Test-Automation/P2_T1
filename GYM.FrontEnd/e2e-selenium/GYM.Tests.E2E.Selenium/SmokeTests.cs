@@ -18,7 +18,7 @@ public class SmokeTests : IDisposable
         options.AddArgument("--window-size=1280,900");
 
         //Creating our driver with the options above
-        _driver = new ChromeDriver();
+        _driver = new ChromeDriver(options);
 
         //We can also use the constructor to configure an implicit wait
         //We will set it so each FindElement(s) retries for up to 2s before
@@ -39,5 +39,6 @@ public class SmokeTests : IDisposable
 
         //Assert - the document title and the header react renders
         _driver.Title.Should().Be("GYM-QUEST");
+        
     }
 }
