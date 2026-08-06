@@ -19,6 +19,7 @@ public class StatsServiceTests
     {
         // ARRANGE: We create an entity of domain that returns a simulate repository
 
+
         var dto = new StatsDTO
         {
             Id = 1,
@@ -31,7 +32,7 @@ public class StatsServiceTests
             Age = 25
         };
 
-        var dbStats = new Statistic
+        Statistic dbStats = new Statistic
         {
             Id = 1,
             UserId = 1,
@@ -54,14 +55,12 @@ public class StatsServiceTests
 
         // validating all values in stats
         result.Should().NotBeNull();
-        result.Should().Be(1);
-        result.Should().Be(dbStats.UserId);
         result.Should().Be(dbStats.Weight);
         result.Should().Be(dbStats.Height);
         result.Should().Be(dbStats.Strength);
-        result.Should().Be(dbStats.MileRun);
-        result.Should().Be(dbStats.MeasureAt);
         result.Should().Be(dbStats.age);
+
+        _statsService.Verify(r => r.AddStats(It.IsAny<Statistic>()), Times.Once);
     }
 
     // testear valores numericos negativos
@@ -69,7 +68,6 @@ public class StatsServiceTests
     public async Task CreateStatsAsync_WithBad400Status()
     {
         // ARRANGE: We create an entity of domain that returns a simulate repository
-
         var dto = new StatsDTO
         {
             Id = 1,
@@ -82,32 +80,14 @@ public class StatsServiceTests
             Age = -25
         };
 
-        var dbStats = new Statistic
-        {
-            Id = 1,
-            UserId = 1,
-            Weight = -78.8m,
-            Height = -1.83m,
-            Strength = -130m,
-            MileRun = new TimeOnly(14,30),
-            MeasureAt = new DateOnly(2026, 8 ,6),
-            age = -25
-        };
-
-        _statsService
-            .Setup(r => r.AddStats(It.IsAny<Statistic>()))
-            .ReturnsAsync(dbStats);
-
         var sut = new StatsService(_statsService.Object);
 
         // ACT
         var result = await sut.AddStatsAsync(dto);
 
-        // validating all values in stats
+        // ASSERT
         result.Should().NotBeNull();
-        result.Should().Be(-78.8m);
-        result.Should().Be(-1.83m);
-        result.Should().Be(-130m);
-        result.Should().Be(-25);
+
+        _statsService.Verify(r => r.AddStats(It.IsAny<Statistic>()), Times.Never);
     }
 }

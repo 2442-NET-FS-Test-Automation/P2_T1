@@ -77,7 +77,10 @@ public class StatsController : ControllerBase
             await _achivementService.AddUserAchivement(3, userId);
         }
 
-        StatsDTO createdStatsDto = await _service.AddStatsAsync(newStats);
+        StatsDTO? createdStatsDto = await _service.AddStatsAsync(newStats);
+
+        if(createdStatsDto is null)
+            return BadRequest("Invalid stats data.");
 
         // Cache eviction
         _cache.Remove("Stats:all");
