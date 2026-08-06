@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1020,
+    "status": 0,
+    "trainings": [
+      {
+        "id": 3,
+        "trainingName": "Beginner Full Body Workout",
+        "difficulty": "Beginner",
+        "place": 1,
+        "exercises": [{ "id": 1 }, { "id": 2 }, { "id": 3 }]
+      }
+    ],
+    "users": [{ "name": "Marcus", "surname": "Coach" }]
+  },
+  {
+    "id": 1030,
+    "status": 0,
+    "trainings": [
+      {
+        "id": 4,
+        "trainingName": "Full Cardio",
+        "difficulty": "Advanced",
+        "place": 1,
+        "exercises": [{ "id": 1 }, { "id": 2 }, { "id": 3 }, { "id": 4 }]
+      }
+    ],
+    "users": [{ "name": "John", "surname": "Coach" }]
+  },
+  {
+    "id": 1040,
+    "status": 0,
+    "trainings": [
+      {
+        "id": 5,
+        "trainingName": "High Intensity Cardio & Core",
+        "difficulty": "Heroic",
+        "place": 1,
+        "exercises": [
+          { "id": 1 },
+          { "id": 2 },
+          { "id": 3 },
+          { "id": 4 },
+          { "id": 5 }
+        ]
+      }
+    ],
+    "users": [{ "name": "Leena", "surname": "Coach" }]
+  }
+]
