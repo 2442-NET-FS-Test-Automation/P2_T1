@@ -44,7 +44,7 @@ public class RouteProtectionMatrix : IDisposable
             By.CssSelector("form.login-form input[type='email']"));
         var password = _driver.FindElement(
             By.CssSelector("form.login-form input[type='password']"));
-        var submit = _driver.FindElement(By.CssSelector("form.login button[type='submit']"));
+        var submit = _driver.FindElement(By.CssSelector("form.login-form button[type='submit']"));
 
         // Drive the elements.
         username.SendKeys("user@test.com");

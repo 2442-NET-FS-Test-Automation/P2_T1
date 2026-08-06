@@ -24,7 +24,7 @@ public class SessionTokenTests : IDisposable
         //failing. Proper explicit waits will be deemed later on
         _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(2);
 
-        _driver.Navigate().GoToUrl("http://localhost:####/");
+        _driver.Navigate().GoToUrl("http://localhost:5173/");
 
     }
 
@@ -36,7 +36,7 @@ public class SessionTokenTests : IDisposable
     [Fact]
     public void BrowserRefresh_MaintainsAuth()
     {
-        _driver.Navigate().GoToUrl("http://localhost:####/login");
+        _driver.Navigate().GoToUrl("http://localhost:5173/login");
 
         // Our SPA has no id or name attributes - so we're gonna use A LOT
         // of css selectors. Hint: you should ad those ID selectors
@@ -44,14 +44,14 @@ public class SessionTokenTests : IDisposable
             By.CssSelector("form.login-form input[type='email']"));
         var password = _driver.FindElement(
             By.CssSelector("form.login-form input[type='password']"));
-        var submit = _driver.FindElement(By.CssSelector("form.login button[type='submit']"));
+        var submit = _driver.FindElement(By.CssSelector("form.login-form button[type='submit']"));
 
         // Drive the elements.
         username.SendKeys("user@test.com");
         password.SendKeys("1234");
         submit.Click();
         //Act - a real navigation in a real browser
-        _driver.Navigate().GoToUrl("http://localhost:####/user/mybookings");
+        _driver.Navigate().GoToUrl("http://localhost:5173/user/mybookings");
 
         _driver.FindElement(By.TagName("h2")).Text.Should().Be("Your bookings");
 

@@ -45,7 +45,7 @@ public class CatalogTests : IDisposable
             By.CssSelector("form.login-form input[type='email']"));
         var password = _driver.FindElement(
             By.CssSelector("form.login-form input[type='password']"));
-        var submit = _driver.FindElement(By.CssSelector("form.login button[type='submit']"));
+        var submit = _driver.FindElement(By.CssSelector("form.login-form button[type='submit']"));
 
         // Drive the elements.
         username.SendKeys("user@test.com");
@@ -55,10 +55,19 @@ public class CatalogTests : IDisposable
         _driver.Navigate().GoToUrl("http://localhost:5173/user/booking");
 
 
-        var bookingCard = _driver.FindElement(By.CssSelector(".booking-card-wrapper")).Should().HaveCount(1);
-        var workoutName = bookingCard.GetAttribute(_driver.FindElement(By.TagName("h3")).Text);
+        var cardsCollection = _driver.FindElements(By.CssSelector(".booking-card-wrapper"));
+        var firstCard = cardsCollection.First();
+        var workoutName = firstCard.FindElement(By.TagName("h3")).Text;
+        workoutName.Should().NotBeNullOrEmpty();
 
-        //WORKING
+        firstCard.FindElement(By.CssSelector("button.primary")).Click();
+        _driver.Navigate().GoToUrl("http://localhost:5173/user/mybookings");
+        var myCardsCollection = _driver.FindElements(By.CssSelector(".exercise-list .booking-card-wrapper"));
+        var myFirstCard = myCardsCollection.First();
+        var myWorkoutName = myFirstCard.FindElement(By.TagName("h3")).Text;
+        myWorkoutName.Should().NotBeNullOrEmpty();
+
+        myWorkoutName.Should().Be(workoutName);
     }
 
 }
