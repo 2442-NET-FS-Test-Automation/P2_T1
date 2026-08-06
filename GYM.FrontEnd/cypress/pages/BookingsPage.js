@@ -1,0 +1,32 @@
+export class BookingsPage{
+    // Firsts, a method to test "readiness" (has the page loaded succesfully)
+    visit(){
+        cy.visit("/user/booking");
+        cy.get("div.booking-card").should("have.length.at.least", 1);
+        return this; // This "return this" is what allows for method chaining
+        // example. .visit(). get() - etc
+    }
+
+    // Method for searching via our searchbar on the page
+    search(text){
+        cy.get('input[type ="search"][placeholder="Filter by name..."]').type(text);
+        return this;
+    }
+
+    // Method for toggling the sort order
+    toggleSort(){
+        cy.get(".toolbar button").click();
+        return this;
+    }
+
+    // Pure selection methid - just get all the cards so we don't have to type
+    // cy.get("article.card") over and over again
+    cards(){
+        return cy.get("article.card");
+    }
+
+    // Grab the first title that appears on the page in a BookCard
+    firstTitle(){
+        return cy.get("article.card h3 a").first();
+    }
+}
