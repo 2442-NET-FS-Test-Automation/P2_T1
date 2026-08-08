@@ -159,6 +159,7 @@ export const TrainingModal: React.FC<TrainingModalProps> = ({ isOpen, onClose, o
                     <label className="form-label small fw-semibold text-aqua">Place</label>
                     <select
                         className="form-select gq-input text-white"
+                        id="place-input"
                         value={formData.place}
                         onChange={(e) => setFormData({ ...formData, place: e.target.value as Place })}
                     >
@@ -183,6 +184,7 @@ export const TrainingModal: React.FC<TrainingModalProps> = ({ isOpen, onClose, o
                     <label className="form-label small fw-semibold text-aqua">Calories (kcal)</label>
                     <input
                         type="number"
+                        data-cy="calories-input"
                         className="form-control gq-input text-white"
                         value={formData.calories}
                         onChange={(e) => setFormData({ ...formData, calories: Number(e.target.value) })}
