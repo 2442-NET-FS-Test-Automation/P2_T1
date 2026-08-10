@@ -4,6 +4,7 @@ using FluentAssertions;
 using GYM.Controller.Api.DTOs;
 using GYM.Tests.Tests.Integration;
 
+[Collection("Gym API")]
 public class StatsApiTest
 {
     private readonly HttpClient _client;
@@ -47,7 +48,6 @@ public class StatsApiTest
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/Stats", dto);
-
 
         // Assert
          //Si las credenciales son invalidas nos devuelve un UnAuthorizes - 401
