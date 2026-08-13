@@ -78,4 +78,45 @@ public class RouteProtectionMatrix : IDisposable
         //Assert - the document title and the header react renders
         _driver.FindElement(By.TagName("h2")).Text.Should().Be("LOG IN TO YOUR ACCOUNT");
     }
+
+    [Fact]
+    public void OpeningBookingCatalog_ShowsCatalog()
+    {
+        _driver.Manage().Cookies.DeleteAllCookies();
+        _driver.Navigate().GoToUrl($"{BaseUrl}/login");
+        var username = _driver.FindElement(By.CssSelector("form.login-form input[type='email']"));
+        var password = _driver.FindElement(By.CssSelector("form.login-form input[type='password']"));
+        var submit = _driver.FindElement(By.CssSelector("form.login-form button[type='submit']"));
+
+        username.SendKeys("user@test.com");
+        // FIXED: Reverted back to your verified password credentials ("1234") to allow the session to pass
+        password.SendKeys("1234"); 
+        submit.Click();
+
+        var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
+
+        // --- FIX A: WAIT FOR THE AUTH RE-ROUTING TO FINISH ON ITS OWN ---
+        // This blocks the driver thread until the landing page logic successfully redirects 
+        // away from /login, proving the JWT payload was saved into LocalStorage/Cookies.
+        wait.Until(d => !d.Url.Contains("/login"));
+
+        // 2. --- NAVIGATE TO WORKOUTS CATALOG VIEW ---
+        _driver.Navigate().GoToUrl($"{BaseUrl}/user/booking");
+
+        // --- FIX B: CONFIRM WE STABLE-LANDED ON THE CATALOG PAGE ---
+        wait.Until(d => d.Url.Contains("/user/booking"));
+
+        //Assert - the document title and the header react renders
+        _driver.FindElement(By.TagName("h2")).Text.Should().Be("Trainings");
+    }
+
+    [Fact]
+    public void OpeningBookingCatalog_NonAuth()
+    {
+        _driver.Manage().Cookies.DeleteAllCookies();
+        _driver.Navigate().GoToUrl($"{BaseUrl}/user/booking");
+
+        //Assert - the document title and the header react renders
+        _driver.FindElement(By.TagName("h2")).Text.Should().Be("LOG IN TO YOUR ACCOUNT");
+    }
 }
