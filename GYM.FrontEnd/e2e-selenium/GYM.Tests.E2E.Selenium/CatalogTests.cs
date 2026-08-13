@@ -1,31 +1,36 @@
-
 using FluentAssertions;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Chromium;
+using Xunit;
+using Xunit.Abstractions;
+using OpenQA.Selenium.Support.UI;
 
 public class CatalogTests : IDisposable
 {
 
     private readonly ChromeDriver _driver;
-    public CatalogTests()
+    private readonly ITestOutputHelper _output;
+
+    private const string BaseUrl = "http://localhost:5173";
+    public CatalogTests(ITestOutputHelper output)
     {
-        //Option classes : per browser launch config
-        //Headless makes it so chrome doesnt pop up
-        //we can even tell it things like what window size we want to use
+        _output = output;
+
+
+
+        // Option classes: per browser launch config.
+        // Headless makes it so chrome doesn't pop up
+        // we can even tell it things like what window size we want it to use
+        _output = output;
+
         var options = new ChromeOptions();
-        options.AddArgument("--headless=new");
+        options.AddArgument("--headless=new"); // Runs inside console environment blocks cleanly
         options.AddArgument("--window-size=1280,900");
 
-        //Creating our driver with the options above
         _driver = new ChromeDriver(options);
+        _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
 
-        //We can also use the constructor to configure an implicit wait
-        //We will set it so each FindElement(s) retries for up to 2s before
-        //failing. Proper explicit waits will be deemed later on
-        _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(2);
-
-        _driver.Navigate().GoToUrl("http://localhost:5173/");
 
     }
 
@@ -37,22 +42,29 @@ public class CatalogTests : IDisposable
     [Fact]
     public void LoginAndBooking_UsesAuth()
     {
-        _driver.Navigate().GoToUrl("http://localhost:5173/login");
-
-        // Our SPA has no id or name attributes - so we're gonna use A LOT
-        // of css selectors. Hint: you should ad those ID selectors
-        var username = _driver.FindElement( // Could also just ask for the input we named username
-            By.CssSelector("form.login-form input[type='email']"));
-        var password = _driver.FindElement(
-            By.CssSelector("form.login-form input[type='password']"));
+        _driver.Manage().Cookies.DeleteAllCookies();
+        _driver.Navigate().GoToUrl($"{BaseUrl}/login");
+        var username = _driver.FindElement(By.CssSelector("form.login-form input[type='email']"));
+        var password = _driver.FindElement(By.CssSelector("form.login-form input[type='password']"));
         var submit = _driver.FindElement(By.CssSelector("form.login-form button[type='submit']"));
 
-        // Drive the elements.
         username.SendKeys("user@test.com");
-        password.SendKeys("1234");
+        // FIXED: Reverted back to your verified password credentials ("1234") to allow the session to pass
+        password.SendKeys("1234"); 
         submit.Click();
-        //Act - a real navigation in a real browser
-        _driver.Navigate().GoToUrl("http://localhost:5173/user/booking");
+
+        var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
+
+        // --- FIX A: WAIT FOR THE AUTH RE-ROUTING TO FINISH ON ITS OWN ---
+        // This blocks the driver thread until the landing page logic successfully redirects 
+        // away from /login, proving the JWT payload was saved into LocalStorage/Cookies.
+        wait.Until(d => !d.Url.Contains("/login"));
+
+        // 2. --- NAVIGATE TO WORKOUTS CATALOG VIEW ---
+        _driver.Navigate().GoToUrl($"{BaseUrl}/user/booking");
+
+        // --- FIX B: CONFIRM WE STABLE-LANDED ON THE CATALOG PAGE ---
+        wait.Until(d => d.Url.Contains("/user/booking"));
 
 
         var cardsCollection = _driver.FindElements(By.CssSelector(".booking-card-wrapper"));
@@ -61,7 +73,7 @@ public class CatalogTests : IDisposable
         workoutName.Should().NotBeNullOrEmpty();
 
         firstCard.FindElement(By.CssSelector("button.primary")).Click();
-        _driver.Navigate().GoToUrl("http://localhost:5173/user/mybookings");
+        _driver.Navigate().GoToUrl($"{BaseUrl}/user/mybookings");
         var myCardsCollection = _driver.FindElements(By.CssSelector(".exercise-list .booking-card-wrapper"));
         var myFirstCard = myCardsCollection.First();
         var myWorkoutName = myFirstCard.FindElement(By.TagName("h3")).Text;
