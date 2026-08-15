@@ -500,3 +500,6 @@ $RECYCLE.BIN/
 cypress/screenshots/
 cypress/videos/
 cypress/downloads
+
+cypress-image-diff-screenshots/
+cypress-image-diff-html-report/

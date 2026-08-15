@@ -1,11 +1,12 @@
 import type { exerciseDTO } from "./exerciseDTO";
 
 export type Place = 'Home' | 'Gym' | 'Outdoor';
+export type Difficulty = 'Beginner' | 'Intermediate' | 'Advanced' | 'Heroic';
 
 export interface TrainingDTO {
   id?: number;                  // int? -> opcional (number)
   trainingName: string;        // string -> string
-  difficulty: string;          // string -> string
+  difficulty: Difficulty | string;          // string -> string
   place: Place | number;      // Place -> Enum o número
   calories: number;            // int -> number
   description: string;         // string -> string
@@ -17,7 +18,7 @@ export interface TrainingDTO {
 export interface TrainingCreateDTO {
     id?: number;
     trainingName: string;        // string -> string
-    difficulty: string;          // string -> string
+    difficulty: Difficulty | string;          // string -> string
     place: Place | number;      // Place -> Enum o número
     calories: number;            // int -> number
     description: string;         // string -> string

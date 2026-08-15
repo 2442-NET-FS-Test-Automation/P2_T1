@@ -1,0 +1,17 @@
+[
+  {
+    "email": "user@test.com",
+    "phone": "1212121212",
+    "password": "1234"
+  },
+{
+    "email": "trainer@test.com",
+    "phone": "1313131313",
+    "password": "1234"
+  },
+{
+    "email": "admin@test.com",
+    "phone": "1414141414",
+    "password": "1234"
+  }
+]

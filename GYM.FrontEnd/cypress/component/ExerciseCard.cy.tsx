@@ -9,34 +9,20 @@ describe("<ExerciseCard />", () => {
   });
 
   it("renders the provided props", () => {
-    cy.mount(
-      <ExerciseCard
-        name="Bench Press"
-        description="Chest exercise"
-      />
-    );
+    cy.mount(<ExerciseCard name="Bench Press" description="Chest exercise" />);
 
     cy.contains("Bench Press").should("exist");
     cy.contains("Chest exercise").should("exist");
   });
 
   it("shows sets and reps when both are provided", () => {
-    cy.mount(
-      <ExerciseCard
-        sets={4}
-        reps={12}
-      />
-    );
+    cy.mount(<ExerciseCard sets={4} reps={12} />);
 
     cy.contains("4 sets × 12 reps").should("exist");
   });
 
   it("does not show sets and reps if one is missing", () => {
-    cy.mount(
-      <ExerciseCard
-        sets={4}
-      />
-    );
+    cy.mount(<ExerciseCard sets={4} />);
 
     cy.contains("sets").should("not.exist");
   });
@@ -44,11 +30,7 @@ describe("<ExerciseCard />", () => {
   it("calls onClick when the card is clicked", () => {
     const onClick = cy.stub().as("cardClick");
 
-    cy.mount(
-      <ExerciseCard
-        onClick={onClick}
-      />
-    );
+    cy.mount(<ExerciseCard onClick={onClick} />);
 
     cy.get(".exercise-card").click();
 
