@@ -14,4 +14,3 @@ public class TrainingDTO
     public List<ExerciseDTO> Exercises { get; set; } = new ();
 
 }
-

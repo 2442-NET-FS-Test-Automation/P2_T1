@@ -32,11 +32,8 @@ describe('userstats', () => {
 
         cy.visit("http://localhost:5173/user/stadistics")
 
-        // Esperas la petición y asertas sobre la respuesta directamente
+        // Waits for request and assert response directly
         cy.wait('@getStats').its('response.statusCode').should('eq', 200);
-
-        // // Verificas que el cuerpo de la respuesta contenga datos (no esté vacío)
-        // cy.wait('@getStats').its('response.body').should('not.be.empty');
 
         // Click on button create
         cy.contains("button", "Create new record").click();
