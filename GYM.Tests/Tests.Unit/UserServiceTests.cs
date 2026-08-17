@@ -68,5 +68,75 @@ public class UserServiceTests
 
         result.Should().Be(null);
     }
+
+    [Fact] //Method_Scenario_ExpectedResult
+    public async Task RegisterUserAsync_ValidCredentials_UserCreated()
+    {
+        _service.Setup(r => r.GetUserByEmail(It.IsAny<string>())).ReturnsAsync((User?)null);
+        _service.Setup(r => r.GetUserByPhone(It.IsAny<string>())).ReturnsAsync((User?)null);
+        
+        RegisterUserDTOs dto = new RegisterUserDTOs
+        {
+            Email = "user@test.com",
+            Phone = "1234567890",
+            Password = "1234",
+        };
+
+        var sut = new UserService(_service.Object, _hasher.Object);
+
+        var result = await sut.RegisterUserAsync(dto);
+        result.Should().BeNull();
+
+    }
     
+    [Fact] //Method_Scenario_ExpectedResult
+    public async Task RegisterUserAsync_RepitedEmail_ErrorMesssage()
+    {
+        User user = new();
+        user.Email= "ser@test.com";
+        user.Phone = "1234567890";
+
+        _service.Setup(r => r.GetUserByEmail(It.IsAny<string>())).ReturnsAsync(user);
+        _service.Setup(r => r.GetUserByPhone(It.IsAny<string>())).ReturnsAsync((User?)null);
+        
+        RegisterUserDTOs dto = new RegisterUserDTOs
+        {
+            Email = "user@test.com",
+            Phone = "1234567890",
+            Password = "1234",
+        };
+
+        var sut = new UserService(_service.Object, _hasher.Object);
+
+        var result = await sut.RegisterUserAsync(dto);
+        result.Should().Be("Email already in use");
+
+    }
+
+    [Fact] //Method_Scenario_ExpectedResult
+    public async Task RegisterUserAsync_RepitedPhone_ErrorMesssage()
+    {
+        User user = new();
+        user.Id = 1;
+        user.Email= "user.test@ut.com";
+        user.Phone = "1234567890";
+        user.Password="1234";
+        user.Role= Role.User;
+
+        _service.Setup(r => r.GetUserByEmail(It.IsAny<string>())).ReturnsAsync((User?)null);
+        _service.Setup(r => r.GetUserByPhone(It.IsAny<string>())).ReturnsAsync(user);
+        
+        RegisterUserDTOs dto = new RegisterUserDTOs
+        {
+            Email = "user@test.com",
+            Phone = "1234567890",
+            Password = "1234",
+        };
+
+        var sut = new UserService(_service.Object, _hasher.Object);
+
+        var result = await sut.RegisterUserAsync(dto);
+        result.Should().Be("Phone already in use");
+
+    }
 }
