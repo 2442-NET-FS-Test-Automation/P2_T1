@@ -55,10 +55,10 @@ public class StatsServiceTests
 
         // validating all values in stats
         result.Should().NotBeNull();
-        result.Should().Be(dbStats.Weight);
-        result.Should().Be(dbStats.Height);
-        result.Should().Be(dbStats.Strength);
-        result.Should().Be(dbStats.age);
+        result.Weight.Should().Be(dto.Weight);
+        result.Height.Should().Be(dto.Height);
+        result.Strength.Should().Be(dto.Strength);
+        result.Age.Should().Be(dto.Age);
 
         _statsService.Verify(r => r.AddStats(It.IsAny<Statistic>()), Times.Once);
     }
@@ -83,11 +83,12 @@ public class StatsServiceTests
         var sut = new StatsService(_statsService.Object);
 
         // ACT
-        var result = await sut.AddStatsAsync(dto);
+        Func<Task> result = async() => await sut.AddStatsAsync(dto);
 
         // ASSERT
-        result.Should().NotBeNull();
+        await result.Should().ThrowAsync<ArgumentException>();
 
+        // Verifying that it never was stored in database
         _statsService.Verify(r => r.AddStats(It.IsAny<Statistic>()), Times.Never);
     }
 }
