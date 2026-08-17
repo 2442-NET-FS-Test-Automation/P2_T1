@@ -5,8 +5,8 @@ using GYM.Controller.Api.DTOs;
 
 namespace GYM.Tests.Tests.Integration;
 
-[Collection("Gym API")]
-public class AuthApiTesting
+[Collection("GYM API")]
+public class AuthApiTesting : IClassFixture<GymApiFactory>
 {
     private readonly HttpClient _client;
 

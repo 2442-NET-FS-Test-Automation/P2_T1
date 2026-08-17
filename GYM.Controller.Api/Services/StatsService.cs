@@ -78,8 +78,11 @@ public async Task<IEnumerable<StatsDTO>> GetStatsByUserId(int userId)
     }).ToList();
 }
 
-public async Task<StatsDTO> AddStatsAsync(StatsDTO statsDTO)
+public async Task<StatsDTO?> AddStatsAsync(StatsDTO statsDTO)
 {
+    if (statsDTO.Weight < 0 || statsDTO.Height <= 0 || statsDTO.Strength < 0 || statsDTO.Age < 0)
+        return null; 
+
     Statistic newStats = new Statistic 
     {
         UserId = statsDTO.UserId,
