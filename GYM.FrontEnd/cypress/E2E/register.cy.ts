@@ -5,24 +5,49 @@ describe('register', () => {
 
     //Siempre ir a la pagina de register
     beforeEach(() => {
-        cy.visit("http://localhost:5173/register");
+        
     });
 
     it("Register with valid credentials", () => {
-        //Log in
-        cy.get("input[placeholder='you@email.com']").type("user@test.com"); //Poner correo
-        cy.get("input[placeholder='••••••••']").type("1234"); //Poner contraseña
-        cy.contains("button", "Log In ⚔️").click(); //Click en el boton de login, contains por el texto que contiene el boton
+        cy.intercept(
+            "POST",
+            "**/authentication/register",
+            (req) => {
+                expect(req.body).to.deep.equal({
+                    email:"test@test.com", 
+                    password:"123456A", 
+                    phone:"1234567890"
+                });
+                req.reply({
+                    statusCode:200,
+                    body:{
+                        email: "user.test@cypress.com",
+                        password: "123456A",
+                        phone: "1234567890"
+                    }
+                });
+        }).as("register");
 
-        cy.url().should("include", "/home-user");
+        cy.visit("http://localhost:5173/register");
+        cy.get('input[type="email"]')
+            .type("test@test.com");
 
-        //Checar que el token se guarde
-        cy.window().then((win) => {
-            const token = win.localStorage.getItem("gym.token");
+        cy.get('input[type="tel"]')
+            .type("1234567890");
 
-            expect(token).to.not.be.null;
-            expect(token).to.not.be.empty;
-        });
+        cy.get('input[type="password"]')
+            .first()
+            .type("123456A");
+
+        cy.get('input[type="password"]')
+            .last()
+            .type("123456A");
+
+        cy.contains("button", "Register ⚔️")
+            .click();
+        
+        cy.contains("Account Created!")
+            .should("be.visible");
 
     })
 })
