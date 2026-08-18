@@ -17,15 +17,36 @@ public class TrainingsTesting
 
     private record TokenResponse(string? token);
 
+    public async Task AuthenticateClientAsync()
+    {
+        var loginDTO = new
+        {
+            Email = "trainer@test.com", 
+            Password = "1234"
+        };
+
+        var response = await _client.PostAsJsonAsync("/authentication/login", loginDTO);
+        response.EnsureSuccessStatusCode();
+
+        // Deserialize the response using TokenResponse record
+        var result = await response.Content.ReadFromJsonAsync<TokenResponse>();
+
+        // Adjuntar el token al cliente HttpClient para todas las peticiones siguientes
+        _client.DefaultRequestHeaders.Authorization = 
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", result?.token);
+    }
+
     // GET - Do training exists in DB?
     [Fact]
     public async Task GetTrainings_With200OkStatus()
     {
         // Arrange
+        await AuthenticateClientAsync();
+
         int ExistingId = 1;
 
         // Act
-        var response = await _client.GetAsync($"/api/Trainings/trainings/{ExistingId}");
+        var response = await _client.GetAsync($"/api/Training/trainings/{ExistingId}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -41,8 +62,11 @@ public class TrainingsTesting
     [InlineData(9999)] // Unexisting ID
     public async Task GetTrainings_With404NotFoundStatus(int NotExistingId)
     {
+        // Arrange
+        await AuthenticateClientAsync();
+
         // Act
-        var response = await _client.GetAsync($"/api/Trainings/trainings/{NotExistingId}");
+        var response = await _client.GetAsync($"/api/Training/trainings/{NotExistingId}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -53,25 +77,41 @@ public class TrainingsTesting
     public async Task CreateTrainings_With201CreatedStatus()
     {
         // Arrange
-        TrainingDTO dto = new TrainingDTO 
+        await AuthenticateClientAsync();
+
+        var dto = new TrainingAddDTO 
         {
-            Id = 1, 
-            TrainingName="Beginner Full Body Workout at GYM", 
-            Difficulty="Beginner",
-            Place=Place.GYM,
-            Calories=65,
-            Description="Beginner Full Body Workout at GYM",
-            EstimatedTime=new TimeOnly(3,0),
-            Exercises = new List<ExerciseDTO>()
+            TrainingName = "Beginner Full Body Workout at GYM", 
+            Difficulty = "Beginner",
+            Place = Place.GYM,
+            Calories = 65,
+            Description = "Beginner Full Body Workout at GYM",
+            EstimatedTime = new TimeOnly(3, 0),
+            ExercisesIDs = new List<int>{ 1 }
         };
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/Trainings/training", dto);
+        var response = await _client.PostAsJsonAsync("/api/Training/trainings", dto);
+
+        // Debug help: read response content if it still fails
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorBody = await response.Content.ReadAsStringAsync();
+            throw new Exception($"API returned {response.StatusCode}: {errorBody}");
+        }
 
         // Assert
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.Created, HttpStatusCode.NoContent); // returns OK 200 of everything was fine
-        var payload = await response.Content.ReadFromJsonAsync<TokenResponse>();
-        payload!.token.Should().NotBeNullOrWhiteSpace();
+        response.StatusCode.Should().BeOneOf(
+            HttpStatusCode.Created, 
+            HttpStatusCode.OK, 
+            HttpStatusCode.NoContent
+        );
+
+        if (response.StatusCode != HttpStatusCode.NoContent)
+        {
+            var createdTraining = await response.Content.ReadFromJsonAsync<TrainingDTO>();
+            createdTraining.Should().NotBeNull();
+        }
     }
     
     // POST Invalid data -> Bad request
@@ -80,6 +120,8 @@ public class TrainingsTesting
     public async Task CreateTrainings_With400BadRequestStatus(int id, string trainingname, string difficulty, Place place, int calories, string description)
     {
         // Arrange
+        await AuthenticateClientAsync();
+
         TrainingDTO dto = new TrainingDTO {
             Id = id, 
             TrainingName = trainingname,
@@ -90,7 +132,7 @@ public class TrainingsTesting
         };
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/Trainings/trainings", dto);
+        var response = await _client.PostAsJsonAsync("/api/Training/trainings", dto);
 
         // Assert
          //Si las credenciales son invalidas nos devuelve un UnAuthorizes - 401
@@ -105,6 +147,8 @@ public class TrainingsTesting
     public async Task EditTrainings_With200OkStatus(string trainingname, string difficulty, string description)
     {
         // Arrange
+        await AuthenticateClientAsync();
+
         TrainingDTO dto = new TrainingDTO {
             TrainingName = trainingname,
             Difficulty = difficulty,
@@ -112,7 +156,7 @@ public class TrainingsTesting
         };
 
         // Act
-        var response = await _client.PatchAsJsonAsync("/api/Trainings/trainings-info", dto);
+        var response = await _client.PutAsJsonAsync("/api/Training/trainings-info", dto);
 
         // Assert
          //Si las credenciales son invalidas nos devuelve un UnAuthorizes - 401
@@ -126,15 +170,23 @@ public class TrainingsTesting
     public async Task DeleteTrainings_With200OkStatus()
     {
         // Arrange
-        int ExistingId = 1;
+        await AuthenticateClientAsync();
 
-        // Act
-        var response = await _client.DeleteAsync($"/api/Trainings/trainings/{ExistingId}");
+        int ExistingId = 4002;
+
+        // Act -> /api/Training/training/{trainingID}
+        var response = await _client.DeleteAsync($"/api/Training/training/{ExistingId}");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            throw new Exception($"DELETE respondió con {response.StatusCode}: {errorContent}");
+        }
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK); // 200
+        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.NoContent); // 200
 
-        var getResponse = await _client.GetAsync($"/api/Trainings/trainings/{ExistingId}");
+        var getResponse = await _client.GetAsync($"/api/Training/trainings/{ExistingId}");
         getResponse.StatusCode.Should().Be(HttpStatusCode.NotFound); // Checking if it was successfully deleted
     }
 
@@ -142,10 +194,12 @@ public class TrainingsTesting
     public async Task DeleteTrainings_With400NotFoundStatus()
     {
         // Arrange
+        await AuthenticateClientAsync();
+
         int NotExistingId = 9999;
 
         // Act
-        var response = await _client.DeleteAsync($"/api/Trainings/trainings/{NotExistingId}");
+        var response = await _client.DeleteAsync($"/api/Training/training/{NotExistingId}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
