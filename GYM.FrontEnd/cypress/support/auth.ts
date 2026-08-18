@@ -7,7 +7,8 @@ const ROLE_CLAIM =
 
 export function createTestToken(
   name = "Cypress User",
-  role = "User"
+  role = "User",
+  id = 1
 ) {
   const header = btoa(
     JSON.stringify({
