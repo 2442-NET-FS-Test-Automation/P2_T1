@@ -5,7 +5,7 @@ describe('Permisions check', () => {
 
 
     it("Login with user credentials and trainer/admin pannel is not visible", () => {
-         cy.login("user@test.com", "1234")
+        cy.login("user@test.com", "1234")
        
         cy.visit("/home-user")
 
@@ -19,7 +19,7 @@ describe('Permisions check', () => {
     })
 
     it("Login with trainer credentials and admin pannel is not visible", () => {
-         cy.login("trainer@test.com", "1234")
+        cy.login("trainer@test.com", "1234")
        
         cy.visit("/home-user")
 
@@ -33,7 +33,7 @@ describe('Permisions check', () => {
     })
 
     it("Login with admin credentials and trainer pannel is not visible", () => {
-         cy.login("admin@test.com", "1234")
+        cy.login("admin@test.com", "1234")
        
         cy.visit("/home-user")
 

@@ -35,10 +35,13 @@
 //     }
 //   }
 // }
+import { createTestToken } from "../support/auth";
+
 declare global {
     namespace Cypress {
         interface Chainable{ //aqui añadir los comandos que se requieran en cypress para testing
-            login(email : string, password:string): Chainable<void>
+            login(email : string, password:string): Chainable<void>,
+            loginAs(name: string, role: string): Chainable<void>
         }
     }
 }
@@ -51,3 +54,30 @@ Cypress.Commands.add("login", (email : string, password : string) => {
             window.localStorage.setItem("gym.token", body.token)
         });
 })
+
+Cypress.Commands.add(
+    "loginAs",
+    (name: string, role: string) => {
+        cy.visit("/login", {
+            onBeforeLoad(win) {
+                win.localStorage.setItem(
+                    "gym.token",
+                    createTestToken(name, role)
+                );
+            }
+        });
+
+        cy.intercept(
+            "GET",
+            "**/authentication/me",
+            {
+                statusCode: 200,
+                body: {
+                    id: 1,
+                    name,
+                    role
+                }
+            }
+        ).as("getUser");
+    }
+);

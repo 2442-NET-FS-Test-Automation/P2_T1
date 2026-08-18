@@ -3,18 +3,7 @@ import { createTestToken } from "../support/auth";
 describe("User can see achievements", () => {
 
     beforeEach(() => {
-        cy.intercept(
-        "GET",
-        "**/authentication/me",
-        {
-            statusCode: 200,
-            body: {
-                id: 1,
-                role: "User",
-                email: "user@test.com"
-            }
-        }
-        ).as("getUser");
+        cy.loginAs("Cypress User", "User")
 
         cy.intercept(
             "GET",
@@ -32,18 +21,11 @@ describe("User can see achievements", () => {
             }
         ).as("getUserAchievements");
 
-        cy.visit("/user/achievements", {
-            onBeforeLoad(win) {
-                win.localStorage.setItem(
-                    "gym.token",
-                    createTestToken("Cypress User", "User")
-                );
-            }
-        });
     });
 
     it("See achievements", () => {
 
+        cy.visit("/user/achievements")
         cy.wait("@getAchievements");
         
 
