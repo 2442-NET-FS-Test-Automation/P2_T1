@@ -139,4 +139,60 @@ public class UserServiceTests
         result.Should().Be("Phone already in use");
 
     }
+
+    //Update User Details Tests
+
+        //SUccessfull update, should have used fluent assertions for dtos to ensure data quality
+
+    [Fact]//If UserId is null
+    public async Task UpdateUserDetails_NoUserId_Null()
+    { //Arrange
+        
+        UserDetailsDTO dto = new UserDetailsDTO{Gender = Gender.Female, Name = "Dummy Name", Surname = "Dummy Surname"};
+
+        var sut = new UserService(_service.Object, _hasher.Object);
+       
+       //Act
+       var response = await sut.UpdateUserDetails(dto);
+
+       //Assert
+
+       response.Should().BeNull();
+    }
+
+    [Fact]//No User with said UserId
+    public async Task UpdateUserDetails_NoUserWithUserId_Null()
+    { //Arrange
+        
+        UserDetailsDTO dto = new UserDetailsDTO{UserId = 1, Gender = Gender.Female, Name = "Dummy Name", Surname = "Dummy Surname"};
+        var sut = new UserService(_service.Object, _hasher.Object);
+       
+       //Act
+       var response = await sut.UpdateUserDetails(dto);
+
+       //Assert
+
+       response.Should().BeNull();
+    }
+
+    [Fact]//No User with said UserId
+    public async Task UpdateUserDetails_SucessfullUpdate_UpdatedUserDetailDTO()
+    { //Arrange
+        DateTime joinAt = DateTime.UtcNow;
+        UserDetailsDTO dto = new UserDetailsDTO{Id = 1, UserId = 1, Gender = Gender.Female, Name = "Dummydto Name", Surname = "Dummydto Surname", JoinAt = joinAt};
+        UserDetail details = new UserDetail{Id = 1, UserId = 1, Gender = dto.Gender, Name = dto.Name, Surname = dto.Surname, JoinAt = joinAt};
+       
+
+        _service.Setup(c => c.GetUserDetailsByUserId(1)).ReturnsAsync(details);
+        _service.Setup(c => c.UpdateUserDetails(details)).ReturnsAsync(details);
+
+       var sut = new UserService(_service.Object, _hasher.Object);
+
+       //Act
+       var response = await sut.UpdateUserDetails(dto);
+
+       //Assert
+
+       response.Should().BeEquivalentTo(dto);
+    }
 }

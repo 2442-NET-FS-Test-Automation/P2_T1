@@ -13,7 +13,8 @@ namespace GYM.Tests.Tests.Unit;
 
 public class AchivementControllerTests
 {
-    private readonly IMemoryCache _cache = new MemoryCache(new MemoryCacheOptions());    private readonly Mock<IAchievementService> _achivementService = new();
+    private readonly IMemoryCache _cache = new MemoryCache(new MemoryCacheOptions());   
+    private readonly Mock<IAchievementService> _achivementService = new();
 
     private AchievementController CreateSut() => new(_achivementService.Object, _cache);
     [Fact]
