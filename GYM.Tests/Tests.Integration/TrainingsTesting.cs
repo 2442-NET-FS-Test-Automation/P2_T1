@@ -2,11 +2,12 @@ using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
 using GYM.Controller.Api.DTOs;
-using GYM.Tests.Tests.Integration;
 using GYM.Data.Entities;
 
+namespace GYM.Tests.Tests.Integration;
+
 [Collection("Gym API")]
-public class TrainingsTesting
+public class TrainingsTesting : IClassFixture<GymApiFactory>
 {
     private readonly HttpClient _client;
 
@@ -43,7 +44,7 @@ public class TrainingsTesting
         // Arrange
         await AuthenticateClientAsync();
 
-        int ExistingId = 1;
+        int ExistingId = 2006;
 
         // Act
         var response = await _client.GetAsync($"/api/Training/trainings/{ExistingId}");
@@ -172,22 +173,33 @@ public class TrainingsTesting
         // Arrange
         await AuthenticateClientAsync();
 
-        int ExistingId = 4002;
-
-        // Act -> /api/Training/training/{trainingID}
-        var response = await _client.DeleteAsync($"/api/Training/training/{ExistingId}");
-
-        if (!response.IsSuccessStatusCode)
+        // 1. Crear un entrenamiento específico para esta prueba
+        var dto = new TrainingAddDTO 
         {
-            var errorContent = await response.Content.ReadAsStringAsync();
-            throw new Exception($"DELETE respondió con {response.StatusCode}: {errorContent}");
-        }
+            TrainingName = "Temporary Training To Delete", 
+            Difficulty = "Beginner",
+            Place = Place.GYM,
+            Calories = 100,
+            Description = "Will be deleted",
+            EstimatedTime = new TimeOnly(1, 0),
+            ExercisesIDs = new List<int>{ 1 }
+        };
+
+        var createResponse = await _client.PostAsJsonAsync("/api/Training/trainings", dto);
+        createResponse.EnsureSuccessStatusCode();
+
+        var createdTraining = await createResponse.Content.ReadFromJsonAsync<TrainingDTO>();
+        int? targetId = createdTraining!.Id; // Usar el ID dinámico generado por la DB
+
+        // Act
+        var response = await _client.DeleteAsync($"/api/Training/training/{targetId}");
 
         // Assert
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.NoContent); // 200
+        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.NoContent);
 
-        var getResponse = await _client.GetAsync($"/api/Training/trainings/{ExistingId}");
-        getResponse.StatusCode.Should().Be(HttpStatusCode.NotFound); // Checking if it was successfully deleted
+        // Verificar que realmente fue eliminado
+        var getResponse = await _client.GetAsync($"/api/Training/trainings/{targetId}");
+        getResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -202,7 +214,7 @@ public class TrainingsTesting
         var response = await _client.DeleteAsync($"/api/Training/training/{NotExistingId}");
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }
 

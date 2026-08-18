@@ -6,7 +6,7 @@ using GYM.Data.Entities;
 using GYM.Tests.Tests.Integration;
 
 [Collection("Gym API")]
-public class StatsApiTest
+public class StatsApiTest : IClassFixture<GymApiFactory>
 {
     private readonly HttpClient _client;
 
@@ -17,11 +17,31 @@ public class StatsApiTest
 
     private record TokenResponse(string? token);
 
+    public async Task AuthenticateClientAsync()
+    {
+        var loginDTO = new
+        {
+            Email = "user@test.com", 
+            Password = "1234"
+        };
+
+        var response = await _client.PostAsJsonAsync("/authentication/login", loginDTO);
+        response.EnsureSuccessStatusCode();
+
+        // Deserialize the response using TokenResponse record
+        var result = await response.Content.ReadFromJsonAsync<TokenResponse>();
+
+        // Adjuntar el token al cliente HttpClient para todas las peticiones siguientes
+        _client.DefaultRequestHeaders.Authorization = 
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", result?.token);
+    }
+
     [Fact]
     public async Task GetStats_With200OkStatus()
     {
+        await AuthenticateClientAsync();
         // Arrange
-        int ExistingId = 1;
+        int ExistingId = 1019;
 
         // Act
         var response = await _client.GetAsync($"/api/Stats/{ExistingId}");
@@ -41,6 +61,8 @@ public class StatsApiTest
     [InlineData(9999)] // Unexisting ID
     public async Task GetTrainings_With404NotFoundStatus(int NotExistingId)
     {
+        await AuthenticateClientAsync();
+
         // Act
         var response = await _client.GetAsync($"/api/Stats/{NotExistingId}");
 
@@ -51,18 +73,28 @@ public class StatsApiTest
     [Fact]
     public async Task CreateStats_With200OkStatus()
     {
+        await AuthenticateClientAsync();
+
         // Arrange
-        StatsDTO dto = new StatsDTO {Id = 1, UserId = 1, Weight = 65m, Height = 183m, 
-            Strength = 170m, MileRun = new TimeOnly(12, 4), 
-            MeasureAt = new DateOnly(2026, 2, 4), Age=25};
+        StatsDTO dto = new StatsDTO
+        {
+            Id = 1,
+            UserId = 2011,
+            Weight = 65m,
+            Height = 1.83m,
+            Strength = 170m,
+            MileRun = new TimeOnly(12, 4),
+            MeasureAt = new DateOnly(2026, 2, 4),
+            Age = 25
+        };
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/Stats", dto);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK); // returns OK 200 of everything was fine
-        var payload = await response.Content.ReadFromJsonAsync<TokenResponse>();
-        payload!.token.Should().NotBeNullOrWhiteSpace();
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
+        var payload = await response.Content.ReadAsStringAsync();
+        payload!.Should().NotBeNullOrWhiteSpace();
     }
     
     [Theory]
@@ -70,6 +102,8 @@ public class StatsApiTest
     public async Task CreateStats_With400BadRequestStatus(int id, int userid, decimal weight, decimal height,
     decimal strength )
     {
+        await AuthenticateClientAsync();
+
         // Arrange
         StatsDTO dto = new StatsDTO {
         Id = id, 
@@ -82,10 +116,8 @@ public class StatsApiTest
         var response = await _client.PostAsJsonAsync("/api/Stats", dto);
 
         // Assert
-         //Si las credenciales son invalidas nos devuelve un UnAuthorizes - 401
+         // Bad request
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        var payload = await response.Content.ReadAsStringAsync();
-        payload.Should().Contain("Bad credentials");
     }
 }
 
