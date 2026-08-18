@@ -13,7 +13,7 @@ public class LayoutIntegrityTests : IDisposable
     private readonly ITestOutputHelper _output;
 
     private const string BaseUrl = "http://localhost:5173";
-    public CatalogTests(ITestOutputHelper output)
+    public LayoutIntegrityTests(ITestOutputHelper output)
     {
         _output = output;
 
@@ -40,7 +40,7 @@ public class LayoutIntegrityTests : IDisposable
     }
 
     [Fact]
-    public void LoginAndBooking_UsesAuth()
+    public void MobileViewport_StacksButtonsAndMaintainsReadability()
     {
         _driver.Manage().Cookies.DeleteAllCookies();
         _driver.Navigate().GoToUrl($"{BaseUrl}/login");
@@ -49,37 +49,70 @@ public class LayoutIntegrityTests : IDisposable
         var submit = _driver.FindElement(By.CssSelector("form.login-form button[type='submit']"));
 
         username.SendKeys("user@test.com");
-        // FIXED: Reverted back to your verified password credentials ("1234") to allow the session to pass
-        password.SendKeys("1234"); 
+        password.SendKeys("1234");
         submit.Click();
 
         var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
+        wait.Until(d => !d.Url.Contains("/login"));
+        _driver.Manage().Window.Size = new System.Drawing.Size(375, 667);
 
-        // --- FIX A: WAIT FOR THE AUTH RE-ROUTING TO FINISH ON ITS OWN ---
-        // This blocks the driver thread until the landing page logic successfully redirects 
-        // away from /login, proving the JWT payload was saved into LocalStorage/Cookies.
+        _driver.Navigate().GoToUrl($"{BaseUrl}/user/mybookings");
+        wait.Until(d => d.FindElements(By.CssSelector(".booking-card-wrapper")).Count > 0);
+
+        var firstCard = _driver.FindElements(By.CssSelector(".booking-card-wrapper")).First();
+        var buttonWrapper = firstCard.FindElement(By.CssSelector(".card-button-wrapper"));
+
+        buttonWrapper.GetCssValue("flex-direction").Should().Be("column",
+            "Under narrow viewports, buttons must stack vertically to prevent text clipping.");
+
+        var exerciseTrackButton = buttonWrapper.FindElement(By.CssSelector("button.secondary"));
+        exerciseTrackButton.Displayed.Should().BeTrue();
+        exerciseTrackButton.Text.Should().Contain("Track Exercises ➔");
+    }
+
+    [Fact]
+    public void DetailsDrawer_TogglesExpansionAndExposesHiddenContent()
+    {
+        _driver.Manage().Cookies.DeleteAllCookies();
+        _driver.Navigate().GoToUrl($"{BaseUrl}/login");
+        var username = _driver.FindElement(By.CssSelector("form.login-form input[type='email']"));
+        var password = _driver.FindElement(By.CssSelector("form.login-form input[type='password']"));
+        var submit = _driver.FindElement(By.CssSelector("form.login-form button[type='submit']"));
+
+        username.SendKeys("user@test.com");
+        password.SendKeys("1234");
+        submit.Click();
+
+        var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
         wait.Until(d => !d.Url.Contains("/login"));
 
-        // 2. --- NAVIGATE TO WORKOUTS CATALOG VIEW ---
-        _driver.Navigate().GoToUrl($"{BaseUrl}/user/booking");
+        _driver.Manage().Window.Size = new System.Drawing.Size(1280, 900);
 
-        // --- FIX B: CONFIRM WE STABLE-LANDED ON THE CATALOG PAGE ---
-        wait.Until(d => d.Url.Contains("/user/booking"));
-
-
-        var cardsCollection = _driver.FindElements(By.CssSelector(".booking-card-wrapper"));
-        var firstCard = cardsCollection.First();
-        var workoutName = firstCard.FindElement(By.TagName("h3")).Text;
-        workoutName.Should().NotBeNullOrEmpty();
-
-        firstCard.FindElement(By.CssSelector("button.primary")).Click();
         _driver.Navigate().GoToUrl($"{BaseUrl}/user/mybookings");
-        var myCardsCollection = _driver.FindElements(By.CssSelector(".exercise-list .booking-card-wrapper"));
-        var myFirstCard = myCardsCollection.First();
-        var myWorkoutName = myFirstCard.FindElement(By.TagName("h3")).Text;
-        myWorkoutName.Should().NotBeNullOrEmpty();
+        wait.Until(d => d.FindElements(By.CssSelector(".booking-card-wrapper")).Count > 0);
 
-        myWorkoutName.Should().Be(workoutName);
+        var targetCardWrapper = _driver.FindElements(By.CssSelector(".booking-card-wrapper")).First();
+        var drawerElement = targetCardWrapper.FindElement(By.CssSelector(".booking-card-drawer"));
+
+        // Audit the React structural class signature tokens
+        targetCardWrapper.GetAttribute("class").Should().NotContain("expanded",
+            "The collapsible drawer container must not possess the expanded helper class name string on baseline initialization.");
+
+        // Trigger details dropdown toggle click interaction
+        var detailsButton = targetCardWrapper.FindElement(By.CssSelector(".card-button-wrapper button.secondary:not([style*='border'])"));
+        detailsButton.Text.Should().Be("Details");
+        detailsButton.Click();
+
+        // Wait until layout wrapper class successfully appends active class token name string
+        wait.Until(d => targetCardWrapper.GetAttribute("class").Contains("expanded"));
+
+        // Wait until the browser unrolls the text contents safely past its collapsed state boundaries
+        wait.Until(d => d.FindElements(By.CssSelector(".drawer-description h5")).First().Displayed);
+
+
+        var drawerDescriptionHeader = targetCardWrapper.FindElement(By.CssSelector(".drawer-description h5"));
+        drawerDescriptionHeader.Text.Should().Be("ABOUT THIS WORKOUT");
+        drawerDescriptionHeader.Displayed.Should().BeTrue();
     }
 
 }
