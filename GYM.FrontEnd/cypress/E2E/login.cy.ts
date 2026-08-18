@@ -1,18 +1,41 @@
 //Login testing
 /// <reference types="cypress" />
+import { createTestToken } from "../support/auth";
 
 describe('login', () => {
 
     //Antes del login queremos estar en el lugar indicado
     beforeEach(() => {
         cy.visit("http://localhost:5173/login");
+    
+        cy.intercept(
+            "GET",
+            "**/api/Training/trainings",
+            {
+                statusCode: 200,
+                body: []
+            }
+        ).as("getTrainings");
     });
 
     it("Log in con credenciales validas para rol user", () => {
+         cy.intercept(
+            "POST",
+            "**/authentication/login",
+            {
+                statusCode: 200,
+                body: {
+                    token: createTestToken("Cypress User", "User")
+                }
+            }
+        ).as("login");
+
         //Log in
         cy.get("input[placeholder='you@email.com']").type("user@test.com"); //Poner correo
         cy.get("input[placeholder='••••••••']").type("1234"); //Poner contraseña
         cy.contains("button", "Log In ⚔️").click(); //Click en el boton de login, contains por el texto que contiene el boton
+
+        cy.wait("@login");
 
         cy.url().should("include", "/home-user");
 
@@ -46,10 +69,22 @@ describe('login', () => {
     })
 
     it("Log in con credenciales validas para rol trainer", () => {
+        cy.intercept(
+            "POST",
+            "**/authentication/login",
+            {
+                statusCode: 200,
+                body: {
+                    token: createTestToken("Cypress User", "Trainer")
+                }
+            }
+        ).as("login");
         //Log in
         cy.get("input[placeholder='you@email.com']").type("trainer@test.com"); //Poner correo
         cy.get("input[placeholder='••••••••']").type("1234"); //Poner contraseña
         cy.contains("button", "Log In ⚔️").click(); //Click en el boton de login, contains por el texto que contiene el boton
+
+        cy.wait("@login");
 
         //Checar por medio de la url que estamos en la landing page tras un login exitoso
         cy.url().should("include", "/home-user");
@@ -84,8 +119,22 @@ describe('login', () => {
     })
 
     it("Log in con credenciales validas para rol admin", () => {
+         cy.intercept(
+            "POST",
+            "**/authentication/login",
+            {
+                statusCode: 200,
+                body: {
+                    token: createTestToken("Cypress User", "Admin")
+                }
+            }
+        ).as("login");
         //Log in
-        cy.login("admin@test.com", "1234")
+        cy.get("input[placeholder='you@email.com']").type("admin@test.com"); //Poner correo
+        cy.get("input[placeholder='••••••••']").type("1234"); //Poner contraseña
+        cy.contains("button", "Log In ⚔️").click(); //Click en el boton de login, contains por el texto que contiene el boton
+
+        cy.wait("@login");
        
         cy.visit("/home-user")
         //Checar que el token se guarde
@@ -119,6 +168,17 @@ describe('login', () => {
     })
 
     it("Log in con credenciales invalidas", () => {
+        cy.intercept(
+            "POST",
+            "**/authentication/login",
+            {
+                statusCode: 401,
+                body: {
+                    
+                }
+            }
+        ).as("login");
+        
         //Intentar log in
         cy.get("input[placeholder='you@email.com']").type("user@test.com"); //Poner correo
         cy.get("input[placeholder='••••••••']").type("bad-password"); //Poner contraseña
