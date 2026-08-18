@@ -67,7 +67,7 @@ public class StatsServiceTests
     [Fact]
     public async Task CreateStatsAsync_WithBad400Status()
     {
-        // ARRANGE: We create an entity of domain that returns a simulate repository
+        // ARRANGE: We create an entity of domain that returns a simulated repository response
         var dto = new StatsDTO
         {
             Id = 1,
@@ -83,10 +83,10 @@ public class StatsServiceTests
         var sut = new StatsService(_statsService.Object);
 
         // ACT
-        Func<Task> result = async() => await sut.AddStatsAsync(dto);
+        var result = await sut.AddStatsAsync(dto);
 
         // ASSERT
-        await result.Should().ThrowAsync<ArgumentException>();
+        result.Should().BeNull(); // if weight/height/strength/age are below 0 return null
 
         // Verifying that it never was stored in database
         _statsService.Verify(r => r.AddStats(It.IsAny<Statistic>()), Times.Never);
