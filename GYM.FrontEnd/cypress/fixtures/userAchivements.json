@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "name": "First Workout",
+    "description": "Complete your first workout.",
+    "completed_At": "2026-08-10T18:30"
+  },
+  {
+    "id": 3,
+    "name": "Getting Started",
+    "description": "Create your first training routine.",
+    "completed_At": "2026-08-10T18:30"
+  }
+]

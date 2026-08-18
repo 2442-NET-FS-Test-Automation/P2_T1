@@ -85,4 +85,58 @@ public class AuthControllerTests
                       
     }
 
+    [Fact] //Credenciales validas para crear nuevo usuario
+    public async Task Register_ValidCredentials_201CreatedAtAction()
+    {
+        //Arrange
+        RegisterUserDTOs dto = new RegisterUserDTOs
+        {
+            Email = "user.test@email.com",
+            Phone = "1234567890",
+            Password = "password123"
+        };
+
+        _userService.Setup(r => r.RegisterUserAsync(It.IsAny<RegisterUserDTOs>())).ReturnsAsync((string?)null);
+
+        AuthController sut = CreateSut();
+
+        //Act
+        var result = await sut.Register(dto);
+
+        //Assert
+        var created = result.Should().BeOfType<CreatedAtActionResult>().Subject; //Created at action
+
+        created.StatusCode.Should().Be(201); //Status code
+        created.ActionName.Should().Be(nameof(AuthController.Me)); //Devuelve un action name de me
+        created.Value.Should().BeNull();
+        
+    }
+
+    [Fact] //Credenciales validas para crear nuevo usuario
+    public async Task Register_Error_401Conflict()
+    {
+        //Arrange
+        RegisterUserDTOs dto = new RegisterUserDTOs
+        {
+            Email = "user.test@email.com",
+            Phone = "1234567890",
+            Password = "password123"
+        };
+
+        _userService.Setup(r => r.RegisterUserAsync(It.IsAny<RegisterUserDTOs>())).ReturnsAsync("Error");
+
+        AuthController sut = CreateSut();
+
+        //Act
+        var result = await sut.Register(dto);
+
+        //Assert
+        var created = result.Should().BeOfType<ConflictObjectResult>().Subject; //Created at action
+
+        created.StatusCode.Should().Be(409); //Status code
+        created.Value.Should().BeEquivalentTo(new { result = "Error"});
+        
+    }
+
+
 }
