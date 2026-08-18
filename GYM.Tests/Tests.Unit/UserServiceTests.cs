@@ -195,4 +195,46 @@ public class UserServiceTests
 
        response.Should().BeEquivalentTo(dto);
     }
+
+    //Admin/Trainer can see user    list
+    [Fact]
+    public async Task GetAllUsersForAdmin_Valid_ListUserAdminDTO()
+    {
+        //Arrange
+        List<User> users = new List<User>();
+        
+        User user = new User{Id= 1, Email = "user@email.com", Phone = "1234567890", Password = "123456", Role = Role.User};
+        User trainer =new User{Id= 2, Email = "trainer@email.com", Phone = "2234567890", Password = "123456", Role = Role.Trainer};
+        User admin = new User{Id= 3, Email = "admin@email.com", Phone = "3234567890", Password = "123456", Role = Role.Admin};
+        
+        users.Add(user);
+        users.Add(trainer);
+        users.Add(admin);
+
+        _service.Setup(c => c.GetAllUsers()).ReturnsAsync(users);
+
+        UserDetail userD = new UserDetail{Id = 1, UserId = 1, Gender = Gender.Male, Name = "User", Surname = "UTest", JoinAt = DateTime.UtcNow};
+        UserDetail trainerD = new UserDetail{Id = 2, UserId = 2, Gender = Gender.Female, Name = "Trainer", Surname = "TTest", JoinAt = DateTime.UtcNow};
+        UserDetail adminD = new UserDetail{Id = 3, UserId = 3, Gender = Gender.Male, Name = "Admin", Surname = "ATest", JoinAt = DateTime.UtcNow};
+
+        _service.Setup(c => c.GetUserDetailsByUserId(1)).ReturnsAsync(userD);
+        _service.Setup(c => c.GetUserDetailsByUserId(2)).ReturnsAsync(trainerD);
+        _service.Setup(c => c.GetUserDetailsByUserId(3)).ReturnsAsync(adminD);
+
+        UserAdminDTO userAdminDTO = new UserAdminDTO{Id = user.Id, Email = user.Email, Phone=user.Phone, Role=user.Role.ToString(), Name=userD.Name, Surname = userD.Surname, JoinAt=userD.JoinAt};
+        UserAdminDTO trainerAdminDTO = new UserAdminDTO{Id = trainer.Id, Email = trainer.Email, Phone=trainer.Phone, Role=trainer.Role.ToString(), Name=trainerD.Name, Surname = trainerD.Surname, JoinAt=trainerD.JoinAt};
+        UserAdminDTO adminAdminDTO = new UserAdminDTO{Id = admin.Id, Email = admin.Email, Phone=admin.Phone, Role=admin.Role.ToString(), Name=adminD.Name, Surname = adminD.Surname, JoinAt=adminD.JoinAt};
+        
+        var sut = new UserService(_service.Object, _hasher.Object);
+
+        //Act
+        var response = await sut.GetAllUsersForAdmin();
+
+        //Assert
+        response.Should().NotBeNull();
+        response.Should().HaveCount(3);
+        response.Should().ContainEquivalentOf(userAdminDTO);
+        response.Should().ContainEquivalentOf(trainerAdminDTO);
+        response.Should().ContainEquivalentOf(adminAdminDTO);
+    }
 }

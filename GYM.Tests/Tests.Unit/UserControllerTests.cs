@@ -19,10 +19,6 @@ public class UserControllerTests
 
     private UserController CreateSut() => new(_cache, _service.Object);
 
-    //Bad request - no dto
-    //Bad request return null, bad update
-    //Sucessfull update
-
     [Fact]
     public async Task UpdateUserDetails_WithoutToken_ReturnsUnauthorized()
     {
@@ -102,5 +98,35 @@ public class UserControllerTests
             Times.Exactly(1)
         );
 
+    }
+
+    //GetAllUsers for admin
+    [Fact]
+    public async Task GetAllUsers_Valid_ReturnOkListAdminDTO()
+    {
+        List<UserAdminDTO> list = new List<UserAdminDTO>();
+        UserAdminDTO userAdminDTO = new UserAdminDTO{Id = 1, Email="user.test@email.com",Phone="12345678980", Role = Role.User.ToString(), Name="User", Surname="Test", JoinAt=DateTime.UtcNow};
+        list.Add(userAdminDTO);
+            
+        //Arrange. Task<List<UserAdminDTO>>
+        _service.Setup(c => c.GetAllUsersForAdmin()).ReturnsAsync(list);
+
+        //Act
+        var controller = CreateSut();
+        var result = await controller.GetAllUsers();
+        
+
+        //Assert
+        result.Result.Should().BeOfType<OkObjectResult>();
+        var okResult = result.Result as OkObjectResult;
+
+        var users = okResult!.Value
+            .Should()
+            .BeAssignableTo<IEnumerable<UserAdminDTO>>()
+            .Subject;
+
+        users.Should().ContainSingle();
+
+        users.Should().ContainEquivalentOf(userAdminDTO);
     }
 }
