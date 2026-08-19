@@ -2,12 +2,11 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.Testing;
 using GYM.Controller.Api.DTOs;
 
 namespace GYM.Tests.Tests.Integration;
 
-[Collection("Gym API")]
+[Collection("GYM API")]
 public class TCA_AdminTests
 {
     private readonly HttpClient _client;

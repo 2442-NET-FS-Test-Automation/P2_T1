@@ -5,7 +5,7 @@ using GYM.Data.Repositories;
 using Moq;
 using FluentAssertions;
 
-namespace GYM.Tests.Tests.Unit;
+namespace GYM.Tests.Tests.Unit; 
 
 public class AdminServiceTests
 {
@@ -224,7 +224,7 @@ public class AdminServiceTests
         };
 
         _trainingRepoMock.Setup(r => r.UpdateExercise(It.IsAny<Exercise>()))
-            .ReturnsAsync((Exercise?)null);
+            .ReturnsAsync((Exercise)null!);
 
         var service = new TrainingService(_trainingRepoMock.Object);
 
