@@ -1,7 +1,7 @@
 //Login testing
 /// <reference types="cypress" />
 
-describe('Permisions check', () => {
+describe('Check the token/roles and its effect on the UI', () => {
     beforeEach(() => {
         cy.intercept(
             "GET",
