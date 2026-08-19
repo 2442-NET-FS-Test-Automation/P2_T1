@@ -27,7 +27,13 @@ public class BookingRepository : IBookingRepository
     {
         await using var db = await _factory.CreateDbContextAsync();
 
-        return await db.Bookings.FirstOrDefaultAsync(i => i.Id == id);
+        return await db.Bookings
+            .Include(b => b.Training)
+                .ThenInclude(t => t.TrainingExercises)
+                    .ThenInclude(te => te.Exercise)
+            .Include(b => b.User)
+                .ThenInclude(u => u.UserDetail)
+            .FirstOrDefaultAsync(b => b.Id == id);
     }
 
     public async Task<IEnumerable<Booking>> GetBookingsByUserId(int userid)
