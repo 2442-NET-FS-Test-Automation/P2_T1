@@ -10,7 +10,7 @@ public interface IStatsService
     Task<IReadOnlyList<StatsDTO>> GetAllStats();
     Task<StatsDTO?> GetStatsById(int Id);
     Task<IEnumerable<StatsDTO>> GetStatsByUserId(int userId);
-    Task<StatsDTO> AddStatsAsync(StatsDTO exerciseDTO);
+    Task<StatsDTO?> AddStatsAsync(StatsDTO exerciseDTO);
     Task<StatsDTO?> UpdateStats(StatsDTO bookingDTO);
     Task<bool> DeleteStatsByIdAsync(int StatsId);
     

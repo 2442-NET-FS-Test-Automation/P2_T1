@@ -1,0 +1,120 @@
+using FluentAssertions;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Chromium;
+using Xunit;
+using Xunit.Abstractions;
+
+public class StateMutationTests : IDisposable
+{
+
+    private readonly ChromeDriver _driver;
+    private readonly ITestOutputHelper _output;
+
+    private const string BaseUrl = "http://localhost:5173";
+    public StateMutationTests(ITestOutputHelper output)
+    {
+        _output = output;
+
+
+
+        // Option classes: per browser launch config.
+        // Headless makes it so chrome doesn't pop up
+        // we can even tell it things like what window size we want it to use
+        _output = output;
+
+        var options = new ChromeOptions();
+        options.AddArgument("--headless=new"); // Runs inside console environment blocks cleanly
+        options.AddArgument("--window-size=1280,900");
+
+        _driver = new ChromeDriver(options);
+        _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
+
+    }
+
+    public void Dispose()
+    {
+        _driver.Quit();
+    }
+
+    [Fact]
+    public void LocateMyBooking_ToggleState()
+    {
+        _driver.Manage().Cookies.DeleteAllCookies();
+        _driver.Navigate().GoToUrl($"{BaseUrl}/login");
+        var username = _driver.FindElement(By.CssSelector("form.login-form input[type='email']"));
+        var password = _driver.FindElement(By.CssSelector("form.login-form input[type='password']"));
+        var submit = _driver.FindElement(By.CssSelector("form.login-form button[type='submit']"));
+
+        username.SendKeys("user@test.com");
+        // FIXED: Reverted back to your verified password credentials ("1234") to allow the session to pass
+        password.SendKeys("1234"); 
+        submit.Click();
+
+        var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
+
+        // --- FIX A: WAIT FOR THE AUTH RE-ROUTING TO FINISH ON ITS OWN ---
+        // This blocks the driver thread until the landing page logic successfully redirects 
+        // away from /login, proving the JWT payload was saved into LocalStorage/Cookies.
+        wait.Until(d => !d.Url.Contains("/login"));
+
+        // 2. --- NAVIGATE TO WORKOUTS CATALOG VIEW ---
+        _driver.Navigate().GoToUrl($"{BaseUrl}/user/mybookings");
+
+        // --- FIX B: CONFIRM WE STABLE-LANDED ON THE CATALOG PAGE ---
+        wait.Until(d => d.Url.Contains("/user/mybookings"));
+
+        var myCardsCollection = _driver.FindElements(By.CssSelector(".exercise-list .booking-card-wrapper"));
+        var myFirstCard = myCardsCollection.First();
+
+        var statusBadge = myFirstCard.FindElement(By.CssSelector(".badge, span.badge"));
+        statusBadge.Text.Should().Be("BOOKED");
+
+
+        var primaryButton = myFirstCard.FindElement(By.CssSelector("button.primary"));
+        primaryButton.Text.Should().Be("Start Workout ➔");
+        primaryButton.Click();
+
+        var updatedStatusBadge = myFirstCard.FindElement(By.CssSelector(".badge, span.badge"));
+        updatedStatusBadge.Text.Should().Be("WORKING");
+
+        var updatedPrimaryButton = myFirstCard.FindElement(By.CssSelector("button.primary"));
+        updatedPrimaryButton.Text.Should().Be("Complete Session ✓");
+    }
+    [Fact]
+    public void LocateMyBooking_SwitchToCancel()
+    {
+        _driver.Manage().Cookies.DeleteAllCookies();
+        _driver.Navigate().GoToUrl($"{BaseUrl}/login");
+
+        // Our SPA has no id or name attributes - so we're gonna use A LOT
+        // of css selectors. Hint: you should ad those ID selectors
+
+        _driver.FindElement(By.TagName("h2")).Text.Should().Be("LOG IN TO YOUR ACCOUNT");
+        var username = _driver.FindElement(By.CssSelector("input[type='email']"));
+        var password = _driver.FindElement(By.CssSelector("input[type='password']"));
+        username.SendKeys("user@test.com");
+        password.SendKeys("1234");
+        _driver.FindElement(By.CssSelector("button[type='submit']")).Click();
+        
+        //Act - a real navigation in a real browser
+        _driver.Navigate().GoToUrl($"{BaseUrl}/user/mybookings");
+
+        var myCardsCollection = _driver.FindElements(By.CssSelector(".exercise-list .booking-card-wrapper"));
+        var myFirstCard = myCardsCollection.First();
+        int initialCount = myCardsCollection.Count;
+
+        var statusBadge = myFirstCard.FindElement(By.CssSelector(".badge, span.badge"));
+        statusBadge.Text.Should().NotBe("COMPLETED");
+
+        var deleteButton = myFirstCard.FindElement(By.CssSelector(".btn-delete"));
+        deleteButton.Text.Should().Be("Cancel Booking");
+        deleteButton.Click();
+
+        IAlert alertBox = _driver.SwitchTo().Alert();
+        alertBox.Accept();
+
+        var updatedCardsCollection = _driver.FindElements(By.CssSelector(".exercise-list .booking-card-wrapper"));
+        updatedCardsCollection.Count.Should().BeLessThan(initialCount);
+    }
+}

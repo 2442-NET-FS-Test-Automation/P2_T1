@@ -2,6 +2,7 @@ import { api } from "../api/client";
 import type { exerciseDTO } from "../types/exerciseDTO";
 import type { TrainingDTO, TrainingCreateDTO } from "../types/trainingDTO";
 import type { UserAdminDTO, UserCreateAdminDTO, UserUpdateRoleDTO } from "../types/user";
+import type { BookingDTO, BookingStatus } from "../types/BookingDTO";
 
 // ==========================================
 // USERS SERVICES
