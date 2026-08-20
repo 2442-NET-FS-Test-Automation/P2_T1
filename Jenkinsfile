@@ -1,8 +1,5 @@
 pipeline {
     agent { label 'windows' }
-    tools {
-        git 'Default'
-    }
     environment {
         API_DIR = '.'
         Jwt__key = credentials('jwt-key')
