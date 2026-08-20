@@ -5,19 +5,21 @@ pipeline {
 
     environment {
         API_DIR = '.'
+        ConnectionStrings__DefaultConnection = credentials('test-conn')
         Jwt__key = credentials('jwt-key')
-        ConnectionsStrings__DefaultConnection = credentials('test-conn')
 
         REGISTRY = 'gymcr.azurecr.io'
         IMAGE = "${REGISTRY}/gym-api"
     }
 
     stages {
-        stage('build') {
+        stage('Checkout SCM') {
             steps {
-                dir(env.API_DIR){
-                    bat 'dotnet build GYM.slnx -c Release'
-                }
+                checkout([$class: 'GitSCM', 
+                    branches: [[name: '*/main']], 
+                    extensions: [[$class: 'CloneOption', depth: 1, noTags: true, shallow: true, timeout: 20]], 
+                    userRemoteConfigs: [[url: 'https://github.com']]
+                ])
             }
         }
 
