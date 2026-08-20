@@ -63,7 +63,7 @@ const string SpaCorsPolicy = "spa"; // string name for our policy
 
 // Let's change our CORS block - we will still have our dev origins from the above code
 // but when the app is DEPLOYED - we want cors to come in from env/config
-var extraOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
+var extraOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
 
 
 var  spaOrigins = new[] { "http://127.0.0.1:5500", "http://localhost:5500", "http://localhost:5173" }
