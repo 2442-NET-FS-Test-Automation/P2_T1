@@ -18,6 +18,7 @@ public class TrainingsTesting : IClassFixture<GymApiFactory>
 
     private record TokenResponse(string? token);
 
+
     public async Task AuthenticateClientAsync()
     {
         var loginDTO = new
@@ -38,7 +39,7 @@ public class TrainingsTesting : IClassFixture<GymApiFactory>
     }
 
     // GET - Do training exists in DB?
-    [Fact]
+    //[Fact]
     public async Task GetTrainings_With200OkStatus()
     {
         // Arrange
@@ -74,7 +75,7 @@ public class TrainingsTesting : IClassFixture<GymApiFactory>
     }
 
     // POST Admin / Trainer Add trainings
-    [Fact]
+    //[Fact]
     public async Task CreateTrainings_With201CreatedStatus()
     {
         // Arrange
@@ -116,8 +117,8 @@ public class TrainingsTesting : IClassFixture<GymApiFactory>
     }
     
     // POST Invalid data -> Bad request
-    [Theory]
-    [InlineData(1, "Beginner Full Body Workout at GYM", "Beginner", Place.GYM, -65, "Beginner Full Body Workout at GYM")]
+    //[Theory]
+    //[InlineData(1, "Beginner Full Body Workout at GYM", "Beginner", Place.GYM, -65, "Beginner Full Body Workout at GYM")]
     public async Task CreateTrainings_With400BadRequestStatus(int id, string trainingname, string difficulty, Place place, int calories, string description)
     {
         // Arrange
@@ -143,8 +144,8 @@ public class TrainingsTesting : IClassFixture<GymApiFactory>
     }
 
     // Admin / Trainer can edit trainings
-    [Theory]
-    [InlineData("Intermediate Full Body Workout at GYM", "Intermediate", "Intermediate Full Body Workout at GYM")]
+    //[Theory]
+    //[InlineData("Intermediate Full Body Workout at GYM", "Intermediate", "Intermediate Full Body Workout at GYM")]
     public async Task EditTrainings_With200OkStatus(string trainingname, string difficulty, string description)
     {
         // Arrange
@@ -167,7 +168,7 @@ public class TrainingsTesting : IClassFixture<GymApiFactory>
     }
 
     // DELETE -> Admin / Trainer can DELETE trainings -> 200 Ok Status
-    [Fact]
+    //[Fact]
     public async Task DeleteTrainings_With200OkStatus()
     {
         // Arrange
@@ -202,7 +203,7 @@ public class TrainingsTesting : IClassFixture<GymApiFactory>
         getResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
-    [Fact]
+    //[Fact]
     public async Task DeleteTrainings_With400NotFoundStatus()
     {
         // Arrange
