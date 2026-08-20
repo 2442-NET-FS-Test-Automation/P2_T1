@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Pagination } from '../../components/Pagination';
+import { Pagination } from '../../Components/Pagination';
 import type { AdminBookingDTO, BookingStatus } from '../../types/BookingDTO';
-import { StatCard } from '../../components/Admin/StatCard';
+import { StatCard } from '../../Components/admin/StatCard';
 // MOCK DATA TEMPORAL
 const MOCK_BOOKINGS: AdminBookingDTO[] = [
 { id: 1, trainingName: 'Cyber Hypertrophy', status: 'Booked', doneAt: '2026-03-30T10:00:00', email: 'alex.v@neon.com', name: 'Alex', surname: 'Vance' },

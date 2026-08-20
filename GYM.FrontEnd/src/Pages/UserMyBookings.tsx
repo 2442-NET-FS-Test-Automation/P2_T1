@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { getPlaceLabel } from "../utils/placeLabels";
 // IMPORT SERVICES: Pulls both your collection getter and status patcher endpoints
 import {
-  deleteBooking,
   getBookingByUserId,
   UpdateBookingStatus,
 } from "../services/BookingService";
@@ -12,22 +11,6 @@ import { BookingCard } from "../Components/BookingCard";
 import { getTrainingImage } from "../utils/trainingImages";
 import { toast } from "react-toastify";
 
-const WORKOUT_COACH_MAP: Record<string, string> = {
-  yoga: "Coach Elena (Yoga Specialist)",
-  strength: "Coach Marcus (Powerlifting)",
-  power: "Coach Marcus (Powerlifting)",
-  hiit: "Coach Alex (HIIT Lead)",
-  circuit: "Coach Alex (HIIT Lead)",
-  cardio: "Coach Sarah (Endurance)",
-  boxing: "Coach Ramirez (Striking)",
-};
-
-const PLACE_ENUM_MAP: Record<number, string> = {
-  0: "Cardio Studio - Room A",
-  1: "Strength Zone - Main Floor",
-  2: "HIIT Cage - Box 2",
-  3: "Mind & Body - Wellness Suite",
-};
 
 export function UserMyBookings() {
   const [bookings, setBookings] = useState<BookingDTO[]>([]);
@@ -125,11 +108,6 @@ export function UserMyBookings() {
                     ? `${firstName} ${lastName}`.trim()
                     : "GymQuest Staff Coach";
 
-                  const placeString =
-                    typeof training?.place === "number"
-                      ? PLACE_ENUM_MAP[training.place] ||
-                        `Zone ${training.place}`
-                      : training?.place || "Main Gym Floor";
 
                   const resolvedCardImage = getTrainingImage(
                     training?.trainingName,

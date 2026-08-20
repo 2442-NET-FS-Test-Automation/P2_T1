@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { UserModal } from '../../components/Admin/modals/UserModal';
+import { UserModal } from '../../Components/admin/modals/UserModal';
 import { UserService } from '../../services/adminServices';
 import type { UserAdminDTO } from '../../types/user';
 import { useAuth } from '../../auth/useAuth';
-import { Pagination } from '../../components/Pagination';
+import { Pagination } from '../../Components/Pagination';
 
 export function AdminUsersPage() {
     const [users, setUsers] = useState<UserAdminDTO[]>([]);

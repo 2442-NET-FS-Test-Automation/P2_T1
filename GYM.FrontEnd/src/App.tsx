@@ -1,34 +1,34 @@
 import './css/App.css';
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { About } from './pages/About'
-import Home from './pages/UserHome';
-import Achievements from './pages/UserAchievements';
-import ProfileSettings from './pages/UserProfileSettings';
-import { Login } from './pages/Login';
-import { LandingPage } from './pages/LandingPage';
-import { UserStatistics } from './pages/UserStadistics';
+import { About } from './Pages/About'
+import Home from './Pages/UserHome';
+import Achievements from './Pages/UserAchievements';
+import ProfileSettings from './Pages/UserProfileSettings';
+import { Login } from './Pages/Login';
+import { LandingPage } from './Pages/LandingPage';
+import { UserStatistics } from './Pages/UserStadistics';
 import { useAuth } from './auth/useAuth';
-import { RequireAuth } from './components/RequireAuth';
-import { Register } from './pages/Register';
-import { UserBooking } from './pages/UserBooking';
-import { NotFound } from './pages/NotFound';
-import Navbar from './components/Navbar';
-import { UserDetailsStep } from './pages/Onboarding/UserDetailsStep';
-import { UserStatsStep } from './pages/Onboarding/UserStatsStep';
-import { UserMyBookings } from './pages/UserMyBookings';
-import { AdminLayout } from './components/admin/AdminLayout';
-import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
-import { AdminUsersPage } from './pages/admin/AdminUsersPage';
-import { AdminExercisesPage } from './pages/admin/AdminExercisesPage';
-import { AdminTrainingsPage } from './pages/admin/AdminTrainingsPage';
-import { ConfirmBooking } from './pages/ConfirmBooking';
+import { RequireAuth } from './Components/RequireAuth';
+import { Register } from './Pages/Register';
+import { UserBooking } from './Pages/UserBooking';
+import { NotFound } from './Pages/NotFound';
+import Navbar from './Components/Navbar';
+import { UserDetailsStep } from './Pages/Onboarding/UserDetailsStep';
+import { UserStatsStep } from './Pages/Onboarding/UserStatsStep';
+import { UserMyBookings } from './Pages/UserMyBookings';
+import { AdminLayout } from './Components/admin/AdminLayout';
+import { AdminDashboardPage } from './Pages/admin/AdminDashboardPage';
+import { AdminUsersPage } from './Pages/admin/AdminUsersPage';
+import { AdminExercisesPage } from './Pages/admin/AdminExercisesPage';
+import { AdminTrainingsPage } from './Pages/admin/AdminTrainingsPage';
+import { ConfirmBooking } from './Pages/ConfirmBooking';
 import { useLocation } from 'react-router-dom'; // return current location
-import { ExerciseDetail } from './pages/ExerciseDetail';
-import { Report } from './pages/Report';
+import { ExerciseDetail } from './Pages/ExerciseDetail';
+import { Report } from './Pages/Report';
 import { ToastContainer } from "react-toastify"; // library for notifications (success messages/error messages) like an alert in js
-import { TrainingDetail } from './pages/TrainingDetail';
-import { Footer } from './components/Footer';
-import { AdminBookingsPage } from './pages/admin/AdminBookingsPage';
+import { TrainingDetail } from './Pages/TrainingDetail';
+import { Footer } from './Components/Footer';
+import { AdminBookingsPage } from './Pages/admin/AdminBookingsPage';
 
 function App() {
   const { status, user } = useAuth();

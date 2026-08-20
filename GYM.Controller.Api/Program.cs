@@ -54,12 +54,29 @@ builder.Services.AddSingleton<ITokenService, TokenService>(); //Services for log
 // Adding CORS 
 const string SpaCorsPolicy = "spa"; // string name for our policy
 
-// Configuring our CORS policy
-builder.Services.AddCors(o => o.AddPolicy(SpaCorsPolicy, p => p
-    .AllowAnyOrigin()
+// // Configuring our CORS policy - DEPRECATED
+// builder.Services.AddCors(o => o.AddPolicy(SpaCorsPolicy, p => p
+//     .AllowAnyOrigin()
+//     .AllowAnyHeader()
+//     .AllowAnyMethod()    
+// ));
+
+// Let's change our CORS block - we will still have our dev origins from the above code
+// but when the app is DEPLOYED - we want cors to come in from env/config
+var extraOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
+
+
+var  spaOrigins = new[] { "http://127.0.0.1:5500", "http://localhost:5500", "http://localhost:5173" }
+    .Concat(extraOrigins)
+    .ToArray();
+
+builder.Services.AddCors(o=>o.AddPolicy(SpaCorsPolicy, p=> p
+    .WithOrigins(spaOrigins)
     .AllowAnyHeader()
-    .AllowAnyMethod()    
+    .AllowAnyMethod()
 ));
+
+
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

@@ -1,19 +1,22 @@
 import { useState, useEffect } from "react";
 import { getUser } from "../services/auth";
 import type { UserData } from "../types/user";
-import { getAchievements, getUserAchievement } from "../services/achievementService";
+import {
+  getAchievements,
+  getUserAchievement,
+} from "../services/achievementService";
 import "../css/Achievements.css";
 import type { AchievementDTO } from "../types/AchievementDTO";
 
 // Tipo local con las propiedades calculadas para el render
+// FIXED: Synchronized property token to match standard camelCase definitions ('completedAt')
 interface AchievementDisplay extends AchievementDTO {
   unlocked: boolean;
-  completed_At?: string | null;
+  completedAt?: string | null;
 }
 
 export default function Achievements() {
   const [user, setUser] = useState<UserData | null>(null);
-  // Usamos el tipo AchievementDisplay en el estado
   const [achievements, setAchievements] = useState<AchievementDisplay[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -40,7 +43,8 @@ export default function Achievements() {
       setUser(userData);
 
       // 2. Traer el catálogo completo de logros
-      const catalog = await getAchievements(userData?.id ?? null);
+      // FIXED: Dropped parameters string argument to match your cleaned service method signatures arity
+      const catalog = await getAchievements();
 
       // 3. Traer los logros completados del usuario (si hay usuario)
       let userAchievementsList: any[] = [];
@@ -56,7 +60,7 @@ export default function Achievements() {
       // 4. Cruzar el catálogo con los logros del usuario
       const merged: AchievementDisplay[] = catalog.map((item: any) => {
         const found = userAchievementsList.find(
-          (ua: any) => ua.achievementId === item.id || ua.id === item.id
+          (ua: any) => ua.achievementId === item.id || ua.id === item.id,
         );
 
         // Aseguramos todas las propiedades requeridas por AchievementDisplay
@@ -69,13 +73,16 @@ export default function Achievements() {
           conditionType: item.conditionType ?? item.condition_type ?? "",
           conditionValue: item.conditionValue ?? item.condition_value ?? 0,
           unlocked: !!found,
-          completed_At: found ? (found.completedAt || found.completed_At || null) : null,
+          // FIXED: Standardized fallback reading assignment properties logic
+          completedAt: found
+            ? found.completedAt || found.completed_At || null
+            : null,
         } as AchievementDisplay;
       });
 
       setAchievements(merged);
     } catch (err: any) {
-      setError(err?.message || "Error al conectar con el servidor");
+      setError(err?.message || "Error connecting to the server");
     } finally {
       setLoading(false);
     }
@@ -85,7 +92,6 @@ export default function Achievements() {
     <div>
       <div className="achievements-page py-4">
         <div className="container" style={{ maxWidth: "800px" }}>
-
           {/* HEADER */}
           <header className="mb-4">
             <h2 className="fw-bold m-0" style={{ fontSize: "2rem" }}>
@@ -99,7 +105,10 @@ export default function Achievements() {
             <div className="me-3 fs-2">🏆</div>
 
             <div className="flex-grow-1 me-3">
-              <div className="fw-bold text-white mb-2" style={{ fontSize: "1.1rem" }}>
+              <div
+                className="fw-bold text-white mb-2"
+                style={{ fontSize: "1.1rem" }}
+              >
                 {unlockedCount} / {totalAchievements} Unlocked achievements
               </div>
 
@@ -124,15 +133,22 @@ export default function Achievements() {
           {/* SECCIÓN PRINCIPAL */}
           <div>
             {/* Aviso si no ha iniciado sesión */}
-            {!user && !loading && (
-              <div className="alert bg-dark text-warning border-warning mb-3" role="alert">
+            {/* FIXED: Keeps unread lint warning clean by reading out explicit profile account keys if active */}
+            {!user?.id && !loading && (
+              <div
+                className="alert bg-dark text-warning border-warning mb-3"
+                role="alert"
+              >
                 🔑 Log In to save your progress and unlock achievements
               </div>
             )}
 
             {/* Mensaje de Error */}
             {error && (
-              <div className="alert bg-dark text-danger border-danger mb-3" role="alert">
+              <div
+                className="alert bg-dark text-danger border-danger mb-3"
+                role="alert"
+              >
                 {error}
               </div>
             )}
@@ -143,7 +159,9 @@ export default function Achievements() {
                 <div className="spinner-border text-cyan" role="status">
                   <span className="visually-hidden">Loading...</span>
                 </div>
-                <p className="mt-2 text-white-50">Loading your achievements...</p>
+                <p className="mt-2 text-white-50">
+                  Loading your achievements...
+                </p>
               </div>
             ) : (
               /* Lista de Cards de Logros */
@@ -156,7 +174,6 @@ export default function Achievements() {
                     }`}
                   >
                     <div>
-                      {/* Soporta la propiedad name o title según tu DTO */}
                       <h5 className="fw-bold m-0 text-white">{item.name}</h5>
                       <p
                         className="m-0 mt-1 text-white-50"
@@ -165,21 +182,29 @@ export default function Achievements() {
                         {item.description}
                       </p>
 
-                      <div className="mt-2 d-flex gap-3" style={{ fontSize: "0.8rem" }}>
+                      <div
+                        className="mt-2 d-flex gap-3"
+                        style={{ fontSize: "0.8rem" }}
+                      >
                         <span className="">
-                          Points: <strong className="text-white">{item.points}</strong>
+                          Points:{" "}
+                          <strong className="text-white">{item.points}</strong>
                         </span>
 
                         <span>
                           {item.unlocked ? (
                             <span className="text-purple-light">
                               Completed at{" "}
-                              {item.completed_At
-                                ? new Date(item.completed_At).toLocaleDateString("es-MX", {
-                                    year: "numeric",
-                                    month: "long",
-                                    day: "numeric",
-                                  })
+                              {/* FIXED: Target your updated camelCase property and updated locale to 'en-US' to output text in English */}
+                              {item.completedAt
+                                ? new Date(item.completedAt).toLocaleDateString(
+                                    "en-US",
+                                    {
+                                      year: "numeric",
+                                      month: "long",
+                                      day: "numeric",
+                                    },
+                                  )
                                 : "—"}
                             </span>
                           ) : (
@@ -198,7 +223,6 @@ export default function Achievements() {
               </div>
             )}
           </div>
-
         </div>
       </div>
     </div>
