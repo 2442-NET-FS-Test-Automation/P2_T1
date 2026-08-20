@@ -48,14 +48,14 @@ pipeline {
                 }
             }
         }
-    }
-
-    post {
-        always {
-            dir(env.API_DIR){
-                junit allowEmptyResults: true, testResults: '**/TestResults/*.junit.xml'
-                archiveArtifacts allowEmptyArchive: true, artifacts: '**/TestResults/*.trx'
+        post {
+            always {
+                dir(env.API_DIR){
+                    junit allowEmptyResults: true, testResults: '**/TestResults/*.junit.xml'
+                    archiveArtifacts allowEmptyArchive: true, artifacts: '**/TestResults/*.trx'
+                }
             }
         }
     }
+
 }
