@@ -9,7 +9,7 @@ using Xunit;
 namespace GYM.Tests.Integration.Api;
 
 [Collection("Gym API")]
-public class BookingsTesting
+public class BookingsTesting : IClassFixture<GymApiFactory>
 {
     private readonly HttpClient _client;
 
@@ -20,12 +20,51 @@ public class BookingsTesting
 
     private record TokenResponse(string? token);
 
+    public async Task AuthenticateUserAsync()
+    {
+        var loginDTO = new
+        {
+            Email = "user@test.com", 
+            Password = "1234"
+        };
+
+        var response = await _client.PostAsJsonAsync("/authentication/login", loginDTO);
+        response.EnsureSuccessStatusCode();
+
+        // Deserialize the response using TokenResponse record
+        var result = await response.Content.ReadFromJsonAsync<TokenResponse>();
+
+        // Adjuntar el token al cliente HttpClient para todas las peticiones siguientes
+        _client.DefaultRequestHeaders.Authorization = 
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", result?.token);
+    }
+
+    public async Task AuthenticateAdminAsync()
+    {
+        var loginDTO = new
+        {
+            Email = "admin@test.com", 
+            Password = "1234"
+        };
+
+        var response = await _client.PostAsJsonAsync("/authentication/login", loginDTO);
+        response.EnsureSuccessStatusCode();
+
+        // Deserialize the response using TokenResponse record
+        var result = await response.Content.ReadFromJsonAsync<TokenResponse>();
+
+        // Adjuntar el token al cliente HttpClient para todas las peticiones siguientes
+        _client.DefaultRequestHeaders.Authorization = 
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", result?.token);
+    }
+
     // GET - Verifies if booking exists in DB and returns populated tables graph
     [Fact]
     public async Task GetBookingById_With200OkStatus()
     {
         // Arrange
-        int existingBookingId = 1020;
+        await AuthenticateUserAsync();
+        int existingBookingId = 3010;
 
         // Act
         var response = await _client.GetAsync($"/api/Booking/bookings/{existingBookingId}");
@@ -45,6 +84,9 @@ public class BookingsTesting
     [InlineData(88888)] // Non-existent booking entry ID matching database constraints
     public async Task GetBookingById_With404NotFoundStatus(int nonExistingId)
     {
+        // Arrange
+        await AuthenticateUserAsync();
+
         // Act
         var response = await _client.GetAsync($"/api/Booking/bookings/{nonExistingId}");
 
@@ -57,10 +99,11 @@ public class BookingsTesting
     public async Task CreateBooking_With201CreatedStatus()
     {
         // Arrange
+        await AuthenticateUserAsync();
         var dto = new BookingDTO
         {
-            TrainingId = 3,
-            UserId = 1,
+            TrainingId = 1,
+            UserId = 2011,
             Status = BookingStatus.Booked,
             ExerciseTime = new DateTime(2026, 07, 28, 1, 0, 0)
         };
@@ -74,7 +117,7 @@ public class BookingsTesting
         var payload = await response.Content.ReadFromJsonAsync<BookingDTO>();
         payload.Should().NotBeNull();
         payload!.Id.Should().BeGreaterThan(0, "The relational database must generate an identity primary key auto-increment token.");
-        payload.UserId.Should().Be(dto.UserId);
+        payload.UserId.Should().BeGreaterThan(0, "The API assigns the booking user from the authenticated token.");
     }
 
     // PATCH - Modifies current lifestyle status state indices anonymously via route segments
@@ -82,7 +125,22 @@ public class BookingsTesting
     public async Task UpdateBookingStatus_With200OkStatus()
     {
         // Arrange
-        int targetBookingId = 1020;
+        await AuthenticateUserAsync();
+        var booking = new BookingDTO
+        {
+            TrainingId = 1,
+            Status = BookingStatus.Booked,
+            ExerciseTime = new DateTime(2026, 07, 29, 1, 0, 0)
+        };
+
+        var createResponse = await _client.PostAsJsonAsync("/api/Booking/bookings", booking);
+        createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+        var createdBooking = await createResponse.Content.ReadFromJsonAsync<BookingDTO>();
+        createdBooking.Should().NotBeNull();
+        createdBooking!.Id.Should().BeGreaterThan(0);
+
+        await AuthenticateAdminAsync();
+        int targetBookingId = createdBooking.Id;
         int nextStatusValueIndex = 1; // 1 maps directly to 'Working' tracking state configurations
 
         // Act - Targets route shape: [HttpPatch("bookings-status/{id}/{newStatus}")]
@@ -101,7 +159,8 @@ public class BookingsTesting
     public async Task DeleteBooking_With24NoContentStatus()
     {
         // Arrange
-        int bookingIdToDelete = 1040; // Presumes clean transaction seed block rows exist
+        await AuthenticateAdminAsync();
+        int bookingIdToDelete = 2009; // Presumes clean transaction seed block rows exist
 
         // Act
         var response = await _client.DeleteAsync($"/api/Booking/bookings/{bookingIdToDelete}");
