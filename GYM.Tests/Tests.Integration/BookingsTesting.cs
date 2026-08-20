@@ -159,8 +159,24 @@ public class BookingsTesting : IClassFixture<GymApiFactory>
     public async Task DeleteBooking_With24NoContentStatus()
     {
         // Arrange
+        await AuthenticateUserAsync();
+
+        var booking = new BookingDTO
+        {
+            TrainingId = 1,
+            Status = BookingStatus.Booked,
+            ExerciseTime = new DateTime(2026, 07, 30, 1, 0, 0)
+        };
+
+        var createResponse = await _client.PostAsJsonAsync("/api/Booking/bookings", booking);
+        createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+
+        var createdBooking = await createResponse.Content.ReadFromJsonAsync<BookingDTO>();
+        createdBooking.Should().NotBeNull();
+        createdBooking!.Id.Should().BeGreaterThan(0);
+
         await AuthenticateAdminAsync();
-        int bookingIdToDelete = 2009; // Presumes clean transaction seed block rows exist
+        int bookingIdToDelete = createdBooking.Id;
 
         // Act
         var response = await _client.DeleteAsync($"/api/Booking/bookings/{bookingIdToDelete}");
