@@ -24,7 +24,7 @@ public class SeederController : ControllerBase
     }
 
     //Seed users (user, trainer, admin)
-    [HttpPost]
+    [HttpPost("seed")]
     public async Task<bool> CreateData()
     {
         List<RegisterUserDTOs> lista = new()
