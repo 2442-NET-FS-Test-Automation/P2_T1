@@ -26,7 +26,7 @@ public class SeederService : ISeederService
         //Register Users
         List<Role> Roles = new List<Role>{Role.User, Role.Trainer, Role.Admin};
         List<int> UsersId = new();
-        for(int i = 0; i < 3; i++)
+        for(int i = 0; i < registerUserDTOs.Count; i++)
         {
             User user = new User
             {

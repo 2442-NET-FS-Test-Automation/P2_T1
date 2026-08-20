@@ -73,7 +73,7 @@ public class UserRepository : IUserRepository
         using var db = await _factory.CreateDbContextAsync();
 
         List<string> names = new List<String>{"Stefano", "Carlos", "Miguel"};
-        for(int i = 0; i < 3; i++)
+        for(int i = 0; i < UsersId.Count; i++)
         {
             UserDetail userDetails = new UserDetail
             {
@@ -86,7 +86,7 @@ public class UserRepository : IUserRepository
             };
             db.UserDetails.Add(userDetails);
         }
-        //registering bookinfs
+        //registering bookinfo
         Booking bookingCompleted = new Booking
         {
             TrainingId = 1,
