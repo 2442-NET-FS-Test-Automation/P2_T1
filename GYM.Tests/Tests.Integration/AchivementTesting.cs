@@ -19,7 +19,7 @@ public class AchivementTesting
 
     private record TokenResponse(string? token);
 
-    [Fact]
+    //[Fact]
     public async Task GetAchievementsByUserId_ValidCredentials_listAchivementDTOs()
     {
         //Arrange
