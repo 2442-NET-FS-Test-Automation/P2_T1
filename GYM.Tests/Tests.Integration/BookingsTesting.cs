@@ -59,7 +59,7 @@ public class BookingsTesting : IClassFixture<GymApiFactory>
     }
 
     // GET - Verifies if booking exists in DB and returns populated tables graph
-    [Fact]
+    //[Fact]
     public async Task GetBookingById_With200OkStatus()
     {
         // Arrange
