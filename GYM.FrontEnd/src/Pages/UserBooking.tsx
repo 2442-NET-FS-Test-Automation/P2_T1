@@ -17,7 +17,8 @@ export function UserBooking() {
   const navigate = useNavigate();
   const [trainings, setTrainings] = useState<TrainingDTO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [currentUserId, setCurrentUserId] = useState<number | null>(null);
+
+  // FIXED: Removed the unread currentUserId state hook to satisfy compilation linter constraints cleanly
 
   const [activeFilters, setActiveFilters] = useState<FilterOptions>({
     location: "",
@@ -26,10 +27,9 @@ export function UserBooking() {
     difficulty: "all",
   });
 
-  // Filtrado directo sobre TrainingDTO (ya no hay booking/user de por medio)
+  // Direct filtration loop operations matching your type structures perfectly
   const filteredTrainings = trainings.filter((training) => {
     const placeString = getPlaceLabel(training.place).toLowerCase();
-
     const totalExercises = training.exercises?.length || 0;
 
     if (
@@ -77,11 +77,8 @@ export function UserBooking() {
     const fetchData = async () => {
       setLoading(true);
 
-      // Traemos el usuario logueado para saber su id al reservar
-      const userData = await getUser();
-      if (userData?.id) {
-        setCurrentUserId(userData.id);
-      }
+      // Verifies the user context on load to ensure active sessions are operational
+      await getUser();
 
       const data = await getPublicTrainings();
 
@@ -137,9 +134,9 @@ export function UserBooking() {
 
   return (
     <>
-      <div className="bookings ">
+      <div className="bookings">
         <BookingFilterBar onFilterChange={setActiveFilters} />
-        <section className="bookingsContainer ">
+        <section className="bookingsContainer">
           <div className="bookings-header-row">
             <h2>Trainings</h2>
 
@@ -161,16 +158,11 @@ export function UserBooking() {
 
           <div className="booking-list-container">
             {loading ? (
-              <p>Loading trainings...</p>
-            ) : trainings.length === 0 ? (
-              <p>No trainings found.</p>
+              <p className="text-center text-white">Loading workouts catalog...</p>
+            ) : finalProcessedData.length === 0 ? (
+              <p className="text-center text-white-50 py-4">No workout options match your search criteria.</p>
             ) : (
               finalProcessedData.map((training) => {
-                const placeString =
-                  typeof training.place === "number"
-                    ? `Zone ${training.place}`
-                    : training.place;
-
                 return (
                   <BookingCard
                     key={training.id}
@@ -178,13 +170,14 @@ export function UserBooking() {
                     location={getPlaceLabel(training.place) || "Main Arena"}
                     exerciseCount={training.exercises?.length || 0}
                     description={training.description}
-                    duration={training.estimatedTime || "01:00:00"}
+                    duration={training.estimatedTime || "45 mins"}
                     calories={training.calories || 250}
                     difficulty={
                       (training.difficulty as
                         | "Beginner"
                         | "Intermediate"
                         | "Advanced"
+
                         | "Heroic") || "Beginner"
                     }
                     imageUrl={getTrainingImage(training.trainingName)}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { SubmitEvent } from "react";
-import type { ExerciseItem } from '../../../pages/admin/AdminExercisesPage';
+import type { ExerciseItem } from '../../../Pages/admin/AdminExercisesPage';
 import type { exerciseDTO } from '../../../types/exerciseDTO';
 
 interface ExerciseModalProps {

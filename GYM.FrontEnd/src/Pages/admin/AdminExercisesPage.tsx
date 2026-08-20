@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { ExerciseModal } from '../../components/Admin/modals/ExerciseModal';
+import { ExerciseModal } from '../../Components/admin/modals/ExerciseModal';
 import { ExerciseService } from '../../services/adminServices';
 import type { exerciseDTO } from '../../types/exerciseDTO';
-import { Pagination } from '../../components/Pagination';
-import { StatCard } from '../../components/Admin/StatCard';
+import { Pagination } from '../../Components/Pagination';
+import { StatCard } from '../../Components/admin/StatCard';
 
 export interface ExerciseItem {
     id: number;

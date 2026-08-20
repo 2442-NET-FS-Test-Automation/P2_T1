@@ -105,7 +105,7 @@ export function Carousel({
         className="carousel-track"
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
-        {images.map((image, index) => (
+        {images.map((image) => (
           <div className="carousel-slide" key={image.id}>
             <img src={image.src} loading="lazy" />
             {image.caption && (

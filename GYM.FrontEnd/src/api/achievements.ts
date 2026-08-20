@@ -1,5 +1,5 @@
 import { api } from "./client";
-import type { AchievementDTO, UserAchievement, CreateAchievementBody } from "../types/AchievementDTO";
+import type { AchievementDTO, UserAchievement } from "../types/AchievementDTO";
 
 // Here lives the catalog data call to the api
 

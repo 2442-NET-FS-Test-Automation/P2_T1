@@ -1,5 +1,5 @@
 import { Navigate, useLocation } from "react-router-dom";
-import { Children, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { useAuth } from "../auth/useAuth";
 
 // A route guard changes routing behavior based on auth state.

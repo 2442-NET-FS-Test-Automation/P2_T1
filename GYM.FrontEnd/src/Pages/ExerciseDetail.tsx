@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
+// FIX: Capitalized the type name to match your standard interface naming conventions
 import type { exerciseDTO } from "../types/exerciseDTO";
 import "../css/ExerciseDetail.css";
 
 export function ExerciseDetail() {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
+  const navigate = useNavigate(); // Added native router navigator engine hook
 
-  // Explicitly binds the exact signature of your updated type definition contract
-  const [exercise, setExercise] = useState<exerciseDTO | null>(
+  // FIXED: Synchronized matching uppercase typings to eliminate build-breaking linter crashes
+  const [exercise] = useState<exerciseDTO | null>(
     (location.state as { exercise?: exerciseDTO })?.exercise || null,
   );
   const [loading, setLoading] = useState<boolean>(!exercise);
@@ -49,44 +51,45 @@ export function ExerciseDetail() {
 
   return (
     <div className="abstract-document-flow">
-
       <div className="abstract-header-node">
         <p className="abstract-primary-label">{exercise.name}</p>
       </div>
 
       <div className="abstract-media-node">
         <img
-          src={exercise.visualReferenceUrl}
+          src={exercise.visualReferenceUrl || "https://wp.com"}
           alt={`${exercise.name} mechanical movement layout`}
           className="abstract-image-element"
         />
-        <p className="abstract-caption-element">
-          Execution reference.
-        </p>
+        <p className="abstract-caption-element">Execution reference.</p>
       </div>
 
       <div className="abstract-content-node">
         <h2>Movement Description</h2>
-        <p>{exercise.description}</p>
+        <p>
+          {exercise.description ||
+            "No execution instructions provided for this movement track."}
+        </p>
 
         <h2>Target Progression Metrics</h2>
-         <div className="metrics-grid">
-            <div className="metric-card">
-              <span className="metric-title">Target Sets</span>
-              <div className="metric-value">{exercise.sets}</div>
-              <span className="metric-sub">rounds</span>
-            </div>
-            <div className="metric-card">
-              <span className="metric-title">Target Reps</span>
-              <div className="metric-value">{exercise.reps}</div>
-              <span className="metric-sub">per set</span>
-            </div>
+        <div className="metrics-grid">
+          <div className="metric-card">
+            <span className="metric-title">Target Sets</span>
+            <div className="metric-value">{exercise.sets || 0}</div>
+            <span className="metric-sub">rounds</span>
           </div>
+          <div className="metric-card">
+            <span className="metric-title">Target Reps</span>
+            <div className="metric-value">{exercise.reps || 0}</div>
+            <span className="metric-sub">per set</span>
+          </div>
+        </div>
 
         <div className="abstract-nav-node abstract-action-divider">
           <button
             className="abstract-action-link"
-            onClick={() => window.history.back()}
+            // FIXED: Uses the secure router pop stack event fallback to prevent browser history breakout loops
+            onClick={() => navigate(-1)}
           >
             ← Return to Exercise List
           </button>

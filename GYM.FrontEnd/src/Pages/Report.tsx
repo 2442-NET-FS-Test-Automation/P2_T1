@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { getPublicStats } from "../services/UserStatService";
 import { ReportCard } from "../Components/ReportCard";
 import "../css/Report.css";
@@ -7,7 +6,6 @@ import type { StatsDTO } from "../types/StatsDTO";
 
 export function Report() {
   const [sortBy, setSortBy] = useState("date-desc");
-  const navigate = useNavigate();
   const [stats, setStats] = useState<StatsDTO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
