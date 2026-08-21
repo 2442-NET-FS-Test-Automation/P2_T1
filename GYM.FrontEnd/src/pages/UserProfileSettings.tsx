@@ -134,7 +134,7 @@ export default function ProfileSettings() {
                 </div>
                 <div>
                   <p className="stats-label">Age</p>
-                  <p className="stats-value">{latestStats.age}</p>
+                  <p className="stats-value">{details?.age}</p>
                 </div>
               </div>
             </div>
