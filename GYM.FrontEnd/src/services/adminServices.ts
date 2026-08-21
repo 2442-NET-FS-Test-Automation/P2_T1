@@ -104,7 +104,7 @@ export const TrainingService = {
     // GET: Obtener todas las rutinas con sus ejercicios vinculados
     getAllTrainings: async (): Promise<TrainingDTO[]> => {
         try {
-            const response = await api.get<TrainingDTO[]>('/Training/trainings');
+            const response = await api.get<TrainingDTO[]>('/api/Training/trainings');
             return response.data;
         } catch (error) {
             console.error('Error getting trainings:', error);
@@ -115,7 +115,7 @@ export const TrainingService = {
     // POST: Crear nueva rutina con sus ejercicios vinculados
     createTraining: async (trainingData: TrainingCreateDTO): Promise<TrainingCreateDTO> => {
         try {
-            const response = await api.post<TrainingCreateDTO>('/Training/trainings', trainingData);
+            const response = await api.post<TrainingCreateDTO>('/api/Training/trainings', trainingData);
             return response.data;
         } catch (error) {
             console.error('Error creating training:', error);
@@ -126,7 +126,7 @@ export const TrainingService = {
     // PUT: Editar rutina existente
     updateTraining: async (trainingData: TrainingDTO): Promise<TrainingDTO> => {
         try {
-            const response = await api.put<TrainingDTO>(`/Training/trainings-info`, trainingData);
+            const response = await api.put<TrainingDTO>(`/api/Training/trainings-info`, trainingData);
             return response.data;
         } catch (error) {
             console.error('Error updating training:', error);
@@ -137,7 +137,7 @@ export const TrainingService = {
     // DELETE: Borrar rutina de la base de datos
     deleteTraining: async (trainingID: number): Promise<void> => {
         try {
-            const response = await api.delete(`/Training/training/${trainingID}`);
+            const response = await api.delete(`/api/Training/training/${trainingID}`);
             return response.data;
         } catch (error) {
             console.error('Error deleting training:', error);
