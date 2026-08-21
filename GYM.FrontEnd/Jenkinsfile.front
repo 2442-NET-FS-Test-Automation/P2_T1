@@ -33,14 +33,14 @@ pipeline {
         }
 
         // Solo configurado para tests de Cypress, adaptar o agregar otro step/stage si usan selenium en sus tests.
-        stage('E2E Tests') {
-            steps {
-                dir(env.FRONT_DIR) {
-                    bat 'npm run test:e2e:ci' //Esto es para correr cypress headless, comando configurado en el 'package.json':
-                    // "test:e2e:ci": "start-server-and-test \"npm run preview -- --host 127.0.0.1 --port 5173\" http://127.0.0.1:5173 e2e"
-                }
-            }
-        }
+        // stage('E2E Tests') {
+        //     steps {
+        //         dir(env.FRONT_DIR) {
+        //             bat 'npm run test:e2e:ci' //Esto es para correr cypress headless, comando configurado en el 'package.json':
+        //             // "test:e2e:ci": "start-server-and-test \"npm run preview -- --host 127.0.0.1 --port 5173\" http://127.0.0.1:5173 e2e"
+        //         }
+        //     }
+        // }
         // STAGE: Headless Cypress Integration Tests
         stage('Cypress Integration Tests') {
             steps {
