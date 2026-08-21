@@ -8,30 +8,21 @@ using OpenQA.Selenium.Support.UI;
 
 public class LayoutIntegrityTests : IDisposable
 {
-
     private readonly ChromeDriver _driver;
     private readonly ITestOutputHelper _output;
-
     private const string BaseUrl = "http://localhost:5173";
+
     public LayoutIntegrityTests(ITestOutputHelper output)
     {
-        _output = output;
 
-
-
-        // Option classes: per browser launch config.
-        // Headless makes it so chrome doesn't pop up
-        // we can even tell it things like what window size we want it to use
         _output = output;
 
         var options = new ChromeOptions();
-        options.AddArgument("--headless=new"); // Runs inside console environment blocks cleanly
+        options.AddArgument("--headless=new"); 
         options.AddArgument("--window-size=1280,900");
 
         _driver = new ChromeDriver(options);
         _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
-
-
     }
 
     public void Dispose()
@@ -94,25 +85,23 @@ public class LayoutIntegrityTests : IDisposable
         var targetCardWrapper = _driver.FindElements(By.CssSelector(".booking-card-wrapper")).First();
         var drawerElement = targetCardWrapper.FindElement(By.CssSelector(".booking-card-drawer"));
 
-        // Audit the React structural class signature tokens
         targetCardWrapper.GetAttribute("class").Should().NotContain("expanded",
             "The collapsible drawer container must not possess the expanded helper class name string on baseline initialization.");
 
-        // Trigger details dropdown toggle click interaction
         var detailsButton = targetCardWrapper.FindElement(By.CssSelector(".card-button-wrapper button.secondary:not([style*='border'])"));
         detailsButton.Text.Should().Be("Details");
         detailsButton.Click();
 
-        // Wait until layout wrapper class successfully appends active class token name string
         wait.Until(d => targetCardWrapper.GetAttribute("class").Contains("expanded"));
 
-        // Wait until the browser unrolls the text contents safely past its collapsed state boundaries
-        wait.Until(d => d.FindElements(By.CssSelector(".drawer-description h5")).First().Displayed);
 
+        wait.Until(d => {
+            var elements = d.FindElements(By.CssSelector(".drawer-description h5"));
+            return elements.Count > 0 && elements.First().Displayed;
+        });
 
         var drawerDescriptionHeader = targetCardWrapper.FindElement(By.CssSelector(".drawer-description h5"));
         drawerDescriptionHeader.Text.Should().Be("ABOUT THIS WORKOUT");
         drawerDescriptionHeader.Displayed.Should().BeTrue();
     }
-
 }
