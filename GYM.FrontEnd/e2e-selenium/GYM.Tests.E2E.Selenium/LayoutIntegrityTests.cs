@@ -18,7 +18,7 @@ public class LayoutIntegrityTests : IDisposable
         _output = output;
 
         var options = new ChromeOptions();
-        options.AddArgument("--headless=new"); 
+        options.AddArgument("--headless=new");
         options.AddArgument("--window-size=1280,900");
 
         _driver = new ChromeDriver(options);
@@ -89,13 +89,16 @@ public class LayoutIntegrityTests : IDisposable
             "The collapsible drawer container must not possess the expanded helper class name string on baseline initialization.");
 
         var detailsButton = targetCardWrapper.FindElement(By.CssSelector(".card-button-wrapper button.secondary:not([style*='border'])"));
-        detailsButton.Text.Should().Be("Details");
+
+        detailsButton.Should().NotBeNull("The Details action controller element must mount safely onto the card frame.");
+        detailsButton?.Text.Should().Be("Details");
         detailsButton.Click();
 
         wait.Until(d => targetCardWrapper.GetAttribute("class").Contains("expanded"));
 
 
-        wait.Until(d => {
+        wait.Until(d =>
+        {
             var elements = d.FindElements(By.CssSelector(".drawer-description h5"));
             return elements.Count > 0 && elements.First().Displayed;
         });
