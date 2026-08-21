@@ -13,8 +13,6 @@ pipeline {
         // REEMPLAZA ESTO: Pon la URL real de tu backend que probamos hace un momento
         VITE_API_URL = 'https://gym-api-e8gkdgcxc6fqhufn.centralus-01.azurewebsites.net/api' //Agrega /api si tus controladores lo usan o si en tu front no está ya concatenado, quítalo.
 
-        CYPRESS_loginIdentifier = credentials('cy-user')
-        CYPRESS_loginPassword = credentials('cy-pass')
     }
 
     stages {
