@@ -3,7 +3,7 @@ import { clearToken, getToken } from '../auth/storage';
 
 // Instancia centralizada de Axios apuntando a la API de ASP.NET Core
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL ?? 'gym-api-e8gkdgcxc6fqhufn.centralus-01.azurewebsites.net',
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -48,7 +48,7 @@ api.interceptors.response.use(
 //This apiCall just change http://localhost:5076/api to http://localhost:5076/ without "/api"
 //because for some reason to call auth endpoints you don't need to use "/api" just call /authorization
 export const apiCall = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? 'gym-api-e8gkdgcxc6fqhufn.centralus-01.azurewebsites.net',
+  baseURL: import.meta.env.VITE_API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
