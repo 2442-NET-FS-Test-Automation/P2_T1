@@ -69,7 +69,7 @@ pipeline {
         stage('Deploy to Azure Blob') {
             steps {
                 dir(env.FRONT_DIR) {
-                    bat 'azcopy copy "dist\\*" "%STORAGE_URL%?%SAS_TOKEN%" --recursive=true --from-to=LocalBlob'
+                    bat 'azcopy copy "dist\\*" "%STORAGE_URL%" --recursive=true'
                 }
             }
         }
