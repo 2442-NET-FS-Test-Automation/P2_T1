@@ -9,6 +9,7 @@ pipeline {
 
         // REEMPLAZA ESTO: Pon el nombre exacto de la cuenta de storage que acabas de crear
         STORAGE_URL = 'https://gymweb2026.blob.core.windows.net/$web'
+        VITE_BASE_API_URL = 'gym-api-e8gkdgcxc6fqhufn.centralus-01.azurewebsites.net'
 
         // REEMPLAZA ESTO: Pon la URL real de tu backend que probamos hace un momento
         VITE_API_URL = 'https://gym-api-e8gkdgcxc6fqhufn.centralus-01.azurewebsites.net/api' //Agrega /api si tus controladores lo usan o si en tu front no está ya concatenado, quítalo.
