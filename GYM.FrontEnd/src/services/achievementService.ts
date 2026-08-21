@@ -10,7 +10,7 @@ export interface Achievement {
 
 export const getAchievements = async (): Promise<Achievement[]> => {
   try {
-    const url = "/api/Achievement/allAchievements";
+    const url = "/Achievement/allAchievements";
     const response = await apiClient.get<Achievement[]>(url);
     return response.data;
   } catch (error) {
@@ -22,7 +22,7 @@ export const getAchievements = async (): Promise<Achievement[]> => {
 
 export const getUserAchievement = async (): Promise<Achievement[]> => {
   try {
-    const url = `/api/Achievement/AchievementByUserId`;
+    const url = `/Achievement/AchievementByUserId`;
     const response = await apiClient.get<Achievement[]>(url);
 
 
