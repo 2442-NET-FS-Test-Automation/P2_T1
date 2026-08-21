@@ -15,7 +15,7 @@ export const getPublicStats = async (): Promise<StatsDTO[]> => {
 // GET: api/stats/{id}
 export const getStatsById = async (id: number): Promise<StatsDTO | null> => {
     try {
-        const response = await apiCall.get<StatsDTO>(`/api/Stats/${id}`);
+        const response = await apiCall.get<StatsDTO>(`/Stats/${id}`);
         return response.data;
     } catch (error) {
         console.error(`Error fetching stats entry ID ${id}:`, error);
@@ -26,7 +26,7 @@ export const getStatsById = async (id: number): Promise<StatsDTO | null> => {
 // GET: api/stats/user/{userId}
 export const getStatsByUserId = async (userId: number): Promise<StatsDTO[]> => {
     try {
-        const response = await apiCall.get<StatsDTO[]>(`/api/Stats/user/${userId}`);
+        const response = await apiCall.get<StatsDTO[]>(`/Stats/user/${userId}`);
         return response.data;
     } catch (error) {
         console.error(`Error fetching stats logs for user ID ${userId}:`, error);
