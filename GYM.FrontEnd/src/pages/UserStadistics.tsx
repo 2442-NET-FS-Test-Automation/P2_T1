@@ -51,7 +51,7 @@ export const UserStatistics: React.FC = () => {
 
   // Adaptación de datos para la gráfica de fuerza
   const strengthDates = hasValidStats
-    ? stats.map((s) => new Date(s.measureAt).toLocaleDateString("es-ES", { day: "2-digit", month: "short" })).reverse()
+    ? stats.map((s) => new Date(s.measureAt).toLocaleDateString("es-ES", { day: "2-digit", month: "short" }))
     : FALLBACK_STRENGTH_DATES;
 
   const parseMileRunToMinutes = (mileRun: string): number => {
