@@ -17,5 +17,19 @@
 import './commands'
 import "@cypress/code-coverage/support"
 import compareSnapshotCommand from 'cypress-image-diff-js';
+// --- ADD THIS TO THE BOTTOM OF cypress/support/e2e.ts ---
+
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      /**
+       * Custom command to log into the application with mock user session contexts.
+       * @example cy.loginAs("Cypress User", "User")
+       */
+      loginAs(username: string, role: string): Chainable<void>;
+    }
+  }
+}
+
 
 compareSnapshotCommand();
