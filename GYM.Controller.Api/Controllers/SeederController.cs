@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 using GYM.Data;
 
 [ApiController]
-[Route("seeder")]
+[Route("api/seeder")]
 
 public class SeederController : ControllerBase
 {
