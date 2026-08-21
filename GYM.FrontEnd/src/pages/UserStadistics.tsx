@@ -47,11 +47,11 @@ export const UserStatistics: React.FC = () => {
 
   // Comprobación segura del array de estadísticas
   const hasValidStats = Array.isArray(stats) && stats.length > 0;
-  const latestStat = hasValidStats ? stats[0] : null;
+  const latestStat = hasValidStats ? stats[stats.length-1] : null;
 
   // Adaptación de datos para la gráfica de fuerza
   const strengthDates = hasValidStats
-    ? stats.map((s) => new Date(s.measureAt).toLocaleDateString("es-ES", { day: "2-digit", month: "short" }))
+    ? stats.map((s) => new Date(s.measureAt).toLocaleDateString("es-ES", { day: "2-digit", month: "short" })).reverse()
     : FALLBACK_STRENGTH_DATES;
 
   const parseMileRunToMinutes = (mileRun: string): number => {

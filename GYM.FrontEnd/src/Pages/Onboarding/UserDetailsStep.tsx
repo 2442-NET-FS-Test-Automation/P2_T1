@@ -24,7 +24,7 @@ export function UserDetailsStep() {
             surname: lastName,
             joinAt: new Date().toISOString(),
             gender: gender,
-            age: age !== '' ? Number(age) : 0,
+            age: age !== '' ? Number(age) : undefined,
         };
 
         try {
