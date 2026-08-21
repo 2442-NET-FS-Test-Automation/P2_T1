@@ -20,7 +20,7 @@ public class userStatsTests : IDisposable
         _output = output;
 
         var options = new ChromeOptions();
-        options.AddArgument("--headless=new"); 
+        options.AddArgument("--headless=new");
         options.AddArgument("--window-size=1280,900");
 
         _driver = new ChromeDriver(options);
@@ -40,13 +40,23 @@ public class userStatsTests : IDisposable
 
         _driver.FindElement(By.CssSelector("input[placeholder='you@email.com']")).SendKeys("user@test.com");
         _driver.FindElement(By.CssSelector("input[placeholder='••••••••']")).SendKeys("1234");
-        
+
         _driver.FindElement(By.XPath("//button[contains(text(), 'Log In')]")).Click();
 
-        _wait.Until(d => !d.Url.Contains("/login"));
-        _driver.Url.Should().NotContain("/login");
-
-        // FIXED TYPO: Synchronized URL route location parameter mapping target strings
+        try
+        {
+            _wait.Until(d => !d.Url.Contains("/login"));
+        }
+        catch (WebDriverTimeoutException)
+        {
+            // Check if an error notification popped up on the frontend view layer
+            var bodyText = _driver.FindElement(By.TagName("body")).Text;
+            if (bodyText.Contains("Error") || bodyText.Contains("connect"))
+            {
+                throw new Exception($"E2E Test Intercepted Network Drop: The React app on localhost cannot reach your Azure Backend. Current URL: {_driver.Url}");
+            }
+            throw;
+        }
         _driver.Navigate().GoToUrl($"{BaseUrl}/user/statistics");
     }
 
@@ -74,7 +84,7 @@ public class userStatsTests : IDisposable
         _wait.Until(d => d.FindElements(By.CssSelector(".stats-table tbody tr")).Count == originalTotalCount + 1);
 
         var lastRow = _driver.FindElements(By.CssSelector(".stats-table tbody tr")).Last();
-        
+
 
         string rowText = lastRow.Text;
         rowText.Should().Contain("65").And.Contain("182");
@@ -92,7 +102,7 @@ public class userStatsTests : IDisposable
 
         _driver.FindElement(By.XPath("//button[contains(text(), 'Save record')]")).Click();
 
-        var toastError = _wait.Until(d => 
+        var toastError = _wait.Until(d =>
             d.FindElement(By.CssSelector(".toast-error, .Toastify__toast--error, .toast.bg-danger"))
         );
 

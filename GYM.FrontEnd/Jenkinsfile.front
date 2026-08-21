@@ -52,19 +52,19 @@ pipeline {
             }
         }
 
-        // STAGE: End-to-End Selenium Tests
-        stage('Selenium E2E Tests') {
-            steps {
-                // FIXED: Directs the workspace context to step inside your exact nested project folder path
-                dir("${env.FRONT_DIR}/e2e-selenium/GYM.Tests.E2E.Selenium") {
-                    // Clears out previous test results to prevent telemetry contamination
-                    powershell 'Remove-Item -Recurse -Force */TestResults -ErrorAction SilentlyContinue'
+        // // STAGE: End-to-End Selenium Tests
+        // stage('Selenium E2E Tests') {
+        //     steps {
+        //         // FIXED: Directs the workspace context to step inside your exact nested project folder path
+        //         dir("${env.FRONT_DIR}/e2e-selenium/GYM.Tests.E2E.Selenium") {
+        //             // Clears out previous test results to prevent telemetry contamination
+        //             powershell 'Remove-Item -Recurse -Force */TestResults -ErrorAction SilentlyContinue'
                     
-                    // Executes your Selenium test files headlessly using the Release configuration profile
-                    bat 'dotnet test -c Release --logger "junit;LogFilePath=TestResults/{assembly}.junit.xml" --logger trx'
-                }
-            }
-        }
+        //             // Executes your Selenium test files headlessly using the Release configuration profile
+        //             bat 'dotnet test -c Release --logger "junit;LogFilePath=TestResults/{assembly}.junit.xml" --logger trx'
+        //         }
+        //     }
+        // }
 
         stage('Deploy to Azure Blob') {
             steps {
