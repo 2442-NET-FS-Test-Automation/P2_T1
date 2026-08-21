@@ -16,30 +16,7 @@ pipeline {
     }
 
     stages {
-         stage('Workspace Cleanup Lock Breaker') {
-            steps {
-                // Safely checks if the lock file exists at the root SCM workspace and force-deletes it
-                powershell '''
-                    $lockPath = ".git/index.lock"
-                    if (Test-Path $lockPath) {
-                        Remove-Item -Force $lockPath -ErrorAction SilentlyContinue
-                        Write-Output "Successfully evicted stale Git index lock handles."
-                    } else {
-                        Write-Output "No stale Git index locks detected. Workspace is clean."
-                    }
-                '''
-            }
-        }
-
-        stage('Checkout SCM') {
-            steps {
-                checkout([$class: 'GitSCM', 
-                    branches: [[name: '*/main']], 
-                    extensions: [[$class: 'CloneOption', depth: 1, noTags: true, shallow: true, timeout: 20]], 
-                    userRemoteConfigs: [[url: 'https://github.com']]
-                ])
-            }
-        }
+        
         stage('Install Dependencies') {
             steps {
                 dir(env.FRONT_DIR) {
