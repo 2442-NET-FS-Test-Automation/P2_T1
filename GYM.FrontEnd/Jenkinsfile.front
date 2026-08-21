@@ -1,0 +1,55 @@
+pipeline {
+    agent { label 'windows' }
+
+    environment {
+        // Carpeta donde está tu package.json
+        FRONT_DIR = 'GYM.FrontEnd' 
+        
+        SAS_TOKEN = credentials('web-sas')
+
+        // REEMPLAZA ESTO: Pon el nombre exacto de la cuenta de storage que acabas de crear
+        STORAGE_URL = 'https://gymweb2026.z19.web.core.windows.net/$web'
+
+        // REEMPLAZA ESTO: Pon la URL real de tu backend que probamos hace un momento
+        VITE_API_URL = 'https://gym-api-e8gkdgcxc6fqhufn.centralus-01.azurewebsites.net/api' //Agrega /api si tus controladores lo usan o si en tu front no está ya concatenado, quítalo.
+
+        CYPRESS_loginIdentifier = credentials('cy-user')
+        CYPRESS_loginPassword = credentials('cy-pass')
+    }
+
+    stages {
+        stage('Install Dependencies') {
+            steps {
+                dir(env.FRONT_DIR) {
+                    bat 'npm install'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir(env.FRONT_DIR) {
+                    bat 'npm run build'
+                }
+            }
+        }
+
+        // Solo configurado para tests de Cypress, adaptar o agregar otro step/stage si usan selenium en sus tests.
+        stage('E2E Tests') {
+            steps {
+                dir(env.FRONT_DIR) {
+                    bat 'npm run test:e2e:ci' //Esto es para correr cypress headless, comando configurado en el 'package.json':
+                    // "test:e2e:ci": "start-server-and-test \"npm run preview -- --host 127.0.0.1 --port 5173\" http://127.0.0.1:5173 e2e"
+                }
+            }
+        }
+
+        stage('Deploy to Azure Blob') {
+            steps {
+                dir(env.FRONT_DIR) {
+                    bat 'azcopy copy "dist\\*" "%STORAGE_URL%?%SAS_TOKEN%" --recursive=true'
+                }
+            }
+        }
+    }
+}
